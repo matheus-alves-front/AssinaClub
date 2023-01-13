@@ -2,12 +2,12 @@
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { DataType } from '../../../@types/TemplateTypes'
-import { getUsers } from '../../../lib/users'
+import { DataType, User } from '../../../@types/TemplateTypes'
+import { getUsers } from '../../../prisma/users'
 
 const prisma = new PrismaClient()
 
-export default async function handler(
+export default async function handleUsers(
   req: NextApiRequest,
   res: NextApiResponse<DataType>
 ) {
@@ -24,13 +24,23 @@ export default async function handler(
     } else if (method === "POST") {
         const {
             name, 
-            email
-        } = req.body
+            cpf,
+            birthDate,
+            email,
+            password,
+            signatures,
+            isPaid
+        }: User = req.body
 
         const user = await prisma.user.create({
             data: {
-                name,
-                email
+                name, 
+                cpf,
+                birthDate,
+                email,
+                password,
+                signatures,
+                isPaid
             }
         })
 
