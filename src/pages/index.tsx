@@ -1,6 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useEffect, useState } from 'react'
-import { getUsers } from '../lib/users'
+import { getUsers } from '../prisma/users'
 
 export default function Home({users}: InferGetStaticPropsType<typeof getStaticProps>) {
   const [listUsers, setListUsers] = useState<User[]>([])

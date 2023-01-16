@@ -1,25 +1,19 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getUsers } from '../../../lib/users'
 
-type Data = {
-  id: number
-  name: string
-}
-
-type DataType = {
-  data?: Data[] | Data
-  message?: string
-}
+import { DataType, User } from '../../../@types/TemplateTypes'
+import { getUsers } from '../../../prisma/users'
 
 const prisma = new PrismaClient()
 
-export default async function handler(
+export default async function handleUsers(
   req: NextApiRequest,
   res: NextApiResponse<DataType>
 ) {
     const { method } = req
+
+    await prisma.$connect()
 
     if (method === "GET") {
         const users = await getUsers()
@@ -30,13 +24,23 @@ export default async function handler(
     } else if (method === "POST") {
         const {
             name, 
-            email
-        } = req.body
+            cpf,
+            birthDate,
+            email,
+            password,
+            signatures,
+            isPaid
+        }: User = req.body
 
         const user = await prisma.user.create({
             data: {
-                name,
-                email
+                name, 
+                cpf,
+                birthDate,
+                email,
+                password,
+                signatures,
+                isPaid
             }
         })
 
