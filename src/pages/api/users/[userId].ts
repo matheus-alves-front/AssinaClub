@@ -12,7 +12,7 @@ export default async function updateUser(
   res: NextApiResponse<DataType>
 ) {
     const { method } = req
-    const { userId } = req.query
+    const userId = String(req.query.userId)
 
     if (method === "GET") {
         const user = await getUser(userId)
