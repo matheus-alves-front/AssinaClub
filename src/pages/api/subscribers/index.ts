@@ -7,7 +7,7 @@ import { getSubscribers } from '../../../prisma/subscribers'
 
 const prisma = new PrismaClient()
 
-export default async function handleUsers(
+export default async function handleSubscribers(
   req: NextApiRequest,
   res: NextApiResponse<SubscriberType>
 ) {
@@ -16,10 +16,10 @@ export default async function handleUsers(
     await prisma.$connect()
 
     if (method === "GET") {
-        const users = await getSubscribers()
+        const subscribers = await getSubscribers()
     
         return res.status(200).json({
-            data: users,
+            data: subscribers,
         })
     } else if (method === "POST") {
         const {
@@ -31,7 +31,7 @@ export default async function handleUsers(
             signatures,
         }: Subscriber = req.body
 
-        const user = await prisma.subscriber.create({
+        const subscriber = await prisma.subscriber.create({
             data: {
                 name, 
                 cpf,
@@ -39,12 +39,11 @@ export default async function handleUsers(
                 email,
                 password,
                 signatures,
-
             }
         })
 
         return res.status(201).json({
-            data: user,
+            data: subscriber,
         })
     }
 
