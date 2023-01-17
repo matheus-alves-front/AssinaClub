@@ -1,4 +1,4 @@
-export type User = {
+export type Subscriber = {
   id: string | string[]
   name: string
   cpf: string
@@ -6,10 +6,9 @@ export type User = {
   email: string
   password: string
   signatures: string[]
-  isPaid: boolean
 }
 
-export type DataType = {
-  data?: User[] | User
+export type SubscriberType = {
+  data?: Subscriber[] | Subscriber | null
   message?: string
 }
