@@ -10,13 +10,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Subscriber {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   name String
   cpf String
   birthDate String
   email String
   password String
-  signatures String[] // temporary
-  isPaid Boolean
+  signatures ClubProvider[] @relation(fields: [subscriberIds], references: [id])
+  subscriberIds String[] @db.ObjectId
 }
+
+model ClubProvider {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  clubName String
+  hostName String
+  cpf String? 
+  cpnj String?
+  creationDate DateTime @default(now())
+  email String
+  password String
+  description String
+  // logo
+  // banner
+  admins Admin[]
+  products Product[]
+  subscribers Subscriber[] @relation(fields: [clubProviderIds], references: [id])
+  clubProviderIds String[] @db.ObjectId
+}
+
+model Admin {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  name String 
+  birthDate String
+  email String
+  password String
+  occupation String
+  provider ClubProvider? @relation(fields: [providerId], references: [id])
+  providerId String @db.ObjectId
+}
+
+model Product {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+  sku String
+  value Float
+  // image
+  // video
+  additionalOptions Option[]
+  subscriptionPlans Plan[]
+  product ClubProvider? @relation(fields: [productId], references: [id])
+  productId String @db.ObjectId
+}
+
+model Option {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String  
+  option Product? @relation(fields: [optionId], references: [id])
+  optionId String @db.ObjectId
+}
+
+model Plan {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  price Float
+  deliveryFrequency Int
+  plan Product? @relation(fields: [planId], references: [id])
+  planId String @db.ObjectId
+}
+
