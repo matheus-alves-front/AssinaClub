@@ -2,21 +2,21 @@
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { DataType, User } from '../../../@types/TemplateTypes'
-import { getUsers } from '../../../prisma/users'
+import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
+import { getSubscribers } from '../../../prisma/subscribers'
 
 const prisma = new PrismaClient()
 
 export default async function handleUsers(
   req: NextApiRequest,
-  res: NextApiResponse<DataType>
+  res: NextApiResponse<SubscriberType>
 ) {
     const { method } = req
 
     await prisma.$connect()
 
     if (method === "GET") {
-        const users = await getUsers()
+        const users = await getSubscribers()
     
         return res.status(200).json({
             data: users,
@@ -29,10 +29,9 @@ export default async function handleUsers(
             email,
             password,
             signatures,
-            isPaid
-        }: User = req.body
+        }: Subscriber = req.body
 
-        const user = await prisma.user.create({
+        const user = await prisma.subscriber.create({
             data: {
                 name, 
                 cpf,
@@ -40,7 +39,7 @@ export default async function handleUsers(
                 email,
                 password,
                 signatures,
-                isPaid
+
             }
         })
 
