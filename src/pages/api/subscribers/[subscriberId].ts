@@ -15,10 +15,10 @@ export default async function updateUser(
     const subscriberId = String(req.query.subscriberId)
 
     if (method === "GET") {
-        const user = await getSubscriber(subscriberId)
+        const subscriber = await getSubscriber(subscriberId)
 
         return res.status(200).json({
-            data: user
+            data: subscriber
         })
 
     } else if (method === "PUT") {
@@ -28,23 +28,23 @@ export default async function updateUser(
             birthDate,
             email,
             password,
-            signatures
+            // signatures
         }: Subscriber = req.body
 
-        const user = await prisma.subscriber.update({
+        const subscriber = await prisma.subscriber.update({
             where: { id: subscriberId },
             data: {
                 name,
                 cpf,
                 birthDate,
                 email,
-                password,
-                signatures
+                password
+                // signatures
             }
         })
 
         return res.status(201).json({
-            data: user,
+            data: subscriber,
             message: "update success"
         })
 

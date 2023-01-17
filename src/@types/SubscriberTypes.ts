@@ -5,7 +5,7 @@ export type Subscriber = {
   birthDate: string
   email: string
   password: string
-  signatures: string[]
+  signatures?: string[]
 }
 
 export type SubscriberType = {
