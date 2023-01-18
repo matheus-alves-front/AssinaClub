@@ -14,6 +14,6 @@ export type ClubProvider = {
 }
 
 export type ClubProviderType = {
-    data?: ClubProvider[] | ClubProvider
+    data?: ClubProvider[] | ClubProvider | null
     message?: string
 }

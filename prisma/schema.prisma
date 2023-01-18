@@ -25,8 +25,8 @@ model ClubProvider {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   clubName String
   hostName String
-  cpf String? 
-  cnpj String?
+  cpf String
+  cnpj String
   creationDate DateTime @default(now())
   email String
   password String
