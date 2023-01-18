@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 
 import { getSubscriber } from '../../../prisma/subscribers'
+import { createSubscriberRelation, removeSubscriberRelation } from '../../../prisma/signaturesRelation'
 
 const prisma = new PrismaClient()
 
@@ -28,8 +29,38 @@ export default async function updateUser(
             birthDate,
             email,
             password,
-            // signatures
+            isPaid,
+            clubAssinatureId,
+            unsubscribe
         }: Subscriber = req.body
+
+        if (unsubscribe) {
+            if (!clubAssinatureId) {
+                return res.status(400).json({
+                    message: "Missing ClubId"
+                })
+            }
+
+            removeSubscriberRelation(subscriberId, clubAssinatureId)
+
+            return res.status(201).json({
+                message: "Signature Removed"
+            })
+        }
+
+        if (isPaid) {
+            if (!clubAssinatureId) {
+                return res.status(400).json({
+                    message: "Missing ClubId"
+                })
+            }
+            
+            createSubscriberRelation(subscriberId, clubAssinatureId)
+
+            return res.status(201).json({
+                message: "Signature Completed"
+            })
+        }
 
         const subscriber = await prisma.subscriber.update({
             where: { id: subscriberId },
@@ -39,7 +70,6 @@ export default async function updateUser(
                 birthDate,
                 email,
                 password
-                // signatures
             }
         })
 
@@ -49,7 +79,6 @@ export default async function updateUser(
         })
 
     } else if (method === "DELETE") {
-
         await prisma.subscriber.delete({
             where: { id: subscriberId }
         })

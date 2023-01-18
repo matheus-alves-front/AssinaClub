@@ -6,6 +6,11 @@ export type Subscriber = {
   email: string
   password: string
   signatures?: string[]
+
+  // For Signatures
+  isPaid?: boolean
+  unsubscribe?: boolean
+  clubAssinatureId?: string
 }
 
 export type SubscriberType = {
