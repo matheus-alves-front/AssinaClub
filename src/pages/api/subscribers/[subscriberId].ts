@@ -8,7 +8,7 @@ import { createSubscriberRelation, removeSubscriberRelation } from '../../../pri
 
 const prisma = new PrismaClient()
 
-export default async function updateUser(
+export default async function updateSubscriber(
     req: NextApiRequest,
     res: NextApiResponse<SubscriberType>
 ) {
