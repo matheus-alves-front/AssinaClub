@@ -8,7 +8,7 @@ export async function createSubscriberRelation(SubscriberId: string, ClubProvide
         id: SubscriberId
       },
       data: {
-        signatures: {
+        signaturesClubs: {
           connect: [{id: ClubProviderId}]
         }
       }
@@ -23,7 +23,7 @@ export async function removeSubscriberRelation(SubscriberId: string, ClubProvide
       id: SubscriberId
     },
     data: {
-      signatures: {
+      signaturesClubs: {
         disconnect: [{id: ClubProviderId}]
       }
     }
