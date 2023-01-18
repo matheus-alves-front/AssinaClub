@@ -32,7 +32,7 @@ export async function removeSubscriberRelation(SubscriberId: string, ClubProvide
   return subscribers
 }
 
-export async function removeSubscriberRelationByClubProvider(SubscriberId: string, ClubProviderId: string | undefined) {
+export async function removeSubscriberRelationByClubProvider(ClubProviderId: string, SubscriberId: string | undefined) {
   const subscribers = await prisma.clubProvider.update({
     where: {
       id: ClubProviderId
