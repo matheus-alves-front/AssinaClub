@@ -2,14 +2,15 @@
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { AdminType, Admin } from '../../../../../../@types/AdminsClubProviderTypes'
-import { getAdmins, ClubProviderExists } from '../../../../../../prisma/adminsClubProviders'
+import { PlansType, Plan } from '../../../../../../@types/PlansTypes'
+import { ClubProviderExists } from '../../../../../../prisma/adminsClubProviders'
+import { getPlans } from '../../../../../../prisma/plans'
 
 const prisma = new PrismaClient()
 
-export default async function handleAdminsOfClubProviders(
+export default async function handlePlansOfClubProviders(
   req: NextApiRequest,
-  res: NextApiResponse<AdminType>
+  res: NextApiResponse<PlansType>
 ) {
     const { method } = req
     const clubProviderId = String(req.query.clubProvider)
@@ -25,34 +26,31 @@ export default async function handleAdminsOfClubProviders(
     }
 
     if (method === "GET") {
-        const admins = await getAdmins(clubProviderId)
+        const plans = await getPlans(clubProviderId)
     
         return res.status(200).json({
-            data: admins,
+            data: plans,
         })
     } else if (method === "POST") {
         const {
-            name, 
-            birthDate,
-            email,
-            password,
-            occupation,
-        }: Admin = req.body
+            title, 
+            description,
+            price,
+            deliveryFrequency
+        }: Plan = req.body
 
-        const admin = await prisma.admin.create({
+        const plan = await prisma.plan.create({
           data: {
-            name,
-            birthDate,
-            email,
-            password,
-            occupation,
+            title, 
+            description,
+            price,
+            deliveryFrequency,
             clubProviderId
           }
         });
 
-
         return res.status(201).json({
-            data: admin,
+            data: plan,
         })
     }
 

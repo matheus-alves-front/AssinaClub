@@ -2,7 +2,7 @@ export type Product = {
     id: string | string[]
     name: string
     description: string
-    sku: number
+    sku: string
     value: number
     clubProviderId: string
 }
