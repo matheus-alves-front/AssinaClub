@@ -27,8 +27,7 @@ export default async function handleSubscribers(
             cpf,
             birthDate,
             email,
-            password,
-            signatures,
+            password
         }: Subscriber = req.body
 
         const subscriber = await prisma.subscriber.create({
@@ -37,8 +36,7 @@ export default async function handleSubscribers(
                 cpf,
                 birthDate,
                 email,
-                password,
-                signatures,
+                password
             }
         })
 

@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 
 import { getClubProvider } from '../../../prisma/clubProviders'
+import { removeSubscriberRelationByClubProvider } from '../../../prisma/signaturesRelation'
 
 const prisma = new PrismaClient()
 
@@ -29,7 +30,8 @@ export default async function updateClubProvider(
             cnpj,
             email,
             password,
-            description
+            description,
+            removeSubscriber
         }: ClubProvider = req.body
 
         const clubProvider = await prisma.clubProvider.update({
@@ -44,6 +46,14 @@ export default async function updateClubProvider(
                 description
             }
         })
+
+        if (removeSubscriber) {
+            removeSubscriberRelationByClubProvider(clubProviderId ,removeSubscriber)
+
+            return res.status(201).json({
+                message: "Subscriber Remove Success"
+            })
+        }
 
         return res.status(201).json({
             data: clubProvider,
