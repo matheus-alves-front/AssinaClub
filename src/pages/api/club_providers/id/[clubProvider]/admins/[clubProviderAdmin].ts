@@ -18,10 +18,17 @@ export default async function handleProductsOfClubProviders(
     await prisma.$connect()
 
     const isClubProviderExists = await ClubProviderExists(clubProviderId)
+    const isAdminExists = await getAdmin(clubProviderAdmin)
 
     if (!isClubProviderExists) {
       return res.status(401).json({
         message: "Club Provider Don't exists"
+      })
+    }
+
+    if (!isAdminExists) {
+      return res.status(401).json({
+        message: "Admin Don't exists"
       })
     }
 
