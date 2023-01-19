@@ -7,7 +7,7 @@ import { getAdmins, ClubProviderExists } from '../../../../../../prisma/adminsCl
 
 const prisma = new PrismaClient()
 
-export default async function handleProductsOfClubProviders(
+export default async function handleAdminsOfClubProviders(
   req: NextApiRequest,
   res: NextApiResponse<AdminType>
 ) {
