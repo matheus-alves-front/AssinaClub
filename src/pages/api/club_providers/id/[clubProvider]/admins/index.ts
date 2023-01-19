@@ -25,10 +25,10 @@ export default async function handleProductsOfClubProviders(
     }
 
     if (method === "GET") {
-        const subscribers = await getAdmins(clubProviderId)
+        const admins = await getAdmins(clubProviderId)
     
         return res.status(200).json({
-            data: subscribers,
+            data: admins,
         })
     } else if (method === "POST") {
         const {

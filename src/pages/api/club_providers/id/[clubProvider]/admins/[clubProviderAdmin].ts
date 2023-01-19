@@ -33,10 +33,10 @@ export default async function handleProductsOfClubProviders(
     }
 
     if (method === "GET") {
-        const subscribers = await getAdmin(clubProviderAdmin)
+        const admin = await getAdmin(clubProviderAdmin)
     
         return res.status(200).json({
-            data: subscribers,
+            data: admin,
         })
     } else if (method === "PUT") {
         const {
