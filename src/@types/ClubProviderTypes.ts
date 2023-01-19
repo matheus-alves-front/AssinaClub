@@ -8,6 +8,9 @@ export type ClubProvider = {
     email: string
     password: string
     description: string
+    subscribers?: string[]
+
+    removeSubscriber?: string
 }
 
 export type ClubProviderType = {
