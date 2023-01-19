@@ -82,7 +82,15 @@ export default async function handlePlansOfClubProviders(
         return res.status(201).json({
             data: plan,
         })
-    }
+    } else if (method === "DELETE") {
+      await prisma.plan.delete({
+          where: { id: planId }
+      })
+
+      return res.status(201).json({
+          message: "Plan Deleted",
+      })
+  }
 
     return res.status(404).json({message: 'Route not found.'})
 }
