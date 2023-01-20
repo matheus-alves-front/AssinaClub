@@ -60,7 +60,8 @@ model Product {
   // image
   // video
   additionalOptions Option[]
-  memberOfPlans Plan[]
+  memberOfPlans Plan[] @relation(fields: [plansId], references: [id])
+  plansId String[] @db.ObjectId
   clubProviderProduct ClubProvider? @relation(fields: [clubProviderId], references: [id])
   clubProviderId String @db.ObjectId
 }
@@ -79,8 +80,8 @@ model Plan {
   description String
   price Float
   deliveryFrequency Int
-  productsPlan Product? @relation(fields: [productId], references: [id])
-  productId String @db.ObjectId
+  productsPlan Product[] @relation(fields: [productId], references: [id])
+  productId String[] @db.ObjectId
 
   clubProviderPlan ClubProvider? @relation(fields: [clubProviderId], references: [id])
   clubProviderId String @db.ObjectId
