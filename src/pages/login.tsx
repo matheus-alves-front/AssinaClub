@@ -11,6 +11,7 @@ import {
 } from 'react-bootstrap';
 import { LoginFormTypes } from "../@types/FormTypes";
 import { RegisterFormClubProvider, RegisterFormSubscriber } from "../components/RegisterForms";
+import Link from "next/link";
 
 export default function Login() {
   const [isRegister, setIsRegister] = useState(false)
@@ -89,7 +90,9 @@ export default function Login() {
               </Button>
             </Form>
             
-            <Button className="my-2" onClick={handleSubscriberModal}>Quero Ser Assinante</Button>
+            <Link href={'/register/subscriber'}>
+              <Button className="my-2">Quero Ser Assinante</Button>
+            </Link>
           </Col>
 
           <Col>
@@ -117,7 +120,11 @@ export default function Login() {
               </Button>
             </Form>
 
-            <Button className="my-2" onClick={handleClubProviderModal}>Quero Criar Um Clube</Button>
+            <Link href={'/register/subscriber'}>
+              <Button className="my-2">
+                Quero Criar Um Clube
+              </Button>
+            </Link>
           </Col>
         </Row>
       </Container>

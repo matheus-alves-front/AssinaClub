@@ -7,7 +7,7 @@ import {
   FloatingLabel
 } from 'react-bootstrap';
 import axios from 'axios'
-
+import { useRouter } from 'next/router';
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
@@ -34,7 +34,7 @@ export function RegisterFormSubscriber() {
       "password": passwordSubscriber.value
     }
 
-    axios.post('api/subscribers', data).then(response => console.log("response", response))
+    axios.post('/api/subscribers', data).then(response => console.log("response", response))
   }
 
   return (
@@ -99,6 +99,8 @@ export function RegisterFormSubscriber() {
 export function RegisterFormClubProvider() {
   const [typeOfPerson, setTypeOfPersons] = useState("CNPJ")
 
+  const router = useRouter()
+
   function whichTypeOfPerson(e: ChangeEvent<HTMLInputElement>) {
     const typeOfPersons = {
       cpf: "CPF",
@@ -139,13 +141,14 @@ export function RegisterFormClubProvider() {
       "description": clubProviderDescription.value
     }
 
-    axios.post('api/club_providers', data).then(response => console.log("response", response))
+    axios.post('/api/club_providers', data).then(response => router.push(`/register/products/${response.data.data.id}`))
   }
 
   return (
     <Form 
         name="formClubProvider" 
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
+        className="py-5 px-3"
       >
         <Row className='mb-1'>
           <Col>
@@ -232,7 +235,7 @@ export function RegisterFormClubProvider() {
           <Form.Check type="checkbox" label="Concordo com os Tesmos de Serviço" />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button className='w-100 py-2 mt-3' variant="primary" type="submit">
           Registrar
         </Button>
       </Form>
