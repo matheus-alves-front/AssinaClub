@@ -120,7 +120,7 @@ export default function Login() {
               </Button>
             </Form>
 
-            <Link href={'/register/subscriber'}>
+            <Link href={'/register/club_provider'}>
               <Button className="my-2">
                 Quero Criar Um Clube
               </Button>
