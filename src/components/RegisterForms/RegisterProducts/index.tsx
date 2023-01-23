@@ -2,14 +2,18 @@ import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { Button, Col, Form, Row, Toast, ToastContainer } from "react-bootstrap";
 import { Product } from "../../../@types/ProductTypes";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-type clubProviderId = {
-  clubProviderId: string | string[] | undefined
-}
-
-export function RegisterFormProducts({clubProviderId}: clubProviderId) {
+export function RegisterFormProducts() {
   const [isProductRegistered, setIsProductRegistered] = useState(false)
   const [productRegistered, setProductRegistered] = useState<Product>()
+
+  const router = useRouter()
+
+  const {clubProviderId} = router.query
+
+  console.log(clubProviderId)
 
   function alertProductRegistered() {
     setIsProductRegistered(true)
@@ -18,7 +22,7 @@ export function RegisterFormProducts({clubProviderId}: clubProviderId) {
       setIsProductRegistered(false)
     }, 5000)
   }
-  
+
   function RegisterProducts(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
     event.preventDefault()
 
@@ -83,6 +87,9 @@ export function RegisterFormProducts({clubProviderId}: clubProviderId) {
           </Col>
         </Row>
         <Button type="submit" className="w-100 py-2 mt-4">Registrar Produto</Button>
+        <Link href={`/register/${clubProviderId}/plans`}>
+          <Button variant="success" className="w-100 my-3">Criar Planos</Button>
+        </Link>
       </Form>
       <Toast className="fixed-bottom m-2" show={isProductRegistered} >
         <Toast.Header>

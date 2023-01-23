@@ -30,10 +30,7 @@ export default function RegisterProducts() {
               </div>
             </Col>
             <Col md={8} className="p-2 py-4">
-              <RegisterFormProducts clubProviderId={clubProviderId} />
-              <Link href={`/register/${clubProviderId}/plans`}>
-                <Button variant="success" className="mb-3 ms-3">Criar Planos</Button>
-              </Link>
+              <RegisterFormProducts />
             </Col>
           </Row>
         </Card.Body>
