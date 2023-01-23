@@ -25,7 +25,7 @@ export default function RegisterSubscriber() {
                 <p className="text-white">Insira os dados iniciais para criar seu Clube de Assinaturas</p>
               </div>
             </Col>
-            <Col>
+            <Col md={8}>
               <RegisterFormClubProvider />
             </Col>
           </Row>

@@ -141,7 +141,7 @@ export function RegisterFormClubProvider() {
       "description": clubProviderDescription.value
     }
 
-    axios.post('/api/club_providers', data).then(response => router.push(`/register/products/${response.data.data.id}`))
+    axios.post('/api/club_providers', data).then(response => router.push(`/register/${response.data.data.id}/products`))
   }
 
   return (
