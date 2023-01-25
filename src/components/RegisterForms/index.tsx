@@ -12,7 +12,7 @@ import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
 
-  function RegisterSubscriberSubmit(event: FormEvent<HTMLFormElement>) {
+  async function RegisterSubscriberSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -34,7 +34,7 @@ export function RegisterFormSubscriber() {
       "password": passwordSubscriber.value
     }
 
-    axios.post('/api/subscribers', data).then(response => console.log("response", response))
+    await axios.post('/api/subscribers', data)
   }
 
   return (
@@ -156,83 +156,83 @@ export function RegisterFormClubProvider() {
   }
 
   return (
-    <Form 
+    <Col className="p-3">
+      <Form 
         name="formClubProvider" 
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
-        className="py-5 px-3"
       >
-        <Row className='mb-1'>
-          <Col>
-            <Form.Group>
-              <Form.Label>Nome do Clube</Form.Label>
-              <Form.Control name="clubProviderName" type="text" placeholder="Ex: Clube Ciclistas" />
-            </Form.Group>
-          </Col>
+          <Row className='mb-1'>
+            <Col>
+              <Form.Group>
+                <Form.Label>Nome do Clube</Form.Label>
+                <Form.Control name="clubProviderName" type="text" placeholder="Ex: Clube Ciclistas" />
+              </Form.Group>
+            </Col>
 
-          <Col>
-            <Form.Group>
-              <Form.Label>Nome do Host</Form.Label>
-              <Form.Control name="clubProviderHostName" type="text" placeholder="Digite seu nome..." />
-              <Form.Text className="text-muted">
-                Nome do proprietário do Clube
-              </Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>Nome do Host</Form.Label>
+                <Form.Control name="clubProviderHostName" type="text" placeholder="Digite seu nome..." />
+                <Form.Text className="text-muted">
+                  Nome do proprietário do Clube
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <Form.Group>
-          <FloatingLabel
-            controlId="floatingTextarea"
-            label="Descrição ClubProvider"
-            className="mb-3"
-          >
-            <Form.Control 
-              name="clubProviderDescription"
-              style={{ height: '100px' }} 
-              as="textarea" 
-              placeholder="Leave a comment here" 
-            />
-          </FloatingLabel>
-        </Form.Group>
-
-        <Row>
-          <Col md={2}>
-            <Form.Group>
-              <Form.Check 
-                type="switch"
-                id="custom-switch"
-                onChange={(e) => whichTypeOfPerson(e)}
-                label={typeOfPerson}
-                className="my-1"
+          <Form.Group>
+            <FloatingLabel
+              controlId="floatingTextarea"
+              label="Descrição ClubProvider"
+              className="mb-3"
+            >
+              <Form.Control 
+                name="clubProviderDescription"
+                style={{ height: '100px' }} 
+                as="textarea" 
+                placeholder="Leave a comment here" 
               />
-            </Form.Group>
-          </Col>
+            </FloatingLabel>
+          </Form.Group>
 
-          <Col md={10}>
-            {typeOfPerson === "CPF" 
-            ?
-              <Form.Group className="mb-3">
-                <Form.Control name="clubProviderCpf" type="text" placeholder="CPF" />
+          <Row>
+            <Col md={2}>
+              <Form.Group>
+                <Form.Check 
+                  type="switch"
+                  id="custom-switch"
+                  onChange={(e) => whichTypeOfPerson(e)}
+                  label={typeOfPerson}
+                  className="my-1"
+                />
               </Form.Group>
-            :
+            </Col>
+
+            <Col md={10}>
+              {typeOfPerson === "CPF" 
+              ?
+                <Form.Group className="mb-3">
+                  <Form.Control name="clubProviderCpf" type="text" placeholder="CPF" />
+                </Form.Group>
+              :
+                <Form.Group className="mb-3">
+                  <Form.Control name="clubProviderCnpj" type="text" placeholder="CNPJ" />
+                </Form.Group>
+              }
+            </Col>
+          </Row>
+
+
+          <Row>
+            <Col>
               <Form.Group className="mb-3">
-                <Form.Control name="clubProviderCnpj" type="text" placeholder="CNPJ" />
+                <Form.Label>Email</Form.Label>
+                <Form.Control name="clubProviderEmail" type="email" placeholder="Email" />
+                <Form.Text className="text-muted">
+                  Lembre que Email e senha são suas credenciais de Login
+                </Form.Text>
               </Form.Group>
-            }
-          </Col>
-        </Row>
-
-
-        <Row>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control name="clubProviderEmail" type="email" placeholder="Email" />
-              <Form.Text className="text-muted">
-                Lembre que Email e senha são suas credenciais de Login
-              </Form.Text>
-            </Form.Group>
-          </Col>
+            </Col>
 
           <Col>
             <Form.Group className="mb-3">
@@ -250,5 +250,6 @@ export function RegisterFormClubProvider() {
           Registrar
         </Button>
       </Form>
+    </Col>
   )
 }

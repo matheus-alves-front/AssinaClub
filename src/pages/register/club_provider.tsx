@@ -23,31 +23,36 @@ export default function RegisterSubscriber() {
 
   return (
     <RegisterStepsContext.Provider value={{registerStepsContext, setRegisterStepsContext}}>
-      <Container className={styles.container} >
-        <h1 className="text-center">Local de Registro:</h1> 
+      <Container className={styles.container}>
         <Card className="w-100">
           <Card.Body className="p-0">
             <Row>
-              <Col>
+              <Col md={4}>
                 <div 
-                  className={`${styles.registerInformation} h-100 w-100 p-2 d-flex flex-column text-start`}
+                  className={`${styles.registerInformation} h-100 w-100 p-3 d-flex flex-column text-start`}
                 >
-                  <ProgressBar className="my-5 w-100">
-                    <ProgressBar striped variant="success" now={0} key={1} />
-                    <ProgressBar variant="warning" now={0} key={2} />
-                    <ProgressBar striped variant="danger" now={0} key={3} />
-                  </ProgressBar>
                   <h3 className="text-white my-3">
-                    Passo <Badge bg="primary">{1}</Badge>
+                    Passo <Badge bg="primary">{registerStepsContext.steps}</Badge>
                   </h3>
-                  <p className="text-white">Insira os dados iniciais para criar seu Clube de Assinaturas</p>
+                  {registerStepsContext?.steps === 1 && 
+                    <p className="text-white">Insira os dados iniciais para criar seu Clube de Assinaturas</p>
+                  }
+                  {registerStepsContext?.steps === 2 && 
+                    <p className="text-white">Adicione no mínimo 3 Produtos que seu clube irá fornecer em seus planos</p>
+                  }
+                  {registerStepsContext?.steps === 3 && 
+                    <p className="text-white">Crie seus planos e em seguida adicione os produtos aos seus planos</p>
+                  }
+                  <ProgressBar className="mb-3 mt-auto w-100">
+                    <ProgressBar striped variant="success" now={registerStepsContext?.steps > 1 ? 33 : 0} key={1} />
+                    <ProgressBar variant="warning" now={registerStepsContext?.steps > 2 ? 33 : 0} key={2} />
+                    <ProgressBar striped variant="danger" now={registerStepsContext?.steps > 3 ? 33 : 0} key={3} />
+                  </ProgressBar>
                 </div>
               </Col>
-              <Col md={8}>
-                  {registerStepsContext?.steps === 1 && <RegisterFormClubProvider />}
-                  {registerStepsContext?.steps === 2 && <RegisterFormProducts />}
-                  {registerStepsContext?.steps === 3 && <RegisterFormPlans />}
-              </Col>
+              {registerStepsContext?.steps === 1 && <RegisterFormClubProvider />}
+              {registerStepsContext?.steps === 2 && <RegisterFormProducts />}
+              {registerStepsContext?.steps === 3 && <RegisterFormPlans />}
             </Row>
           </Card.Body>
         </Card>

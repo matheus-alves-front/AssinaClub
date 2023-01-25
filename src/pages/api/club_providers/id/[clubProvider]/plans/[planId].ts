@@ -6,7 +6,7 @@ import { PlansType, Plan } from '../../../../../../@types/PlansTypes'
 import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 import { getPlan } from '../../../../../../prisma/plans'
 import { createProductToPlanRelation, removeProductToPlanRelation } from '../../../../../../prisma/plansProductRelation'
-import { getProducts } from '../../../../../../prisma/products'
+import { getProduct, getProducts } from '../../../../../../prisma/products'
 
 const prisma = new PrismaClient()
 
@@ -49,21 +49,26 @@ export default async function handlePlansOfClubProviders(
     const productIdString = String(req.body.productId)
 
     if (productId) {
-      const products = await getProducts(clubProviderId)
-      const planName = products.filter(product => product.id === productIdString)[0].name
+      const product = await getProduct(productIdString) 
+
+      if (!product) {
+        return res.status(404).json({
+          message: `Product not found`,
+        })
+      }
 
       if (removeProduct) {
         removeProductToPlanRelation(productIdString, planId)
 
         return res.status(201).json({
-          message: `Product Removed from Plan ${planName}`,
+          message: `Product Removed from Plan ${product?.name}`,
         })
       }
 
       createProductToPlanRelation(productIdString, planId)
 
       return res.status(201).json({
-        message: `Product Added to Plan ${planName}`,
+        message: `Product Added to Plan ${product?.name}`,
       })
     }
 
