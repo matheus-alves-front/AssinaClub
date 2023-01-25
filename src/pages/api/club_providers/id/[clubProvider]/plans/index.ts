@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { PlansType, Plan } from '../../../../../../@types/PlansTypes'
-import { ClubProviderExists } from '../../../../../../prisma/adminsClubProviders'
+import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 import { getPlans } from '../../../../../../prisma/plans'
 
 const prisma = new PrismaClient()
@@ -17,13 +17,9 @@ export default async function handlePlansOfClubProviders(
 
     await prisma.$connect()
 
-    const isClubProviderExists = await ClubProviderExists(clubProviderId)
-
-    if (!isClubProviderExists) {
-      return res.status(401).json({
-        message: "Club Provider Don't exists"
-      })
-    }
+    if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
+      message: "Provider not found!"
+    })
 
     if (method === "GET") {
         const plans = await getPlans(clubProviderId)
