@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import {
   Row,
   Col, 
@@ -7,7 +7,7 @@ import {
   FloatingLabel
 } from 'react-bootstrap';
 import axios from 'axios'
-import { useRouter } from 'next/router';
+import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
@@ -98,8 +98,11 @@ export function RegisterFormSubscriber() {
 
 export function RegisterFormClubProvider() {
   const [typeOfPerson, setTypeOfPersons] = useState("CNPJ")
-
-  const router = useRouter()
+  
+  const { 
+    registerStepsContext,
+    setRegisterStepsContext
+  }: any = useContext(RegisterStepsContext)
 
   function whichTypeOfPerson(e: ChangeEvent<HTMLInputElement>) {
     const typeOfPersons = {
@@ -116,7 +119,7 @@ export function RegisterFormClubProvider() {
     setTypeOfPersons(typeOfPersons.cpf)
   }
 
-  function RegisterClubProviderSubmit(event: FormEvent<HTMLFormElement>) {
+  async function RegisterClubProviderSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -141,7 +144,15 @@ export function RegisterFormClubProvider() {
       "description": clubProviderDescription.value
     }
 
-    axios.post('/api/club_providers', data).then(response => router.push(`/register/${response.data.data.id}/products`))
+    const postClubProvider = await axios.post('/api/club_providers', data)
+
+    const clubProviderData = postClubProvider.data.data
+
+    setRegisterStepsContext({
+      ...registerStepsContext,
+      steps: 2,
+      data: clubProviderData
+    })
   }
 
   return (

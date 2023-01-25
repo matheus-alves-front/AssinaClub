@@ -1,19 +1,19 @@
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { Button, Col, Form, Row, Toast, ToastContainer } from "react-bootstrap";
+import { FormEvent, useContext, useState } from "react";
+import { Button, Col, Form, Row, Toast } from "react-bootstrap";
 import { Product } from "../../../@types/ProductTypes";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext";
 
 export function RegisterFormProducts() {
   const [isProductRegistered, setIsProductRegistered] = useState(false)
   const [productRegistered, setProductRegistered] = useState<Product>()
 
-  const router = useRouter()
+  const { 
+    registerStepsContext,
+    setRegisterStepsContext
+  }: any = useContext(RegisterStepsContext)
 
-  const {clubProviderId} = router.query
-
-  console.log(clubProviderId)
+  const clubProviderId = registerStepsContext?.data.id 
 
   function alertProductRegistered() {
     setIsProductRegistered(true)
@@ -23,7 +23,14 @@ export function RegisterFormProducts() {
     }, 5000)
   }
 
-  function RegisterProducts(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
+  function goToNextStepRegister() {
+    setRegisterStepsContext({
+      ...registerStepsContext,
+      steps: 3
+    })
+  }
+
+  async function RegisterProducts(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -42,10 +49,18 @@ export function RegisterFormProducts() {
       "value": Number(productValue.value)
     }
 
-    axios.post(`/api/club_providers/id/${clubProviderId}/products`, data).then(response => {
-      alertProductRegistered()
-      setProductRegistered(response.data.data)
-      form.reset()
+    const postProduct = await axios.post(`/api/club_providers/id/${clubProviderId}/products`, data)
+
+    form.reset()
+    
+    const products = postProduct.data.data
+
+    setProductRegistered(products)
+    alertProductRegistered()
+
+    setRegisterStepsContext({
+      ...registerStepsContext,
+      products: [...registerStepsContext.products, products]
     })
   }
 
@@ -87,9 +102,13 @@ export function RegisterFormProducts() {
           </Col>
         </Row>
         <Button type="submit" className="w-100 py-2 mt-4">Registrar Produto</Button>
-        <Link href={`/register/${clubProviderId}/plans`}>
-          <Button variant="success" className="w-100 my-3">Criar Planos</Button>
-        </Link>
+        <Button 
+          variant="success" 
+          className="w-100 my-3"
+          onClick={() => goToNextStepRegister()}
+        >
+          Criar Planos
+        </Button>
       </Form>
       <Toast className="fixed-bottom m-2" show={isProductRegistered} >
         <Toast.Header>
