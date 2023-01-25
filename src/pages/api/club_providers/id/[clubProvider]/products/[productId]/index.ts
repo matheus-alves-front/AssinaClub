@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { ProductType, Product } from '../../../../../../@types/ProductTypes'
-import { getProduct } from '../../../../../../prisma/products'
-import { getClubProvider } from '../../../../../../prisma/clubProviders'
+import { ProductType, Product } from '../../../../../../../@types/ProductTypes'
+import { checkIfProductExists, getProduct } from '../../../../../../../prisma/products'
+import { checkIfClubProviderExists } from '../../../../../../../prisma/clubProviders'
 
 const prisma = new PrismaClient()
 
-export default async function updateProduct(
+export default async function handleProduct(
     req: NextApiRequest,
     res: NextApiResponse<ProductType>
 ) {
@@ -15,19 +15,15 @@ export default async function updateProduct(
     const clubProviderId = String(req.query.clubProvider)
     const productId = String(req.query.productId)
 
-    const clubProviderExists = await getClubProvider(clubProviderId)
-
-    if (!clubProviderExists) return res.status(401).json({
-        message: "ClubProvider not valid!"
-    })
-
-    const product = await getProduct(productId)
-
-    if (!product) return res.status(404).json({
-        message: "Product was not found!"
-    })
+    if (!await checkIfClubProviderExists(clubProviderId) || !await checkIfProductExists(productId)) {
+        return res.status(404).json({
+            message: "Product or Provider not found!"
+        })
+    }
 
     if (method === "GET") {
+
+        const product = await getProduct(productId)
 
         return res.status(200).json({
             data: product

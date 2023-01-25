@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { AdminType, Admin } from '../../../../../../@types/AdminsClubProviderTypes'
-import { getAdmins, ClubProviderExists } from '../../../../../../prisma/adminsClubProviders'
+import { getAdmins } from '../../../../../../prisma/adminsClubProviders'
+import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 
 const prisma = new PrismaClient()
 
@@ -11,50 +12,47 @@ export default async function handleAdminsOfClubProviders(
   req: NextApiRequest,
   res: NextApiResponse<AdminType>
 ) {
-    const { method } = req
-    const clubProviderId = String(req.query.clubProvider)
+  const { method } = req
+  const clubProviderId = String(req.query.clubProvider)
 
-    await prisma.$connect()
+  await prisma.$connect()
 
-    const isClubProviderExists = await ClubProviderExists(clubProviderId)
+  if (!await checkIfClubProviderExists(clubProviderId)) {
+    return res.status(404).json({
+      message: "Provider not found!"
+    })
+  }
 
-    if (!isClubProviderExists) {
-      return res.status(401).json({
-        message: "Club Provider Don't exists"
-      })
-    }
+  if (method === "GET") {
+    const admins = await getAdmins(clubProviderId)
 
-    if (method === "GET") {
-        const admins = await getAdmins(clubProviderId)
-    
-        return res.status(200).json({
-            data: admins,
-        })
-    } else if (method === "POST") {
-        const {
-            name, 
-            birthDate,
-            email,
-            password,
-            occupation,
-        }: Admin = req.body
+    return res.status(200).json({
+      data: admins,
+    })
+  } else if (method === "POST") {
+    const {
+      name,
+      birthDate,
+      email,
+      password,
+      occupation,
+    }: Admin = req.body
 
-        const admin = await prisma.admin.create({
-          data: {
-            name,
-            birthDate,
-            email,
-            password,
-            occupation,
-            clubProviderId
-          }
-        });
+    const admin = await prisma.admin.create({
+      data: {
+        name,
+        birthDate,
+        email,
+        password,
+        occupation,
+        clubProviderId
+      }
+    });
 
+    return res.status(201).json({
+      data: admin,
+    })
+  }
 
-        return res.status(201).json({
-            data: admin,
-        })
-    }
-
-    return res.status(404).json({message: 'Route not found.'})
+  return res.status(404).json({ message: 'Route not found.' })
 }
