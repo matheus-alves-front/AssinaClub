@@ -9,7 +9,7 @@ import { checkIfProductExists, getProduct } from '../../../../../../../../prisma
 
 const prisma = new PrismaClient()
 
-export default async function updateProduct(
+export default async function handleOptions(
     req: NextApiRequest,
     res: NextApiResponse<OptionType>
 ) {

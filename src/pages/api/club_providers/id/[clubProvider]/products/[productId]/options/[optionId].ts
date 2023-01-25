@@ -5,11 +5,11 @@ import { Option, OptionType } from '../../../../../../../../@types/OptionTypes'
 
 import { checkIfClubProviderExists } from '../../../../../../../../prisma/clubProviders'
 import { getOption } from '../../../../../../../../prisma/options'
-import { checkIfProductExists, getProduct } from '../../../../../../../../prisma/products'
+import { checkIfProductExists } from '../../../../../../../../prisma/products'
 
 const prisma = new PrismaClient()
 
-export default async function updateClubProvider(
+export default async function handleOption(
     req: NextApiRequest,
     res: NextApiResponse<OptionType>
 ) {

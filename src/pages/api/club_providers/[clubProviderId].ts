@@ -8,7 +8,7 @@ import { removeSubscriberRelationByClubProvider } from '../../../prisma/signatur
 
 const prisma = new PrismaClient()
 
-export default async function updateClubProvider(
+export default async function handleClubProvider(
     req: NextApiRequest,
     res: NextApiResponse<ClubProviderType>
 ) {

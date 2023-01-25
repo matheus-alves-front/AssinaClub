@@ -3,11 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ProductType, Product } from '../../../../../../../@types/ProductTypes'
 import { checkIfProductExists, getProduct } from '../../../../../../../prisma/products'
-import { checkIfClubProviderExists, getClubProvider } from '../../../../../../../prisma/clubProviders'
+import { checkIfClubProviderExists } from '../../../../../../../prisma/clubProviders'
 
 const prisma = new PrismaClient()
 
-export default async function updateProduct(
+export default async function handleProduct(
     req: NextApiRequest,
     res: NextApiResponse<ProductType>
 ) {
