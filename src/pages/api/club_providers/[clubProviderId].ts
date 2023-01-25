@@ -3,17 +3,21 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 
-import { getClubProvider } from '../../../prisma/clubProviders'
+import { checkIfClubProviderExists, getClubProvider } from '../../../prisma/clubProviders'
 import { removeSubscriberRelationByClubProvider } from '../../../prisma/signaturesRelation'
 
 const prisma = new PrismaClient()
 
-export default async function updateClubProvider(
+export default async function handleClubProvider(
     req: NextApiRequest,
     res: NextApiResponse<ClubProviderType>
 ) {
     const { method } = req
     const clubProviderId = String(req.query.clubProviderId)
+
+    if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
+        message: "Provider not found!"
+    })
 
     if (method === "GET") {
         const clubProvider = await getClubProvider(clubProviderId)

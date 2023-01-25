@@ -21,13 +21,3 @@ export async function getAdmin( AdminId: string ) {
 
   return admin
 }
-
-export async function ClubProviderExists(clubProviderId: string) {
-  const clubProviderExists = await prisma.clubProvider.findUnique({
-    where: {
-      id: clubProviderId
-    }
-  })
-
-  return clubProviderExists 
-}
