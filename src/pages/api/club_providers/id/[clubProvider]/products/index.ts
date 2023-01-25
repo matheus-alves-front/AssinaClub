@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ProductType, Product } from '../../../../../../@types/ProductTypes'
 import { getProducts } from '../../../../../../prisma/products'
-import { getClubProvider } from '../../../../../../prisma/clubProviders'
+import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 
 const prisma = new PrismaClient()
 
@@ -17,10 +17,8 @@ export default async function handleProducts(
 
     await prisma.$connect()
 
-    const clubProviderExists = await getClubProvider(clubProviderId)
-
-    if (!clubProviderExists) return res.status(401).json({
-        message: "ClubProvider not valid!"
+    if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
+        message: "Provider not found!"
     })
 
     if (method === "GET") {
@@ -54,7 +52,20 @@ export default async function handleProducts(
         })
     }
 
-    return res.status(404).json({ 
-        message: 'Route not found.' 
+    else if (method === "DELETE") {
+
+        await prisma.product.deleteMany({
+            where: {
+                clubProviderId
+            }
+        })
+
+        return res.status(200).json({
+            message: "Products deleted with sucess!"
+        })
+    }
+
+    return res.status(404).json({
+        message: 'Route not found.'
     })
-}
+} 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { NextApiResponse } from 'next'
 
 const prisma = new PrismaClient()
 
@@ -20,4 +21,12 @@ export async function getProduct(ProductId: string) {
     })     
 
     return product
+}
+
+export async function checkIfProductExists(ProductId: string) {
+    const product = await getProduct(ProductId)    
+
+    if (!product) return false
+
+    return true
 }

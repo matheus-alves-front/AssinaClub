@@ -57,9 +57,7 @@ model Product {
   description String
   sku String
   value Float
-  // image
-  // video
-  additionalOptions Option[]
+  additionalOptions String[] @db.ObjectId
   memberOfPlans Plan[] @relation(fields: [plansId], references: [id])
   plansId String[] @db.ObjectId
   clubProviderProduct ClubProvider? @relation(fields: [clubProviderId], references: [id])
@@ -69,8 +67,7 @@ model Product {
 model Option {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   title String
-  description String  
-  productOption Product? @relation(fields: [productId], references: [id])
+  options String[]  
   productId String @db.ObjectId
 }
 
