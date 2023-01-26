@@ -1,4 +1,5 @@
 export type Plan = {
+  id: string | string[]
   title: string
   description: string
   price: number
