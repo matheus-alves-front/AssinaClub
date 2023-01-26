@@ -97,7 +97,8 @@ export function RegisterFormSubscriber() {
 }
 
 export function RegisterFormClubProvider() {
-  const [typeOfPerson, setTypeOfPersons] = useState("CNPJ")
+  const [typeOfPerson, setTypeOfPersons] = useState("CPF")
+  const [isCheckedInput, setIsCheckedInput] = useState(false)
   
   const { 
     registerStepsContext,
@@ -134,6 +135,24 @@ export function RegisterFormClubProvider() {
       clubProviderDescription
     } = form
 
+    if (
+      !clubProviderName.value || 
+      !clubProviderHostName.value ||
+      !clubProviderEmail.value || 
+      !clubProviderPassword.value || 
+      !clubProviderDescription.value 
+      ) {
+      alert('Campos Faltando')
+
+      return
+    }
+
+    if (typeOfPerson === "CPF" && !clubProviderCpf.value || typeOfPerson === "CNPJ" && !clubProviderCnpj.value) {
+      alert('Adicione um CNPJ ou um CPF para cadastrar')
+
+      return
+    }
+
     const data = {
       "clubName": clubProviderName.value,
       "hostName": clubProviderHostName.value,
@@ -156,9 +175,10 @@ export function RegisterFormClubProvider() {
   }
 
   return (
-    <Col className="p-3">
+    <>
       <Form 
         name="formClubProvider" 
+        className='p-1 py-3'
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
       >
           <Row className='mb-1'>
@@ -243,13 +263,13 @@ export function RegisterFormClubProvider() {
         </Row>
 
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Concordo com os Tesmos de Serviço" />
+          <Form.Check onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" label="Concordo com os Tesmos de Serviço" />
         </Form.Group>
 
-        <Button className='w-100 py-2 mt-3' variant="primary" type="submit">
+        <Button className='w-100 py-2 mt-3' variant="primary" type="submit" disabled={!isCheckedInput}>
           Registrar
         </Button>
       </Form>
-    </Col>
+    </>
   )
 }

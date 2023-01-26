@@ -51,6 +51,12 @@ export function RegisterFormProducts() {
       productValue
     } = form
 
+    if (!productName.value || !productDescription.value || !productSku.value || !productValue.value) {
+      alert('Campo Faltando')
+
+      return
+    }
+
     const data = {
       "name": productName.value,
       "description": productDescription.value,
@@ -92,71 +98,75 @@ export function RegisterFormProducts() {
 
   return (
     <>
-      <Col className="p-3" md={8}>
-        <Form onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label>Nome do Produto</Form.Label>
-                <Form.Control type="text" name="productName" />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label>Descrição</Form.Label>
-                <Form.Control type="text" name="productDescription" />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Label>Sku:</Form.Label>
-                <Form.Control type="text" name="productSku" />
-                <Form.Text className="text-muted">
-                  sku é o identificador único do produto
-                </Form.Text>
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group>
-                <Form.Label>Valor:</Form.Label>
-                <Form.Control type="number" min="0.00" max="10000.00" name="productValue" />
-                <Form.Text className="text-muted">
-                  O valor é uma média para controle de gastos em seu dashboard
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-          <div className="buttonGroup d-flex justify-content-between flex-row">
-            <Button type="submit" className="w-50 p-2 m-1 mt-4">Registrar Produto</Button>
+      <Form className="p-2" onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
+        <Row className="my-1">
+          <Col className="my-1" md={6}>
+            <Form.Group>
+              <Form.Label>Nome do Produto</Form.Label>
+              <Form.Control type="text" name="productName" />
+            </Form.Group>
+          </Col>
+          <Col className="my-1" md={6}>
+            <Form.Group>
+              <Form.Label>Descrição</Form.Label>
+              <Form.Control type="text" name="productDescription" />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="my-1">
+          <Col className="my-1" md={6}>
+            <Form.Group>
+              <Form.Label>Sku:</Form.Label>
+              <Form.Control type="text" name="productSku" />
+              <Form.Text className="text-muted">
+                sku é o identificador único do produto
+              </Form.Text>
+            </Form.Group>
+          </Col>
+          <Col className="my-1" md={6}>
+            <Form.Group>
+              <Form.Label>Valor:</Form.Label>
+              <Form.Control type="number" min="0.00" max="10000.00" name="productValue" />
+              <Form.Text className="text-muted">
+                O valor é uma média para controle de gastos em seu dashboard
+              </Form.Text>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="my-1">
+          <Col md={5}>
+            <Button type="submit" className="w-100 p-2 mt-4">Registrar Produto</Button>
+          </Col>
+          <Col md={7}>
             <Button 
               variant="warning" 
-              className="p-2 m-1 mt-4"
+              className="w-100 p-2 mt-4"
               onClick={() => handleModal()}
             >Editar Produtos Cadastrados</Button>
+          </Col>
+          <Col xs={12}>
             <Button 
               variant="success" 
-              className="p-2 m-1 mt-4"
+              className="w-100 p-2 mt-4"
               onClick={() => goToNextStepRegister()}
               disabled={registerStepsContext.products.length < 3 ? true : false}
             >
               Criar Planos
             </Button>
-          </div>
-        </Form>
-        <Toast className="fixed-bottom m-2" show={isProductRegistered} >
-          <Toast.Header>
-            <strong className="me-auto">Produto Adicionado</strong>
-            <small>sku: {productRegistered?.sku}</small>
-          </Toast.Header>
-          <Toast.Body>
-            <p>nome: {productRegistered?.name}</p>
-            <p>valor: {productRegistered?.value}</p>
-            <p>descrição: {productRegistered?.description}</p>
-          </Toast.Body>
-        </Toast>
-      </Col>
+          </Col>
+        </Row>
+      </Form>
+      <Toast className="fixed-bottom m-2" show={isProductRegistered} >
+        <Toast.Header>
+          <strong className="me-auto">Produto Adicionado</strong>
+          <small>sku: {productRegistered?.sku}</small>
+        </Toast.Header>
+        <Toast.Body>
+          <p>nome: {productRegistered?.name}</p>
+          <p>valor: {productRegistered?.value}</p>
+          <p>descrição: {productRegistered?.description}</p>
+        </Toast.Body>
+      </Toast>
       <Modal show={isEditModal} onHide={handleModal}>
         <Modal.Header closeButton>
           <Modal.Title>Editar Produtos: </Modal.Title>

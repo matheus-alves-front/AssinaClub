@@ -1,6 +1,6 @@
 import '../styles/globals.css'
-import type { AppProps } from 'next/app'
 import '../styles/theme.scss'
+import type { AppProps } from 'next/app'
 import { Router } from 'next/router'
 import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'

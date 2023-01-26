@@ -6,6 +6,7 @@ import { Plan } from "../../../@types/PlansTypes"
 import { BsFillArrowRightSquareFill, BsFillTrashFill } from "react-icons/bs"
 import { Product } from "../../../@types/ProductTypes"
 import { getPlans } from "../../../prisma/plans"
+import Link from "next/link"
 
 export default function RegisterFormPlans() {
   const { 
@@ -15,9 +16,11 @@ export default function RegisterFormPlans() {
   const clubProviderId = registerStepsContext?.data.id 
 
   const [isAddProduct, setIsAddProduct] = useState(false)
+  const [modalPlanIndex, setModalPlanIndex] = useState(0)
   
-  function handleModal() {
+  function handleModal(index: number) {
     setIsAddProduct(!isAddProduct)
+    setModalPlanIndex(index)
   }
 
   async function RegisterPlans(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
@@ -31,6 +34,12 @@ export default function RegisterFormPlans() {
       PlanPrice,
       PlanFrequency
     } = form
+
+    if(!PlanTitle.value || !PlanDescription.value || !PlanPrice.value || !PlanFrequency.value) {
+      alert("Campos Faltando")
+
+      return
+    }
 
     const data = {
       "title": PlanTitle.value,
@@ -54,6 +63,22 @@ export default function RegisterFormPlans() {
 
   }
 
+  async function RemovePlans(clubProviderId: string | string[] | undefined, planId: string | string[] | undefined, index: number) {
+    try {
+      await axios.delete(`/api/club_providers/id/${clubProviderId}/plans/${planId}`)
+      const plansUpdated = [...registerStepsContext.plans]
+      plansUpdated.splice(index, 1)
+      
+      setRegisterStepsContext({
+        ...registerStepsContext,
+        plans: plansUpdated
+      })
+    }
+    catch(err) {
+      console.log(err)
+    }
+  }
+
   async function AddProductToPlan(planId: string | string[], productId: string | string[], index: number) {
     const addProductToPlan = {
       "productId": productId
@@ -71,6 +96,7 @@ export default function RegisterFormPlans() {
 
     setRegisterStepsContext({
       ...registerStepsContext,
+      steps: 4,
       plans: plansUpdated
     })
   }
@@ -99,8 +125,8 @@ export default function RegisterFormPlans() {
   }
   
   return(
-    <>
-      <Col className="p-3">
+    <Row>
+      <Col className="my-2" xxl={6}>
         <Form onSubmit={(e) => RegisterPlans(e, clubProviderId)}>
           <Form.Group className="mb-2">
             <Form.Label>Nome do Plano</Form.Label>
@@ -127,56 +153,112 @@ export default function RegisterFormPlans() {
               </Form.Group>
             </Col>
           </Row>
-          <Button variant="success" className="w-100 mt-2" type="submit">Criar Plano</Button>
+          <Row>
+            <Col xs={8}>
+              <Button 
+                variant="primary" 
+                className="w-100" 
+                type="submit"
+              >
+                Criar Plano
+              </Button>
+            </Col>
+            <Col>
+              <Link href={'/login'}>
+                <Button
+                  variant="success"
+                  className="w-100 text-white"
+                  disabled={registerStepsContext?.plans[0] && !registerStepsContext?.plans[0].productId.length ? true : false}
+                >
+                  Ir para Seu ambiente
+                </Button>
+              </Link>
+            </Col>
+
+          </Row>
         </Form>
       </Col>
-      <Col>
+      <Col xxl={6}>
+        <section className="d-block w-100" style={{overflowY: 'auto', overflowX: 'hidden', maxHeight: '75vh'}}>
+        {!registerStepsContext.plans.length && (
+          <Card className="p-2 my-2">
+            <Card.Text>Não existem Planos</Card.Text>
+          </Card>
+        )}
         {registerStepsContext.plans.map((plan: Plan, index: number) => (
-          <section key={index}>
-            <Card className="p-2 m-2">
+            <Card className="p-2 my-2" key={index}>
               <Card.Title>{plan.title}</Card.Title>
               <Card.Subtitle>Preço: R${plan.price}</Card.Subtitle>
-              <Button onClick={() => handleModal()} variant="primary">Adicionar Produtos Ao Plano</Button>
+              <Card.Body className="p-1">
+                <Card.Text className="mb-0">De {plan.deliveryFrequency} em {plan.deliveryFrequency} meses</Card.Text>
+                <Card.Text>
+                  <strong>Descrição</strong>
+                  {plan.description}
+                </Card.Text>
+              </Card.Body>
+              <Card.Footer className="border-0 bg-transparent p-0 d-flex justify-content-between">
+                <Button 
+                  onClick={() => handleModal(index)} 
+                  variant="info"
+                  className="text-white"
+                >
+                  Adicionar Produtos Ao Plano
+                </Button>
+                <Button
+                  className="rounded-pill"
+                  variant="danger"
+                  onClick={() => RemovePlans(clubProviderId, plan.id, index)}
+                >
+                  <BsFillTrashFill
+                    fontSize={20} 
+                    cursor={'pointer'}
+                    className=""
+                    />
+                </Button>
+              </Card.Footer>
+              {modalPlanIndex == index ?
+                <Modal show={isAddProduct} onHide={() => handleModal(index)} key={index}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Editar Produtos ao Plano {plan.title} </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
+                    {registerStepsContext.products.map((product: Product, indexProduct: number) => {
+                      return (
+                        <Card className="my-1 p-2 position-relative" key={indexProduct}>
+                          <Card.Title>{product.name}</Card.Title>
+                          <Card.Subtitle>
+                            {product.description}
+                          </Card.Subtitle>
+                          <span>Valor: R${product.value}</span>
+
+                          
+                          
+                          {!plan.productId.includes(String(product.id)) ? 
+                            <BsFillArrowRightSquareFill
+                              fontSize={40} 
+                              cursor={'pointer'}
+                              onClick={() => AddProductToPlan(plan.id, product.id, index)}
+                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
+                            />
+                          :
+                            <BsFillTrashFill
+                              fontSize={40} 
+                              cursor={'pointer'}
+                              onClick={() => RemoveProductToPlan(plan.id, product.id, index)}
+                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
+                              />
+                          }
+                        </Card>
+                      )
+                    })}
+                  </Modal.Body>
+                </Modal>
+              : ''}
             </Card>
-            <Modal show={isAddProduct} onHide={handleModal}>
-              <Modal.Header closeButton>
-                <Modal.Title>Editar Produtos: </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
-                {registerStepsContext.products.map((product: Product, indexProduct: number) => {
-                  return (
-                    <Card className="my-1 p-2 position-relative" key={indexProduct}>
-                      <Card.Title>{product.name}</Card.Title>
-                      <Card.Subtitle>
-                        {product.description}
-                      </Card.Subtitle>
-                      <span>Valor: R${product.value}</span>
-                      
-                      {!plan.productId.includes(String(product.id)) ? 
-                        <BsFillArrowRightSquareFill
-                          fontSize={40} 
-                          cursor={'pointer'}
-                          onClick={() => AddProductToPlan(plan.id, product.id, index)}
-                          className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
-                        />
-                       :
-                        <BsFillTrashFill
-                          fontSize={40} 
-                          cursor={'pointer'}
-                          onClick={() => RemoveProductToPlan(plan.id, product.id, index)}
-                          className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
-                          />
-                       }
-                    </Card>
-                  )
-                })}
-              </Modal.Body>
-            </Modal>
-          </section>
         ))}
+        </section> 
       </Col>
-      
-    </>
+    </Row>
   )
 }
