@@ -17,10 +17,6 @@ export default function RegisterSubscriber() {
     plans: []
   })
 
-  useEffect(() => {
-    console.log(registerStepsContext)
-  }, [registerStepsContext])
-
   return (
     <RegisterStepsContext.Provider value={{registerStepsContext, setRegisterStepsContext}}>
       <Container className={styles.container}>
