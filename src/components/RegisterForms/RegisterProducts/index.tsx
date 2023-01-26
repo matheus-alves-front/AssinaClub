@@ -100,16 +100,16 @@ export function RegisterFormProducts() {
     <>
       <Form className="p-2" onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
         <Row className="my-1">
-          <Col className="my-1" md={6}>
+          <Col className="my-1" md={12}>
             <Form.Group>
               <Form.Label>Nome do Produto</Form.Label>
               <Form.Control type="text" name="productName" />
             </Form.Group>
           </Col>
-          <Col className="my-1" md={6}>
+          <Col className="my-1" md={12}>
             <Form.Group>
               <Form.Label>Descrição</Form.Label>
-              <Form.Control type="text" name="productDescription" />
+              <Form.Control as="textarea" name="productDescription" />
             </Form.Group>
           </Col>
         </Row>

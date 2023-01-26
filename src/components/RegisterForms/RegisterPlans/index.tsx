@@ -148,13 +148,13 @@ export default function RegisterFormPlans() {
                 <Form.Label>Frequencia</Form.Label>
                 <Form.Control name="PlanFrequency" type="number" />
                 <Form.Text className="text-muted">
-                  De 2 em 2 meses
+                  De x em x meses
                 </Form.Text>
               </Form.Group>
             </Col>
           </Row>
-          <Row>
-            <Col xs={8}>
+          <Row className="gap-2">
+            <Col md={8} xxl={12}>
               <Button 
                 variant="primary" 
                 className="w-100" 
@@ -164,15 +164,15 @@ export default function RegisterFormPlans() {
               </Button>
             </Col>
             <Col>
-              <Link href={'/login'}>
                 <Button
                   variant="success"
                   className="w-100 text-white"
-                  disabled={registerStepsContext?.plans[0] && !registerStepsContext?.plans[0].productId.length ? true : false}
+                  disabled={registerStepsContext?.plans[0] && registerStepsContext?.plans[0].productId.length < 2 ? true : false}
                 >
+                <Link href={'/login'}>
                   Ir para Seu ambiente
+                </Link>
                 </Button>
-              </Link>
             </Col>
 
           </Row>

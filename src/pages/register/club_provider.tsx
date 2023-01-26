@@ -39,7 +39,7 @@ export default function RegisterSubscriber() {
                 <p className="text-white">Adicione no mínimo 3 Produtos que seu clube irá fornecer em seus planos</p>
               }
               {registerStepsContext?.steps >= 3 && 
-                <p className="text-white">Crie seus planos e em seguida adicione os produtos aos seus planos</p>
+                <p className="text-white">Crie seus planos e em seguida adicione no minimo 2 produtos aos seus planos</p>
               }
               <ProgressBar className="mb-3 mt-auto w-100">
                 <ProgressBar striped variant="success" now={registerStepsContext?.steps > 1 ? 33 : 0} key={1} />

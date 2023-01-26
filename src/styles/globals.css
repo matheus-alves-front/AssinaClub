@@ -19,3 +19,8 @@
     border-radius: 10px;
     border: 3px double #ffffff;
   }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }

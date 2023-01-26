@@ -182,14 +182,14 @@ export function RegisterFormClubProvider() {
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
       >
           <Row className='mb-1'>
-            <Col>
+            <Col md={6}>
               <Form.Group>
                 <Form.Label>Nome do Clube</Form.Label>
                 <Form.Control name="clubProviderName" type="text" placeholder="Ex: Clube Ciclistas" />
               </Form.Group>
             </Col>
 
-            <Col>
+            <Col md={6}>
               <Form.Group>
                 <Form.Label>Nome do Host</Form.Label>
                 <Form.Control name="clubProviderHostName" type="text" placeholder="Digite seu nome..." />
@@ -244,7 +244,7 @@ export function RegisterFormClubProvider() {
 
 
           <Row>
-            <Col>
+            <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Label>Email</Form.Label>
                 <Form.Control name="clubProviderEmail" type="email" placeholder="Email" />
@@ -254,7 +254,7 @@ export function RegisterFormClubProvider() {
               </Form.Group>
             </Col>
 
-          <Col>
+          <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Senha</Form.Label>
               <Form.Control name="clubProviderPassword" type="password" placeholder="Senha" />
