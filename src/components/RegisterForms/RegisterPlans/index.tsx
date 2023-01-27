@@ -169,7 +169,7 @@ export default function RegisterFormPlans() {
                   className="w-100 text-white"
                   disabled={registerStepsContext?.plans[0] && registerStepsContext?.plans[0].productId.length < 2 ? true : false}
                 >
-                <Link href={'/login'}>
+                <Link href={'/login/club_provider'}>
                   Ir para Seu ambiente
                 </Link>
                 </Button>
