@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function getPlans(ClubProviderId: string ) {
   const plans = await prisma.plan.findMany({

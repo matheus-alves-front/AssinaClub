@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function getOptions(ProductId: string ) {
     const options = await prisma.option.findMany({

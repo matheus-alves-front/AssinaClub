@@ -1,12 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { PlansType, Plan } from '../../../../../../@types/PlansTypes'
 import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 import { getPlans } from '../../../../../../prisma/plans'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../../../../prisma/PrismaClient'
 
 export default async function handlePlansOfClubProviders(
   req: NextApiRequest,

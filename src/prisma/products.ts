@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-import { NextApiResponse } from 'next'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function getProducts(ClubProviderId: string ) {
     const products = await prisma.product.findMany({

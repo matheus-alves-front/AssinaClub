@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function createSubscriberRelation(SubscriberId: string, ClubProviderId: string | undefined) {
     const subscribers = await prisma.subscriber.update({

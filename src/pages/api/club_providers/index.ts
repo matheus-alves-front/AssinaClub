@@ -1,16 +1,12 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ValidationError, ValidationErrorItem } from '@hapi/joi'
-import { PrismaClient } from '@prisma/client'
-import dayjs from 'dayjs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
+import { ValidationErrorItem } from '@hapi/joi';
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 import { getClubProviders } from '../../../prisma/clubProviders'
 
-import { clubProviderRegisterSchema } from "../schemas/clubProviderSchema"
-
-const prisma = new PrismaClient()
+import { prisma } from '../../../prisma/PrismaClient'
+import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
 
 export default async function handleClubProviders(
     req: NextApiRequest,
@@ -46,7 +42,7 @@ export default async function handleClubProviders(
                 cpf,
                 cnpj,
                 password: hashedPassword,
-                creationDate: new Date(dayjs(Date.now()).format('MM/DD/YYYY')),
+                creationDate: new Date(Date.now()),
                 email,
                 description
             }

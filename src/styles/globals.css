@@ -1,3 +1,26 @@
-/* html, body {
-  background-color: #5b5310 !important;
-} */
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #0084ff #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #0084ff;
+    border-radius: 10px;
+    border: 3px double #ffffff;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }

@@ -1,12 +1,10 @@
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 
 import { checkIfClubProviderExists, getClubProvider } from '../../../prisma/clubProviders'
 import { removeSubscriberRelationByClubProvider } from '../../../prisma/signaturesRelation'
-
-const prisma = new PrismaClient()
+import { prisma } from '../../../prisma/PrismaClient'
 
 export default async function handleClubProvider(
     req: NextApiRequest,

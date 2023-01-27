@@ -1,11 +1,10 @@
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ProductType, Product } from '../../../../../../../@types/ProductTypes'
 import { checkIfProductExists, getProduct } from '../../../../../../../prisma/products'
 import { checkIfClubProviderExists } from '../../../../../../../prisma/clubProviders'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../../../../../prisma/PrismaClient'
 
 export default async function handleProduct(
     req: NextApiRequest,
