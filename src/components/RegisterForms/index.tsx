@@ -57,7 +57,7 @@ export function RegisterFormSubscriber() {
       console.log(err)
     }
 
-    router.push('/login')
+    router.push('/login/subscriber')
   }
 
   return (
