@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
@@ -6,7 +5,7 @@ import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 import { getSubscriber } from '../../../prisma/subscribers'
 import { createSubscriberRelation, removeSubscriberRelation } from '../../../prisma/signaturesRelation'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../prisma/PrismaClient'
 
 export default async function updateSubscriber(
     req: NextApiRequest,

@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function createProductToPlanRelation(ProductId: string, PlanId: string | undefined) {
     const product = await prisma.product.update({

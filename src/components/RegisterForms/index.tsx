@@ -8,9 +8,12 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios'
 import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
+import { useRouter } from 'next/router';
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
+
+  const router = useRouter()
 
   async function RegisterSubscriberSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -26,6 +29,19 @@ export function RegisterFormSubscriber() {
       passwordSubscriber,
     } = form
 
+    if (
+      !firstNameSubscriber.value || 
+      !lastNameSubscriber.value || 
+      !cpfSubscriber.value || 
+      !birthDateSubscriber.value || 
+      !emailSubscriber.value || 
+      !passwordSubscriber.value
+    ) {
+      alert('Campos Faltando')
+
+      return
+    }
+
     const data = {
       "name": `${firstNameSubscriber.value} ${lastNameSubscriber.value} `,
       "cpf": cpfSubscriber.value,
@@ -34,22 +50,30 @@ export function RegisterFormSubscriber() {
       "password": passwordSubscriber.value
     }
 
-    await axios.post('/api/subscribers', data)
+    try {
+      await axios.post('/api/subscribers', data)
+    }
+    catch(err) {
+      console.log(err)
+    }
+
+    router.push('/login')
   }
 
   return (
     <Form 
       name="regiterFormSubscriber" 
       onSubmit={(e) => RegisterSubscriberSubmit(e)}
+      className="p-4 py-4"
     >
       <Row>
-        <Col>
+        <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Nome</Form.Label>
             <Form.Control name="firstNameSubscriber" type="text" placeholder="Nome" />
           </Form.Group>
         </Col>
-        <Col>
+        <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Sobrenome</Form.Label>
             <Form.Control name="lastNameSubscriber" type="text" placeholder="Sobrenome" />
@@ -71,13 +95,13 @@ export function RegisterFormSubscriber() {
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control name="emailSubscriber" type="email" placeholder="Email" />
           </Form.Group>
         </Col>
-        <Col>
+        <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Senha</Form.Label>
             <Form.Control name="passwordSubscriber" type="password" placeholder="Senha" />

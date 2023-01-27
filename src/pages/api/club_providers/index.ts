@@ -1,11 +1,9 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 import { getClubProviders } from '../../../prisma/clubProviders'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../prisma/PrismaClient'
 
 export default async function handleClubProviders(
     req: NextApiRequest,

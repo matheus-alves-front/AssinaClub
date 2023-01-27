@@ -1,8 +1,4 @@
-import { NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { ClubProviderType } from '../@types/ClubProviderTypes'
-
-const prisma = new PrismaClient()
+import { prisma } from './PrismaClient'
 
 export async function getClubProviders() {
     const clubProviders = await prisma.clubProvider.findMany()

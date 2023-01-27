@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { Option, OptionType } from '../../../../../../../../@types/OptionTypes'
@@ -7,7 +6,7 @@ import { checkIfClubProviderExists } from '../../../../../../../../prisma/clubPr
 import { getOption } from '../../../../../../../../prisma/options'
 import { checkIfProductExists } from '../../../../../../../../prisma/products'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../../../../../../prisma/PrismaClient'
 
 export default async function handleOption(
     req: NextApiRequest,
