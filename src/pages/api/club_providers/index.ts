@@ -20,7 +20,7 @@ export default async function handleClubProviders(
         const clubProviders = await getClubProviders()
 
         return res.status(200).json({
-            data: clubProviders,
+            data: clubProviders.reverse(),
         })
     } else if (method === "POST") {
         const {

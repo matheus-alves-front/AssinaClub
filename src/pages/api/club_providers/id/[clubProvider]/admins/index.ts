@@ -25,7 +25,7 @@ export default async function handleAdminsOfClubProviders(
     const admins = await getAdmins(clubProviderId)
 
     return res.status(200).json({
-      data: admins,
+      data: admins.reverse(),
     })
   } else if (method === "POST") {
     const {

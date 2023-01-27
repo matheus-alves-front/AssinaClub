@@ -17,7 +17,7 @@ export default async function handleSubscribers(
         const subscribers = await getSubscribers()
     
         return res.status(200).json({
-            data: subscribers,
+            data: subscribers.reverse(),
         })
     } else if (method === "POST") {
         const {

@@ -23,7 +23,7 @@ export default async function handlePlansOfClubProviders(
         const plans = await getPlans(clubProviderId)
     
         return res.status(200).json({
-            data: plans,
+            data: plans.reverse(),
         })
     } else if (method === "POST") {
         const {
