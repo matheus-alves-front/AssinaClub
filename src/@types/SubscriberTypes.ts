@@ -15,5 +15,5 @@ export type Subscriber = {
 
 export type SubscriberType = {
   data?: Subscriber[] | Subscriber | null
-  message?: string
+  message?: string | string[]
 }
