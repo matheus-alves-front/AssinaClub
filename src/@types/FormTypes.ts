@@ -1,9 +1,4 @@
-export type LoginFormTypes = {
-  name: string,
-  elements: {
-    emailSubscriber: string
-    passwordSubscriber: string
-    emailClubProvider: string
-    passwordClubProvider: string
-  }
+export type LoginFormType = {
+  email: string
+  password: string
 }
