@@ -1,13 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { ValidationErrorItem } from '@hapi/joi';
 
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 import { getSubscribers } from '../../../prisma/subscribers'
 
 import { prisma } from '../../../prisma/PrismaClient'
 
+import bcrypt from "bcrypt"
+import { subscriberRegisterSchema } from '../schemas/subscriberSchema'
+
 export default async function handleSubscribers(
-  req: NextApiRequest,
-  res: NextApiResponse<SubscriberType>
+    req: NextApiRequest,
+    res: NextApiResponse<SubscriberType>
 ) {
     const { method } = req
 
@@ -15,33 +19,45 @@ export default async function handleSubscribers(
 
     if (method === "GET") {
         const subscribers = await getSubscribers()
-    
+
         return res.status(200).json({
             data: subscribers.reverse(),
         })
     } else if (method === "POST") {
         const {
-            name, 
+            name,
             cpf,
             birthDate,
             email,
             password
         }: Subscriber = req.body
 
-        const subscriber = await prisma.subscriber.create({
+        const subscriberCreation = {
             data: {
-                name, 
+                name,
                 cpf,
                 birthDate,
                 email,
-                password
+                password: bcrypt.hashSync(password, 10)
             }
-        })
+        }
+
+        const validated = subscriberRegisterSchema.validate(subscriberCreation.data, { abortEarly: false })
+
+        if (validated?.error) {
+            const detailedErros = validated?.error?.details.map((error: ValidationErrorItem) => error.message.replaceAll('\"', ''))
+
+            return res.status(422).json({
+                message: detailedErros
+            })
+        }
+
+        const subscriber = await prisma.subscriber.create(subscriberCreation)
 
         return res.status(201).json({
             data: subscriber,
         })
     }
 
-    return res.status(404).json({message: 'Route not found.'})
+    return res.status(404).json({ message: 'Route not found.' })
 }
