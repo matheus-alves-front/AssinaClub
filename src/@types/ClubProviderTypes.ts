@@ -9,11 +9,10 @@ export type ClubProvider = {
     password: string
     description: string
     subscribers?: string[]
-
     removeSubscriber?: string
 }
 
 export type ClubProviderType = {
     data?: ClubProvider[] | ClubProvider | null
-    message?: string
+    message?: string | string[]
 }

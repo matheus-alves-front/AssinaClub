@@ -23,7 +23,7 @@ model Subscriber {
 
 model ClubProvider {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
-  clubName String
+  clubName String @unique
   hostName String
   cpf String
   cnpj String
