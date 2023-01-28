@@ -15,7 +15,7 @@ model Subscriber {
   name String
   cpf String
   birthDate String
-  email String
+  email String @unique
   password String
   signaturesClubs ClubProvider[] @relation(fields: [clubProviderIds], references: [id])
   clubProviderIds String[] @db.ObjectId
@@ -34,7 +34,7 @@ model ClubProvider {
   cpf String
   cnpj String
   creationDate DateTime @default(now())
-  email String
+  email String @unique
   password String
   description String
   // logo
@@ -44,6 +44,12 @@ model ClubProvider {
   plans Plan[]
   subscribers Subscriber[] @relation(fields: [subscriberIds], references: [id])
   subscriberIds String[] @db.ObjectId
+}
+
+model ClubProviderToken {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  clubProviderId String @unique
+  token String
 }
 
 model Admin {
