@@ -21,6 +21,12 @@ model Subscriber {
   clubProviderIds String[] @db.ObjectId
 }
 
+model SubscriberToken {
+  id String    @id @default(auto()) @map("_id") @db.ObjectId
+  subscriberId String @unique
+  token String
+}
+
 model ClubProvider {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   clubName String @unique
