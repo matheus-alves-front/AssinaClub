@@ -12,9 +12,11 @@ export default function Home() {
       <Button variant="info" className="text-white">
         <Link href={"/login/subscriber"}>Sou Assinante</Link>
       </Button>
-      <Button variant="warning" className="text-white">
-        <Link href={"/login/club_provider"}>Sou Um Clube</Link>
-      </Button>
+      <Link href={"/login/club_provider"}>
+        <Button variant="warning" className="text-white">
+          Sou Um Clube    
+        </Button>
+      </Link>
     </Container>
   )
 }

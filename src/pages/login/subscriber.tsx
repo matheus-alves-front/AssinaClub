@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/router";
 import { 
   Container, 
   Row, 
@@ -10,9 +11,12 @@ import {
 import Link from "next/link";
 
 import styles from '../../styles/pages/login.module.scss'
+import axios from "axios";
 
 export default function Login() {
-  function LoginSubmit(event: FormEvent<HTMLFormElement>) {
+  const router = useRouter()
+
+  async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.target as HTMLFormElement
 
@@ -21,7 +25,29 @@ export default function Login() {
       password,
     } = form
 
-    console.log(email.value, password.value)
+    const data = {
+      "email": email.value,
+      "password": password.value,
+      // "typeOfUser": "subscriber"
+    }
+
+    try {
+      const loginPost = await axios.post('/api/login', data)
+      const { id, token } = loginPost.data.data 
+      
+      localStorage.setItem('login', JSON.stringify({
+        "id": id,
+        "typeOfPerson": "subscriber",
+        "token": token 
+      }))
+
+      console.log(localStorage.getItem('login'))
+
+      router.push('/subscriber/clubs_board')
+    }
+    catch(err: any) {
+      alert(String(err.response.data.message))
+    }
   }
 
   return (

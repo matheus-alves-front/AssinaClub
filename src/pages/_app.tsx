@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import { Router } from 'next/router'
 import { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
+import { Header } from '../components/Header'
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isLoad, setIsLoad] = useState(true)
@@ -17,12 +18,13 @@ export default function App({ Component, pageProps }: AppProps) {
   })
   
   return (
-    <main>
+    <>
+      <Header />
       {isLoad ? 
         <Component {...pageProps} />
         : 
         <Spinner className='position-fixed top-50 start-50' animation="border" />
       }
-    </main>
+    </>
   )
 }
