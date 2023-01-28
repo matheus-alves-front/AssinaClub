@@ -42,7 +42,6 @@ export default async function handleClubProviders(
                 cpf,
                 cnpj,
                 password: hashedPassword,
-                creationDate: new Date(Date.now()),
                 email,
                 description
             }
