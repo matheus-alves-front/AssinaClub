@@ -42,7 +42,6 @@ export default async function handleClubProviders(
                 cpf,
                 cnpj,
                 password: hashedPassword,
-                creationDate: new Date(Date.now()),
                 email,
                 description
             }
@@ -66,6 +65,16 @@ export default async function handleClubProviders(
 
         if (clubNameInUse) return res.status(409).json({
             message: "ClubName already in use"
+        })
+
+        const clubEmailInUse = await prisma.clubProvider.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        if (clubEmailInUse) return res.status(409).json({
+            message: "Email already in use"
         })
 
         const clubProvider = await prisma.clubProvider.create(clubProviderCreation)

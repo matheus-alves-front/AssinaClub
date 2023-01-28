@@ -1,11 +1,13 @@
 export type LoginResponse = {
-    subscriberId: string
+    subscriberId?: string
+    clubProviderId?: string
     token: string
 }
 
 export type LoginRequest = {
     email: string
     password: string
+    typeOfUser: string
 }
 
 export type LoginType = {
