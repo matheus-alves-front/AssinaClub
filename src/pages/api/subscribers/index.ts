@@ -52,6 +52,16 @@ export default async function handleSubscribers(
             })
         }
 
+        const emailInUse = await prisma.subscriber.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        if (emailInUse) return res.status(409).json({
+            message: "Email already in use"
+        })
+
         const subscriber = await prisma.subscriber.create(subscriberCreation)
 
         return res.status(201).json({

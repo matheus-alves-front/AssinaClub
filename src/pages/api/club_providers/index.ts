@@ -67,6 +67,16 @@ export default async function handleClubProviders(
             message: "ClubName already in use"
         })
 
+        const clubEmailInUse = await prisma.clubProvider.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        if (clubEmailInUse) return res.status(409).json({
+            message: "Email already in use"
+        })
+
         const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
 
         return res.status(201).json({
