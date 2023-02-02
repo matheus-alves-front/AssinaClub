@@ -22,7 +22,7 @@ export default function Login() {
   } = useContext(AuthContext)
 
   if (isAuthenticated) {
-    router.push('/subscriber/clubs_board')
+    router.push('/subscriber/dashboard')
   }
 
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
