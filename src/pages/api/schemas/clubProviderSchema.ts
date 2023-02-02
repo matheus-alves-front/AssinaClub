@@ -16,6 +16,6 @@ export const clubProviderRegisterSchema = Joi.object<ClubProviderRegisterSchema>
     cpf: Joi.string().length(11).allow(""),
     cnpj: Joi.string().length(14).allow(""),
     email: Joi.string().email().required(),
-    password: Joi.string().length(60).required(), // size of bcrypt hash is 60
+    password: Joi.string().min(1).required(), 
     description: Joi.string().min(1).max(250).required(),
 })

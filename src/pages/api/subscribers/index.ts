@@ -8,6 +8,7 @@ import { prisma } from '../../../prisma/PrismaClient'
 
 import bcrypt from "bcrypt"
 import { subscriberRegisterSchema } from '../schemas/subscriberSchema'
+import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
 
 export default async function handleSubscribers(
     req: NextApiRequest,
@@ -32,6 +33,8 @@ export default async function handleSubscribers(
             password
         }: Subscriber = req.body
 
+        if (validateErrorsInSchema(subscriberRegisterSchema, req, res) !== 'ok') return
+
         const subscriberCreation = {
             data: {
                 name,
@@ -40,16 +43,6 @@ export default async function handleSubscribers(
                 email,
                 password: bcrypt.hashSync(password, 10)
             }
-        }
-
-        const validated = subscriberRegisterSchema.validate(subscriberCreation.data, { abortEarly: false })
-
-        if (validated?.error) {
-            const detailedErros = validated?.error?.details.map((error: ValidationErrorItem) => error.message.replaceAll('\"', ''))
-
-            return res.status(422).json({
-                message: detailedErros
-            })
         }
 
         const emailInUse = await prisma.subscriber.findUnique({
