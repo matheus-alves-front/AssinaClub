@@ -50,14 +50,16 @@ export function RegisterFormSubscriber() {
       "password": passwordSubscriber.value
     }
 
+
+    
     try {
       await axios.post('/api/subscribers', data)
+      
+      router.push('/login/subscriber')
     }
-    catch(err) {
-      console.log(err)
+    catch(err: any) {
+      console.log(err.response.data.message)
     }
-
-    router.push('/login/subscriber')
   }
 
   return (
@@ -70,13 +72,25 @@ export function RegisterFormSubscriber() {
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Nome</Form.Label>
-            <Form.Control name="firstNameSubscriber" type="text" placeholder="Nome" />
+            <Form.Control 
+              name="firstNameSubscriber" 
+              type="text" 
+              placeholder="Nome"
+              maxLength={14}
+              minLength={2} 
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Sobrenome</Form.Label>
-            <Form.Control name="lastNameSubscriber" type="text" placeholder="Sobrenome" />
+            <Form.Control 
+              name="lastNameSubscriber" 
+              type="text" 
+              placeholder="Sobrenome" 
+              maxLength={14}
+              minLength={2} 
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -84,7 +98,13 @@ export function RegisterFormSubscriber() {
         <Col>
           <Form.Group className="mb-3">
             <Form.Label>CPF</Form.Label>
-            <Form.Control name="cpfSubscriber" type="text" placeholder="CPF" />
+            <Form.Control 
+              name="cpfSubscriber" 
+              type="text" 
+              placeholder="CPF"
+              maxLength={11}
+              minLength={11}  
+            />
           </Form.Group>
         </Col>
         <Col>
@@ -187,15 +207,19 @@ export function RegisterFormClubProvider() {
       "description": clubProviderDescription.value
     }
 
-    const postClubProvider = await axios.post('/api/club_providers', data)
-
-    const clubProviderData = postClubProvider.data.data
-
-    setRegisterStepsContext({
-      ...registerStepsContext,
-      steps: 2,
-      data: clubProviderData
-    })
+    try {
+      const postClubProvider = await axios.post('/api/club_providers', data)
+      const clubProviderData = postClubProvider.data.data
+    
+      setRegisterStepsContext({
+        ...registerStepsContext,
+        steps: 2,
+        data: clubProviderData
+      })
+    }
+    catch(err: any) {
+      console.log(err.response.data.message)
+    }
   }
 
   return (
@@ -223,7 +247,6 @@ export function RegisterFormClubProvider() {
               </Form.Group>
             </Col>
           </Row>
-
           <Form.Group>
             <FloatingLabel
               controlId="floatingTextarea"
@@ -238,7 +261,6 @@ export function RegisterFormClubProvider() {
               />
             </FloatingLabel>
           </Form.Group>
-
           <Row>
             <Col md={2}>
               <Form.Group>
@@ -251,7 +273,6 @@ export function RegisterFormClubProvider() {
                 />
               </Form.Group>
             </Col>
-
             <Col md={10}>
               {typeOfPerson === "CPF" 
               ?
@@ -265,8 +286,6 @@ export function RegisterFormClubProvider() {
               }
             </Col>
           </Row>
-
-
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
@@ -277,19 +296,16 @@ export function RegisterFormClubProvider() {
                 </Form.Text>
               </Form.Group>
             </Col>
-
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control name="clubProviderPassword" type="password" placeholder="Senha" />
-            </Form.Group>
-          </Col>
+            <Col md={6}>
+              <Form.Group className="mb-3">
+                <Form.Label>Senha</Form.Label>
+                <Form.Control name="clubProviderPassword" type="password" placeholder="Senha" />
+              </Form.Group>
+            </Col>
         </Row>
-
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
           <Form.Check onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" label="Concordo com os Tesmos de Serviço" />
         </Form.Group>
-
         <Button className='w-100 py-2 mt-3' variant="primary" type="submit" disabled={!isCheckedInput}>
           Registrar
         </Button>

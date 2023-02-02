@@ -24,3 +24,8 @@
     text-decoration: none !important;
     color: inherit !important;
   }
+
+  button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
