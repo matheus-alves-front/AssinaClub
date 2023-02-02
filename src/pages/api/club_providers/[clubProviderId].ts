@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcrypt'
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
 
-import { checkIfClubProviderExists, getClubProvider } from '../../../prisma/clubProviders'
+import { checkIfClubProviderExists, getClubProvider, validateClubProviderConflict } from '../../../prisma/clubProviders'
 import { removeSubscriberRelationByClubProvider } from '../../../prisma/signaturesRelation'
 import { prisma } from '../../../prisma/PrismaClient'
+import { deleteAllClubProviderAdmins } from '../../../prisma/adminsClubProviders'
 
 export default async function handleClubProvider(
     req: NextApiRequest,
@@ -36,6 +38,12 @@ export default async function handleClubProvider(
             removeSubscriber
         }: ClubProvider = req.body
 
+        if (await validateClubProviderConflict(clubName, email, res) !== 'ok') return
+
+        let hashedPassword
+
+        if (password) hashedPassword = bcrypt.hashSync(password, 10)
+
         const clubProvider = await prisma.clubProvider.update({
             where: { id: clubProviderId },
             data: {
@@ -44,13 +52,13 @@ export default async function handleClubProvider(
                 cpf,
                 cnpj,
                 email,
-                password,
+                password: hashedPassword,
                 description
             }
         })
 
         if (removeSubscriber) {
-            removeSubscriberRelationByClubProvider(clubProviderId ,removeSubscriber)
+            removeSubscriberRelationByClubProvider(clubProviderId, removeSubscriber)
 
             return res.status(201).json({
                 message: "Subscriber Remove Success"
@@ -64,12 +72,18 @@ export default async function handleClubProvider(
 
     } else if (method === "DELETE") {
 
-        await prisma.clubProvider.delete({
-            where: { id: clubProviderId }
-        })
-
-        return res.status(201).json({
-            message: "Account Deleted",
-        })
+        if (!(await deleteAllClubProviderAdmins(clubProviderId))) {
+            return res.status(500).json({
+                message: "Error while deleting all admins"
+            })
+        } else {
+            await prisma.clubProvider.delete({
+                where: { id: clubProviderId }
+            })
+    
+            return res.status(201).json({
+                message: "Account Deleted",
+            })
+        }
     }
 }

@@ -1,10 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import bcrypt from 'bcrypt'
+
 import { AdminType, Admin } from '../../../../../../@types/AdminsClubProviderTypes'
-import { getAdmins } from '../../../../../../prisma/adminsClubProviders'
+import { deleteAllClubProviderAdmins, getAdmins } from '../../../../../../prisma/adminsClubProviders'
 import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
 
 import { prisma } from '../../../../../../prisma/PrismaClient'
+import { adminRegisterSchema } from '../../../../schemas/adminSchema'
+import validateErrorsInSchema from '../../../../../../utils/validateErrosInSchema'
 
 export default async function handleAdminsOfClubProviders(
   req: NextApiRequest,
@@ -36,12 +40,26 @@ export default async function handleAdminsOfClubProviders(
       occupation,
     }: Admin = req.body
 
+    if (validateErrorsInSchema(adminRegisterSchema, req, res) !== 'ok') return
+
+    const emailInUse = await prisma.admin.findUnique({
+      where: {
+        email
+      }
+    })
+
+    if (emailInUse) return res.status(409).json({
+      message: 'Email already in use by another admin'
+    })
+
+    const hashedPassword = bcrypt.hashSync(password, 10)
+
     const admin = await prisma.admin.create({
       data: {
         name,
         birthDate,
         email,
-        password,
+        password: hashedPassword,
         occupation,
         clubProviderId
       }
@@ -50,6 +68,19 @@ export default async function handleAdminsOfClubProviders(
     return res.status(201).json({
       data: admin,
     })
+  }
+  else if (method === "DELETE") {
+
+    if( await deleteAllClubProviderAdmins(clubProviderId)) {
+      return res.json({
+        message: "All admins deleted successfully"
+      })
+    } else {
+      return res.status(500).json({
+        message: "Error while deleting all admins"
+      })
+    }
+
   }
 
   return res.status(404).json({ message: 'Route not found.' })

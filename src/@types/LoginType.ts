@@ -1,6 +1,4 @@
 export type LoginResponse = {
-    subscriberId?: string
-    clubProviderId?: string
     token: string
 }
 

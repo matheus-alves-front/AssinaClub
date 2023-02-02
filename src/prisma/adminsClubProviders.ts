@@ -19,3 +19,17 @@ export async function getAdmin( AdminId: string ) {
 
   return admin
 }
+
+export async function deleteAllClubProviderAdmins(clubProviderId: string) {
+   try {
+      await prisma.admin.deleteMany({
+        where: {
+          clubProviderId
+        }
+      })
+    } catch (err) {
+      console.log(err);
+      return false  
+    }
+    return true
+}

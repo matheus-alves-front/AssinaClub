@@ -13,5 +13,5 @@ export const subscriberRegisterSchema = Joi.object<SubscriberRegisterSchema>({
     cpf: Joi.string().length(11),
     birthDate: Joi.date().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().length(60).required(), // size of bcrypt hash is 60
+    password: Joi.string().min(1).required(), 
 })
