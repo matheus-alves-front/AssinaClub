@@ -63,8 +63,8 @@ export function AuthProvider({children}: any) {
   }
 
   async function signOut() {
-    destroyCookie(null, 'AssinaClubLoginToken')
-    destroyCookie(null, 'AssinaClubUserId')
+    destroyCookie(undefined, 'AssinaClubLoginToken')
+    destroyCookie(undefined, 'AssinaClubUserId')
     setUserInformation(null)
 
     router.push(`/login/${typeOfPerson}`)

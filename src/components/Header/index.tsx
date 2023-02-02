@@ -16,7 +16,7 @@ export function Header() {
     signOut
   } = useContext(AuthContext)
 
-  Router.events.on("routeChangeComplete", (url) => {
+  Router.events.on("routeChangeStart", (url) => {
     setIsLoggedIn(isAuthenticated)
   })
 
@@ -52,8 +52,7 @@ export function Header() {
             {isLoggedIn ? 
               (
                 <>
-                  <Link href={'/'}>Home</Link>
-                  <Link href={`/login/${typeOfPerson}`}>Fazer Login</Link>
+                  <Link href={`/${typeOfPerson}/dashboard`}>Ver Perfil</Link>
                   <Link href={`/${typeOfPerson}/clubs_board`}>Ver todos os Clubes</Link>
                   <Button 
                     className="mt-auto" 
@@ -65,7 +64,7 @@ export function Header() {
             : 
               <>
                 <Link href={'/login/subscriber'}>Fazer Login</Link>
-                <Link className="mt-auto" href={'/login/club_provider'}>Sou Administrador de um Clube</Link>
+                <Link className="mt-auto text-warning" href={'/login/club_provider'}>Sou Administrador de um Clube</Link>
               </>
             }
             </Offcanvas.Body>

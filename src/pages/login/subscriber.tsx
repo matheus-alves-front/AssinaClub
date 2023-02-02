@@ -52,7 +52,7 @@ export default function Login() {
       updateTypeOfPerson('subscriber')
       await signIn(cookie)
 
-      router.push('/subscriber/clubs_board')
+      router.push('/subscriber/dashboard')
     }
     catch(err: any) {
       alert(String(err.response.data.message))
