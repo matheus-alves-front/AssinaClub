@@ -1,15 +1,17 @@
 import { createContext, useEffect, useState } from "react";
-import { setCookie, parseCookies } from 'nookies'
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import { Subscriber } from "../@types/SubscriberTypes";
 import { ClubProvider } from "../@types/ClubProviderTypes";
 import axios from "axios";
-import { Router } from "next/router";
+import { Router, useRouter } from "next/router";
 
 type AuthContextType = {
   isAuthenticated: boolean
   signIn: ({token, userId}: signInDataType) => Promise<void>
+  signOut: () => void
   typeOfPerson: string
   updateTypeOfPerson: (type: string) => void
+  userInformation: Subscriber | ClubProvider | null
 }
 
 type signInDataType = {
@@ -20,19 +22,27 @@ type signInDataType = {
 export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({children}: any) {
+  const router = useRouter()
+
   const [typeOfPerson, setTypeOfPerson] = useState('subscriber')
   const [userInformation, setUserInformation] = useState<Subscriber | ClubProvider | null>(null)
   
   let isAuthenticated = !!userInformation 
 
-  Router.events.on('routeChangeStart', () => {
-    isAuthenticated = !!userInformation 
-    console.log('mudou')
-  })
+  useEffect(() => {
+    const { 'AssinaClubUserId': id } = parseCookies()
 
-  function updateTypeOfPerson(type: string) {
-    setTypeOfPerson(type)
-  }
+    if (id && !userInformation) {
+      axios.get(`/api/subscribers/${id}`).then(response => {
+        setUserInformation(response.data.data)
+        isAuthenticated = true
+      })
+    }
+  }, [])
+
+  Router.events.on('routeChangeStart', () => {
+    isAuthenticated = !!userInformation
+  })
 
   async function signIn({token, userId}: signInDataType) {
     setCookie(undefined, 'AssinaClubLoginToken', token, {
@@ -45,8 +55,6 @@ export function AuthProvider({children}: any) {
 
     const { 'AssinaClubUserId': id } = parseCookies()
 
-    console.log(id)
-
     if (id) {
       axios.get(`/api/subscribers/${id}`).then(response => {
         setUserInformation(response.data.data)
@@ -54,17 +62,27 @@ export function AuthProvider({children}: any) {
     }
   }
 
-  useEffect(() => {
-    console.log('userInformation', userInformation)
-  }, [userInformation])
+  async function signOut() {
+    destroyCookie(null, 'AssinaClubLoginToken')
+    destroyCookie(null, 'AssinaClubUserId')
+    setUserInformation(null)
 
+    router.push(`/login/${typeOfPerson}`)
+  }
+
+
+  function updateTypeOfPerson(type: string) {
+    setTypeOfPerson(type)
+  }
 
   return (
     <AuthContext.Provider value={{
       isAuthenticated,
       signIn,
+      signOut,
       typeOfPerson,
-      updateTypeOfPerson
+      updateTypeOfPerson,
+      userInformation
       }}>
       {children}
     </AuthContext.Provider>
