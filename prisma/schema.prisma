@@ -21,12 +21,6 @@ model Subscriber {
   clubProviderIds String[] @db.ObjectId
 }
 
-model SubscriberToken {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  subscriberId String @unique
-  token String
-}
-
 model ClubProvider {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   clubName String @unique
@@ -46,17 +40,11 @@ model ClubProvider {
   subscriberIds String[] @db.ObjectId
 }
 
-model ClubProviderToken {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  clubProviderId String @unique
-  token String
-}
-
 model Admin {
   id String    @id @default(auto()) @map("_id") @db.ObjectId
   name String 
   birthDate String
-  email String
+  email String @unique
   password String
   occupation String
   clubProviderAdmin ClubProvider? @relation(fields: [clubProviderId], references: [id])

@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from "uuid"
+import jwt from "jsonwebtoken"
 import { ValidationErrorItem } from '@hapi/joi';
 
 import { LoginRequest, LoginType } from '../../../@types/LoginType';
 
 import { prisma } from '../../../prisma/PrismaClient';
 import { loginAttemptSchema } from '../schemas/loginSchema';
+import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
 
-export default async function handleClubProviders(
+export default async function handleLogin(
     req: NextApiRequest,
     res: NextApiResponse<LoginType>
 ) {
@@ -24,134 +25,98 @@ export default async function handleClubProviders(
             typeOfUser
         }: LoginRequest = req.body
 
-        const validated = loginAttemptSchema.validate(req.body, { abortEarly: false })   
+        if (validateErrorsInSchema(loginAttemptSchema, req, res) !== 'ok') return
 
-        if (typeOfUser === "subscriber") await loginSubscriber(validated, res, email, password)
-
-        else if (typeOfUser === "clubProvider") await loginClubProvider(validated, res, email, password)
+        else {
+            return login(typeOfUser, res, email, password)
+        }
     }
 }
 
-async function loginSubscriber(validated: any, res: any, email: any, password: any) {
+async function login(
+    typeOfUser: string,
+    res: NextApiResponse<LoginType>,
+    email: string,
+    password: string
+) {
 
     try {
-        if (validated?.error) {
-            const detailedErros = validated?.error?.details.map((error: ValidationErrorItem) => error.message.replaceAll('\"', ''))
+        if (typeOfUser === "subscriber") {
 
-            return res.status(422).json({
-                message: detailedErros
+            const subscriber = await prisma.subscriber.findUnique({
+                where: {
+                    email: email
+                }
             })
+
+            if (!subscriber) return res.status(404).json({ message: "No account found" })
+
+            const hashedPassword = bcrypt.compareSync(password, subscriber.password)
+
+            if (!hashedPassword) return res.status(404).json({ message: "No subscriber found" })
+
+            const token = jwt.sign(
+                { subscriberId: subscriber.id },
+                process.env.SECRET ?? "",
+                { expiresIn: 60 * 60 * 12 } // 12 hours
+            )
+
+            return res.json({ data: { token } })
+
+        } else if (typeOfUser === "clubProvider") {
+
+            const clubProvider = await prisma.clubProvider.findUnique({
+                where: {
+                    email: email
+                }
+            })
+
+            if (!clubProvider) return res.status(404).json({ message: "No account found" })
+
+            const hashedPassword = bcrypt.compareSync(password, clubProvider.password)
+
+            if (!hashedPassword) return res.status(404).json({
+                message: "No user found with this data."
+            })
+
+            const token = jwt.sign(
+                { clubProviderId: clubProvider.id },
+                process.env.SECRET ?? "",
+                { expiresIn: 60 * 60 * 12 } // 12 hours
+            )
+
+            return res.status(200).json({ data: { token } })
+        } else if (typeOfUser === "admin") {
+
+            const admin = await prisma.admin.findUnique({
+                where: {
+                    email: email
+                }
+            })
+
+            if (!admin) return res.status(404).json({ message: "No account found" })
+
+            const hashedPassword = bcrypt.compareSync(password, admin.password)
+
+            if (!hashedPassword) return res.status(404).json({
+                message: "No user found with this data."
+            })
+
+            const token = jwt.sign(
+                { adminId: admin.id },
+                process.env.SECRET ?? "",
+                { expiresIn: 60 * 60 * 12 } // 12 hours
+            )
+
+            return res.status(200).json({ data: { token } })
         }
-        const subscriber = await prisma.subscriber.findUnique({
-            where: {
-                email: email
-            }
-        })
 
-        if(!subscriber) return res.status(404).json({
-            message: "No subscriber found"
-        })
-
-        const hashedPassword = bcrypt.compareSync(password, subscriber.password)
-
-        if (!hashedPassword) return res.status(404).json({
-            message: "No subscriber found"
-        })
-
-        const hastoken = await prisma.subscriberToken.findUnique({
-            where: {
-                subscriberId: subscriber.id,
-            }
-        })
-
-        if (!hastoken) {
-
-            const token = uuidv4()
-
-            const subscriberToken = {
-                subscriberId: subscriber.id,
-                token
-            }
-
-            await prisma.subscriberToken.create({
-                data: subscriberToken
-            })
-
-            return res.status(200).json({
-                data: subscriberToken
-            })
-        }
-
-        return res.status(200).json({
-            data: hastoken
+        return res.status(400).json({
+            message: "Invalid type of user"
         })
 
     } catch (err) {
         console.log(err)
-        return res.status(500).json({
-            message: "An error occurred trying to login",
-        })
-    }
-}
-
-async function loginClubProvider(validated: any, res: any, email: any, password: any) {
-
-    try {
-        if (validated?.error) {
-            const detailedErros = validated?.error?.details.map((error: ValidationErrorItem) => error.message.replaceAll('\"', ''))
-
-            return res.status(422).json({
-                message: detailedErros
-            })
-        }
-        
-        const clubProvider = await prisma.clubProvider.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        if (!clubProvider) return res.status(404).json({
-            message: "No user found with this data."
-        })
-
-        const hashedPassword = bcrypt.compareSync(password, clubProvider.password)
-
-        if (!hashedPassword) return res.status(404).json({
-            message: "No user found with this data."
-        })
-
-        const hastoken = await prisma.clubProviderToken.findUnique({
-            where: {
-                clubProviderId: clubProvider.id,
-            }
-        })
-
-        if (!hastoken) {
-
-            const token = uuidv4()
-
-            const clubProviderToken = {
-                clubProviderId: clubProvider.id,
-                token
-            }
-
-            await prisma.clubProviderToken.create({
-                data: clubProviderToken
-            })
-
-            return res.status(200).json({
-                data: clubProviderToken
-            })
-        }
-
-        return res.status(200).json({
-            data: hastoken
-        })
-
-    } catch (err) {
-        console.log(err)
-        
         return res.status(500).json({
             message: "An error occurred trying to login",
         })

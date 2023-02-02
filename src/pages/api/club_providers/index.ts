@@ -3,10 +3,11 @@ import bcrypt from 'bcrypt';
 import { ValidationErrorItem } from '@hapi/joi';
 
 import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
-import { getClubProviders } from '../../../prisma/clubProviders'
+import { getClubProviders, validateClubProviderConflict } from '../../../prisma/clubProviders'
 
 import { prisma } from '../../../prisma/PrismaClient'
 import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
+import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
 
 export default async function handleClubProviders(
     req: NextApiRequest,
@@ -31,7 +32,9 @@ export default async function handleClubProviders(
             email,
             password,
             description
-        }: ClubProvider = req.body
+        }: ClubProvider = req.body        
+
+        if (validateErrorsInSchema(clubProviderRegisterSchema, req, res) !== 'ok') return
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -47,42 +50,15 @@ export default async function handleClubProviders(
             }
         }
 
-        const validated = clubProviderRegisterSchema.validate(clubProviderCreation.data, { abortEarly: false })
+        if (await validateClubProviderConflict(clubName, email, res) !== 'ok') return
 
-        if (validated?.error) {
-            const detailedErros = validated?.error?.details.map((error: ValidationErrorItem) => error.message.replaceAll('\"', ''))
+        else {
+            const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
 
-            return res.status(422).json({
-                message: detailedErros
+            return res.status(201).json({
+                data: clubProvider,
             })
         }
-
-        const clubNameInUse = await prisma.clubProvider.findUnique({
-            where: {
-                clubName: clubName
-            }
-        })
-
-        if (clubNameInUse) return res.status(409).json({
-            message: "ClubName already in use"
-        })
-
-        const clubEmailInUse = await prisma.clubProvider.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        if (clubEmailInUse) return res.status(409).json({
-            message: "Email already in use"
-        })
-
-        const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
-
-        return res.status(201).json({
-            data: clubProvider,
-        })
     }
-
     return res.status(404).json({ message: 'Route not found.' })
 }

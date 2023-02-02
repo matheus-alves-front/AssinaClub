@@ -22,20 +22,23 @@ export default async function handleOption(
             message: "Product or Provider not found!"
         })
     }
-    
-    if (method === "GET") {
 
-        const option = await getOption(optionId)
+    const option = await getOption(optionId)
 
-        if (!option) return res.status(404).json({
+    if (!option) {
+        return res.status(404).json({
             message: "Option not found!"
         })
+    }
+    
+    if (method === "GET") {
 
         return res.status(200).json({
             data: option
         })
 
     } else if (method === "PUT") {
+        
         const {
             title,
             options
