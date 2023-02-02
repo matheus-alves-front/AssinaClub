@@ -1,47 +1,56 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext } from "react";
 import { useRouter } from "next/router";
 import { 
-  Container, 
-  Row, 
-  Col, 
+  Container,
   Button,
   Form,
   Card
 } from 'react-bootstrap';
 import Link from "next/link";
+import axios from "axios";
 
 import styles from '../../styles/pages/login.module.scss'
-import axios from "axios";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Login() {
   const router = useRouter()
 
+  const {
+    isAuthenticated,
+    signIn,
+    updateTypeOfPerson
+  } = useContext(AuthContext)
+
+  if (isAuthenticated) {
+    router.push('/subscriber/clubs_board')
+  }
+
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const form = event.target as HTMLFormElement
 
     const {
       email,
       password,
-    } = form
+    } = event.target as HTMLFormElement
 
     const data = {
       "email": email.value,
       "password": password.value,
-      // "typeOfUser": "subscriber"
+      "typeOfUser": "subscriber"
     }
 
     try {
       const loginPost = await axios.post('/api/login', data)
-      const { id, token } = loginPost.data.data 
       
-      localStorage.setItem('login', JSON.stringify({
-        "id": id,
-        "typeOfPerson": "subscriber",
-        "token": token 
-      }))
+      const { token, subscriberId } = loginPost.data.data 
 
-      console.log(localStorage.getItem('login'))
+      const cookie = {
+        token,
+        userId: subscriberId
+      }
+
+      updateTypeOfPerson('subscriber')
+      await signIn(cookie)
 
       router.push('/subscriber/clubs_board')
     }

@@ -50,6 +50,8 @@ export function RegisterFormSubscriber() {
       "password": passwordSubscriber.value
     }
 
+
+    
     try {
       await axios.post('/api/subscribers', data)
       
@@ -58,7 +60,6 @@ export function RegisterFormSubscriber() {
     catch(err: any) {
       console.log(err.response.data.message)
     }
-
   }
 
   return (
@@ -71,13 +72,25 @@ export function RegisterFormSubscriber() {
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Nome</Form.Label>
-            <Form.Control name="firstNameSubscriber" type="text" placeholder="Nome" />
+            <Form.Control 
+              name="firstNameSubscriber" 
+              type="text" 
+              placeholder="Nome"
+              maxLength={14}
+              minLength={2} 
+            />
           </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Sobrenome</Form.Label>
-            <Form.Control name="lastNameSubscriber" type="text" placeholder="Sobrenome" />
+            <Form.Control 
+              name="lastNameSubscriber" 
+              type="text" 
+              placeholder="Sobrenome" 
+              maxLength={14}
+              minLength={2} 
+            />
           </Form.Group>
         </Col>
       </Row>
@@ -85,7 +98,13 @@ export function RegisterFormSubscriber() {
         <Col>
           <Form.Group className="mb-3">
             <Form.Label>CPF</Form.Label>
-            <Form.Control name="cpfSubscriber" type="text" placeholder="CPF" />
+            <Form.Control 
+              name="cpfSubscriber" 
+              type="text" 
+              placeholder="CPF"
+              maxLength={11}
+              minLength={11}  
+            />
           </Form.Group>
         </Col>
         <Col>
