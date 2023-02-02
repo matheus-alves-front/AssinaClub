@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcrypt'
 
 import { AdminType, Admin } from '../../../../../../@types/AdminsClubProviderTypes'
 import { getAdmin } from '../../../../../../prisma/adminsClubProviders'
@@ -46,6 +47,8 @@ export default async function handleAdminOfClubProviders(
       occupation,
     }: Admin = req.body
 
+    const hashedPassword = bcrypt.hashSync(password, 10)
+
     const admin = await prisma.admin.update({
       where: {
         id: clubProviderAdmin
@@ -54,7 +57,7 @@ export default async function handleAdminOfClubProviders(
         name,
         birthDate,
         email,
-        password,
+        password: hashedPassword,
         occupation
       }
     })
