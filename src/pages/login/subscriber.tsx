@@ -34,7 +34,11 @@ export default function Login(session: any) {
     try {
       const loginPost = await axios.post('/api/login', data)
       const {token} = loginPost.data.data
-      signIn('SubscriberLogin', {token , typeOfUser: 'subscriber'})
+      signIn('SubscriberLogin', {
+        email: email.value,
+        token, 
+        typeOfUser: 'subscriber', 
+      })
     }
     catch(err: any) {
       alert(String(err.response.data.message))

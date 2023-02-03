@@ -14,7 +14,6 @@ export type DashboardType = {
 export default function Dashboard(sessions: any) {
   const { data: session } = useSession()
 
-  console.log(session)
   // console.log('serverside', sessions)
 
   return (
@@ -42,7 +41,7 @@ export default function Dashboard(sessions: any) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const sessions = await getSession(context)
 
-  console.log('terminal serverside', sessions)
+  console.log('terminal serverside', sessions, 'terminal serverside end')
 
   return {
     props: {
