@@ -15,7 +15,7 @@ export default function Dashboard(sessions: any) {
   const { data: session } = useSession()
 
   console.log(session)
-  console.log('serverside', sessions)
+  // console.log('serverside', sessions)
 
   return (
     <Container>
