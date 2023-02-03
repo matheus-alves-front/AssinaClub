@@ -4,16 +4,22 @@ import { getSubscriber } from "../../../prisma/subscribers"
 import { Container, Row } from "react-bootstrap"
 import { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { prisma } from "../../../prisma/PrismaClient"
+import { getSession, useSession } from "next-auth/react"
 
 export type DashboardType = {
   subscriberData: Subscriber,
   signatures: ClubProvider[]
 }
+// {subscriberData, signatures}: DashboardType
+export default function Dashboard(sessions: any) {
+  const { data: session } = useSession()
 
-export default function Dashboard({subscriberData, signatures}: DashboardType) {
+  console.log(session)
+  console.log('serverside', sessions)
+
   return (
     <Container>
-      <h1>Olá {subscriberData.name}</h1>
+      {/* <h1>Olá {subscriberData.name}</h1>
       <Row>
         <h5>Suas informações:</h5>
         <ul>
@@ -28,30 +34,39 @@ export default function Dashboard({subscriberData, signatures}: DashboardType) {
           </ul>
           </li>
         </ul>
-      </Row>
+      </Row> */}
     </Container>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const {
-    AssinaClubUserId
-  } = context.req?.cookies
+  const sessions = await getSession(context)
 
-  const subscriberData = await getSubscriber(String(AssinaClubUserId))
-
-  let assinantOfClubs = JSON.stringify(await prisma.clubProvider.findMany({
-    where: {
-      id: {
-        in: subscriberData?.clubProviderIds
-      }
-    }
-  }))
+  console.log('terminal serverside', sessions)
 
   return {
     props: {
-      subscriberData,
-      signatures: JSON.parse(assinantOfClubs)
+      sessions
     }
   }
+  // const {
+  //   AssinaClubUserId
+  // } = context.req?.cookies
+
+  // const subscriberData = await getSubscriber(String(AssinaClubUserId))
+
+  // let assinantOfClubs = JSON.stringify(await prisma.clubProvider.findMany({
+  //   where: {
+  //     id: {
+  //       in: subscriberData?.clubProviderIds
+  //     }
+  //   }
+  // }))
+
+  // return {
+  //   props: {
+  //     subscriberData,
+  //     signatures: JSON.parse(assinantOfClubs)
+  //   }
+  // }
 }

@@ -9,11 +9,12 @@ import {
 import Link from "next/link";
 import axios from "axios";
 
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 
 import styles from '../../styles/pages/login.module.scss'
+import { GetServerSideProps } from "next";
 
-export default function Login() {
+export default function Login(session: any) {
   const router = useRouter()
 
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
@@ -32,8 +33,6 @@ export default function Login() {
 
     try {
       const loginPost = await axios.post('/api/login', data)
-      
-      const { token, subscriberId } = loginPost.data.data 
 
       router.push('/subscriber/dashboard')
     }
@@ -76,4 +75,23 @@ export default function Login() {
       </Container>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+
+  if (session) {
+    return {
+      redirect: {
+        destination: '/subscriber/dashboard',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session
+    }
+  }
 }
