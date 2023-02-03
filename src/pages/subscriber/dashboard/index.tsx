@@ -5,7 +5,7 @@ import { Container, Row } from "react-bootstrap"
 import { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { prisma } from "../../../prisma/PrismaClient"
 
-type DashboardType = {
+export type DashboardType = {
   subscriberData: Subscriber,
   signatures: ClubProvider[]
 }

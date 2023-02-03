@@ -3,31 +3,17 @@ import Link from "next/link";
 import { Router } from "next/router";
 import { Button, Container, Navbar, Offcanvas } from "react-bootstrap";
 
-import { AuthContext } from "../../contexts/AuthContext";
 import { IoMenu } from "react-icons/io5"
 import { Subscriber } from "../../@types/SubscriberTypes";
 import { ClubProvider } from "../../@types/ClubProviderTypes";
 
 export function Header() {
-  const {
-    isAuthenticated,
-    userInformation,
-    typeOfPerson,
-    signOut
-  } = useContext(AuthContext)
 
   Router.events.on("routeChangeStart", (url) => {
-    setIsLoggedIn(isAuthenticated)
   })
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const userInformationRef = useRef<Subscriber | ClubProvider | null>(null)
   const [isOffcanvas, setIsOffcanvas] = useState(false)
-
-  useEffect(() => {
-    setIsLoggedIn(isAuthenticated)
-    userInformationRef.current = userInformation || null
-  }, [isAuthenticated])
 
   const handleCloseOffcanvas = () => setIsOffcanvas(false)
 
@@ -45,19 +31,19 @@ export function Header() {
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
             <Offcanvas.Header>
               <Offcanvas.Title>
-                Olá, {isLoggedIn ? ((userInformationRef.current as Subscriber)?.name || (userInformationRef.current as ClubProvider)?.clubName) : 'Faça Login'}
+                Olá, 
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body className="d-flex flex-column gap-2">
             {isLoggedIn ? 
               (
                 <>
-                  <Link href={`/${typeOfPerson}/dashboard`}>Ver Perfil</Link>
-                  <Link href={`/${typeOfPerson}/clubs_board`}>Ver todos os Clubes</Link>
+                  <Link href={`/${'subscriber'}/dashboard`}>Ver Perfil</Link>
+                  <Link href={`/${'subscriber'}/clubs_board`}>Ver todos os Clubes</Link>
                   <Button 
                     className="mt-auto" 
                     variant="danger"
-                    onClick={() => signOut()}
+                    // onClick={() => signOut()}
                   >Sair da Conta</Button>
                 </>
               )

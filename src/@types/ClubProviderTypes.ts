@@ -9,6 +9,7 @@ export type ClubProvider = {
     password: string
     description: string
     subscribers?: string[]
+    subscriberIds?: string[]
     removeSubscriber?: string
 }
 
