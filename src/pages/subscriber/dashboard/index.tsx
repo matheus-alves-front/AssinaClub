@@ -36,6 +36,15 @@ interface GetSubscriberData extends GetSessionParams {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const sessions = await getSession(context) as GetSubscriberData 
 
+  if (!sessions) {
+    return {
+      redirect: {
+        destination: '/login/subscriber',
+        permanent: false
+      }
+    }
+  }
+
   const subscriberData = sessions?.userData
 
   let assinantOfClubs = JSON.stringify(await prisma.clubProvider.findMany({

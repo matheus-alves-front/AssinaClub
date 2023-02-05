@@ -6,3 +6,9 @@ export function getDataPrismaDateFormat(data: any) {
 
   return JSON.parse(formatedData)
 }
+
+export function getDataObjectPrismaDateFormat(data: any) {
+  data.creationDate = data.creationDate.toISOString()
+
+  return data
+}

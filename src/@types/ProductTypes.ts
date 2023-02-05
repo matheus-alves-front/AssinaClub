@@ -5,6 +5,7 @@ export type Product = {
     sku: string
     value: number
     clubProviderId: string
+    plansId: string[]
 }
 
 export type ProductType = {

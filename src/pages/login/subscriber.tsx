@@ -1,22 +1,18 @@
-import { FormEvent, useContext } from "react";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { FormEvent } from "react";
+import Link from "next/link";
+import axios from "axios";
+import { getSession, signIn } from 'next-auth/react'
+
+import styles from '../../styles/pages/login.module.scss'
 import { 
   Container,
   Button,
   Form,
   Card
 } from 'react-bootstrap';
-import Link from "next/link";
-import axios from "axios";
-
-import { getSession, signIn } from 'next-auth/react'
-
-import styles from '../../styles/pages/login.module.scss'
-import { GetServerSideProps } from "next";
 
 export default function Login(session: any) {
-  const router = useRouter()
-
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 

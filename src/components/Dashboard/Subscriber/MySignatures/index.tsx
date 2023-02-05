@@ -9,12 +9,12 @@ export function MySignaturesCard({signatures}: DashboardType) {
       <Card.Body>
         <Row>
         {signatures?.map((club, index) => (
-          <Col key={index}>
+          <Col md={6} className="mb-3" key={index}>
             <h5>{club.clubName}</h5>
             <small>{club.subscriberIds?.length} inscritos</small>
             <h6 className="mb-0">descrição:</h6>
             <p>{club.description}</p>
-            <Link className="text-info" href={`/club_provider/${club.clubName}`}>Ver o Clube</Link>
+            <Link className="text-info" href={`/club_providers/${club.clubName}`}>Ver o Clube</Link>
           </Col>  
         ))}
         </Row>

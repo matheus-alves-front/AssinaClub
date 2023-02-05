@@ -31,6 +31,7 @@ export default function App({ Component, pageProps: {session, ...pageProps} }: A
         : 
         <Spinner className='position-fixed top-50 start-50' animation="border" />
       }
+      <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
     </SessionProvider>
   )
 }
