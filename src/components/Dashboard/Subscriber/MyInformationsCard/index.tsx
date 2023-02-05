@@ -2,8 +2,6 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import { Subscriber } from "../../../../@types/SubscriberTypes"
 import { DashboardType } from "../../../../pages/subscriber/dashboard"
 
-
-
 export function MyInformationsCard({subscriberData}: DashboardType) {
   return (
     <Card>

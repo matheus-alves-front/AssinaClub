@@ -1,11 +1,9 @@
-import NextAuth from "next-auth"
+import NextAuth, { DefaultSession } from "next-auth"
 import GithubProvider from 'next-auth/providers/github'
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
 import jwt from "jsonwebtoken";
 import { getSubscriber } from "../../../prisma/subscribers";
-import { signIn } from "next-auth/react";
-import { getToken } from "next-auth/jwt";
+import { Subscriber } from "../../../@types/SubscriberTypes";
 
 const githubId = process.env.GITHUB_ID
 const githubSecret = process.env.GITHUB_SECRET
@@ -18,6 +16,10 @@ type SubscriberLogin = {
 
 type TokenSubscriberType = {
   subscriberId: string
+}
+
+interface NewSession extends DefaultSession, TokenSubscriberType {
+  userData: Subscriber | null
 }
 
 const secret = process.env.SECRET
@@ -33,7 +35,8 @@ export default NextAuth({
         name: "SubscriberLogin",
         credentials: {
           token: {label: 'subscriberToken', type: 'text'},
-          typeOfUser: {label: 'typeOfUser', type: 'text'}
+          typeOfUser: {label: 'typeOfUser', type: 'text'},
+          email: {label: 'email', type: 'text'}
         },
         async authorize(credentials, req) {
           const {
@@ -45,8 +48,6 @@ export default NextAuth({
           const { 
             subscriberId
           } = jwt.decode(token) as TokenSubscriberType
-
-          const subscriberData = await getSubscriber(subscriberId)
           
           return {
             id: subscriberId,
@@ -60,40 +61,38 @@ export default NextAuth({
       async signIn({ user, account, profile, email, credentials }) {
         if (account) {
           account.typeOfUser = credentials?.typeOfUser
-          account.subscriberId = credentials?.typeOfUser
+          account.subscriberId = user.id
         }
 
         return true
       },
       async jwt({ token, account, profile }) {
         if (account) {
-          token.typeOfUser = account.typeOfUser
+          const { 
+            subscriberId,
+            typeOfUser
+           } = account
+
+          if (typeOfUser === 'subscriber') {
+            const subscriberData = await getSubscriber(String(subscriberId))
+
+            token.userData = subscriberData
+          } else if (typeOfUser === 'clubProvider') {
+            //...
+          }
         }
 
         return token
       },
       async session({session, token, user}) {
-        console.log('session',{
-          session,
-          token,
-          user
-        }, 'end of session')
+        const { userData } = token
 
-        const subscriberId = String(token?.sub)
-        console.log('TOKENZAO', String(token?.sub))
+        const newSession = {
+          ...session, userData
+        } as NewSession
         
-        const subscriberData = await getSubscriber(subscriberId)
-
-        session.user = {
-          name: subscriberData?.name,
-          email: subscriberData?.email,
-        }
-
-        // tem que arrumar a tipagem mas tá funcionando
-        session.subscriberId = token
-        
-        return session
+        return newSession
       }
     },
-    secret: process.env.SECRET
+    secret: secret
 })
