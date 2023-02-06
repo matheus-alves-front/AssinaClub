@@ -19,6 +19,8 @@ model Subscriber {
   password String
   signaturesClubs ClubProvider[] @relation(fields: [clubProviderIds], references: [id])
   clubProviderIds String[] @db.ObjectId
+  signaturePlans Plan[] @relation(fields: [planIds], references: [id])
+  planIds String[] @db.ObjectId
 }
 
 model ClubProvider {
@@ -79,6 +81,9 @@ model Plan {
   deliveryFrequency Int
   productsPlan Product[] @relation(fields: [productId], references: [id])
   productId String[] @db.ObjectId
+
+  subscribers Subscriber[] @relation(fields: [subscriberIds], references: [id])
+  subscriberIds String[] @db.ObjectId
 
   clubProviderPlan ClubProvider? @relation(fields: [clubProviderId], references: [id])
   clubProviderId String @db.ObjectId

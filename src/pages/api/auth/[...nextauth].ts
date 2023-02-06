@@ -109,7 +109,7 @@ export const authOptions: NextAuthOptions = {
       }    
 
       const newSession = {
-        ...session, userData
+        ...session, userData, typeOfUser
       } as NewSession
 
       return newSession
