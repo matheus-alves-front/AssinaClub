@@ -304,7 +304,7 @@ export function RegisterFormClubProvider() {
             </Col>
         </Row>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" label="Concordo com os Tesmos de Serviço" />
+          <Form.Check onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" label="Concordo com os Termos de Serviço" />
         </Form.Group>
         <Button className='w-100 py-2 mt-3' variant="primary" type="submit" disabled={!isCheckedInput}>
           Registrar
