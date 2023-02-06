@@ -18,28 +18,14 @@ type GeneralLogin = {
   email: string
 }
 
-type TokenSubscriberType = {
-  subscriberId: string
+type UserTypes = {
+  subscriberId?: string
+  clubProviderId?: string
+  adminId?: string
 }
 
-type TokenClubProviderType = {
-  clubProviderId: string
-}
-
-type TokenAdminType = {
-  adminId: string
-}
-
-interface SubscriberSession extends DefaultSession, TokenSubscriberType {
-  userData: Subscriber | null
-}
-
-interface ClubProviderSession extends DefaultSession, TokenClubProviderType {
-  userData: ClubProvider | null
-}
-
-interface AdminSession extends DefaultSession, TokenAdminType {
-  userData: Admin | null
+interface NewSession extends DefaultSession, UserTypes {
+  userData: Subscriber | ClubProvider | Admin | null
 }
 
 const secret = process.env.SECRET
@@ -68,16 +54,16 @@ export default NextAuth({
         let id = ""
 
         if (typeOfUser === "subscriber") {
-          const { subscriberId } = jwt.decode(token) as TokenSubscriberType
-          id = subscriberId
+          const { subscriberId } = jwt.decode(token) as UserTypes
+          id = String(subscriberId)
 
         } else if (typeOfUser === "clubProvider") {
-          const { clubProviderId } = jwt.decode(token) as TokenClubProviderType
-          id = clubProviderId
+          const { clubProviderId } = jwt.decode(token) as UserTypes
+          id = String(clubProviderId)
 
         } else if (typeOfUser === "admin") {
-          const { adminId } = jwt.decode(token) as TokenAdminType
-          id = adminId
+          const { adminId } = jwt.decode(token) as UserTypes
+          id = String(adminId)
         }
 
         return {
@@ -104,8 +90,6 @@ export default NextAuth({
           typeOfUser
         } = account
 
-        token.typeOfUser = typeOfUser
-
         if (typeOfUser === 'subscriber') {
           token.userData = await getSubscriber(String(userId))
 
@@ -120,25 +104,11 @@ export default NextAuth({
       return token
     },
     async session({ session, token, user }) {
-      const { userData, typeOfUser } = token
+      const { userData } = token
 
-      let newSession
-
-      if (typeOfUser === 'subscriber') {
-        newSession = {
-          ...session, userData
-        } as SubscriberSession
-
-      } else if (typeOfUser === 'clubProvider') { 
-        newSession = {
-          ...session, userData
-        } as ClubProviderSession
-        
-      } else {
-        newSession = {
-          ...session, userData
-        } as AdminSession
-      }
+      const newSession = {
+        ...session, userData
+      } as NewSession
 
       return newSession
     }

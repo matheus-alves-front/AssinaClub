@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import axios from 'axios'
-import { DefaultSession } from "next-auth"
 
 import {
   Container,
@@ -12,8 +11,12 @@ import Link from "next/link";
 
 import styles from '../../styles/pages/login.module.scss'
 import { GetServerSideProps } from "next";
-import { getSession, signIn } from 'next-auth/react'
+import { getSession, GetSessionParams, signIn } from 'next-auth/react'
 import { ClubProvider } from "../../@types/ClubProviderTypes";
+
+interface GetClubProviderData extends GetSessionParams {
+  userData?: ClubProvider
+}
 
 export default function Login() {
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
@@ -82,15 +85,9 @@ export default function Login() {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-  type UserDataType = { userData: ClubProvider }
+  const session = await getSession(context) as GetClubProviderData
 
-  interface SessionWithUserData extends DefaultSession, UserDataType { }
-
-  const session = await getSession(context)
-
-  const sessionWithUserData = session as SessionWithUserData | null
-
-  const clubProviderName = sessionWithUserData?.userData?.clubName
+  const clubProviderName = session?.userData?.clubName
 
   if (session) {
     return {
