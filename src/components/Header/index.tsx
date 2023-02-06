@@ -1,39 +1,32 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Router } from "next/router";
 import { Button, Container, Navbar, Offcanvas } from "react-bootstrap";
 
-import { AuthContext } from "../../contexts/AuthContext";
 import { IoMenu } from "react-icons/io5"
+import { GetSessionParams, signOut, useSession } from "next-auth/react";
 import { Subscriber } from "../../@types/SubscriberTypes";
-import { ClubProvider } from "../../@types/ClubProviderTypes";
+
+interface GetSubscriberData extends GetSessionParams {
+  data: {
+    userData?: Subscriber
+  }
+}
 
 export function Header() {
-  const {
-    isAuthenticated,
-    userInformation,
-    typeOfPerson,
-    signOut
-  } = useContext(AuthContext)
+  const session = useSession() as GetSubscriberData
+  let userData
+  if (session.data) {
+    userData = session?.data.userData
+  }
 
-  Router.events.on("routeChangeStart", (url) => {
-    setIsLoggedIn(isAuthenticated)
-  })
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const userInformationRef = useRef<Subscriber | ClubProvider | null>(null)
   const [isOffcanvas, setIsOffcanvas] = useState(false)
-
-  useEffect(() => {
-    setIsLoggedIn(isAuthenticated)
-    userInformationRef.current = userInformation || null
-  }, [isAuthenticated])
 
   const handleCloseOffcanvas = () => setIsOffcanvas(false)
 
   return (
     <>
-      <Navbar className="shadow-sm mb-5">
+      <Navbar className="shadow-sm mb-4">
         <Container className="position-relative py-2">
           <Navbar.Brand className="d-block" href="/">AssinaClub</Navbar.Brand>
           <Navbar.Toggle 
@@ -45,15 +38,15 @@ export function Header() {
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
             <Offcanvas.Header>
               <Offcanvas.Title>
-                Olá, {isLoggedIn ? ((userInformationRef.current as Subscriber)?.name || (userInformationRef.current as ClubProvider)?.clubName) : 'Faça Login'}
+                Olá, {userData ? userData?.name : 'Faça Login'}
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body className="d-flex flex-column gap-2">
-            {isLoggedIn ? 
+            {session.data ? 
               (
                 <>
-                  <Link href={`/${typeOfPerson}/dashboard`}>Ver Perfil</Link>
-                  <Link href={`/${typeOfPerson}/clubs_board`}>Ver todos os Clubes</Link>
+                  <Link href={`/subscriber/dashboard`}>Ver Perfil</Link>
+                  <Link href={`/club_providers/clubs_board`}>Ver todos os Clubes</Link>
                   <Button 
                     className="mt-auto" 
                     variant="danger"
