@@ -1,8 +1,8 @@
 import { FormEvent, useState } from "react";
 import axios from 'axios'
 
-import { 
-  Container, 
+import {
+  Container,
   Button,
   Form,
   Card
@@ -10,18 +10,42 @@ import {
 import Link from "next/link";
 
 import styles from '../../styles/pages/login.module.scss'
+import { GetServerSideProps } from "next";
+import { getSession, GetSessionParams, signIn } from 'next-auth/react'
+import { ClubProvider } from "../../@types/ClubProviderTypes";
+
+interface GetClubProviderData extends GetSessionParams {
+  userData?: ClubProvider
+}
 
 export default function Login() {
-  function LoginSubmit(event: FormEvent<HTMLFormElement>) {
+  async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const form = event.target as HTMLFormElement
 
     const {
       email,
       password,
-    } = form
+    } = event.target as HTMLFormElement
 
-    console.log(email.value, password.value)
+    const data = {
+      "email": email.value,
+      "password": password.value,
+      "typeOfUser": "clubProvider"
+    }
+
+    try {
+      const loginPost = await axios.post('/api/login', data)
+      const { token } = loginPost.data.data
+      signIn('GeneralLogin', {
+        email: email.value,
+        token,
+        typeOfUser: 'clubProvider',
+      })
+    }
+    catch (err: any) {
+      alert(String(err.response.data.message))
+    }
+
   }
 
   return (
@@ -30,7 +54,7 @@ export default function Login() {
         <Card className={`${styles.form} px-5 py-4 shadow-lg`}>
           <h2 className="mb-3">Login Clube de Assinatura</h2>
           <Form
-            name="formSubscribers" 
+            name="formSubscribers"
             className="mb-1"
             onSubmit={(e) => LoginSubmit(e)}
           >
@@ -49,7 +73,7 @@ export default function Login() {
               Fazer Login
             </Button>
           </Form>
-          
+
           <Link href={'/register/club_provider'}>
             <Button variant="warning" className="my-2 text-white w-100">Quero Criar um Clube</Button>
           </Link>
@@ -57,4 +81,26 @@ export default function Login() {
       </Container>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+  const session = await getSession(context) as GetClubProviderData
+
+  const clubProviderName = session?.userData?.clubName
+
+  if (session) {
+    return {
+      redirect: {
+        destination: `/club_providers/${clubProviderName}`,
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session
+    }
+  }
 }
