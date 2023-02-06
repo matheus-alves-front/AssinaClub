@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt'
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 
 import { getSubscriber } from '../../../prisma/subscribers'
-import { createSubscriberRelation, removeSubscriberRelation } from '../../../prisma/signaturesRelation'
 
 import { prisma } from '../../../prisma/PrismaClient'
 

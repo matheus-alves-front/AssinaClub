@@ -3,12 +3,15 @@ import type { NextAuthOptions } from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
+
 import { getSubscriber } from "../../../prisma/subscribers";
-import { Subscriber } from "../../../@types/SubscriberTypes";
-import { ClubProvider } from "../../../@types/ClubProviderTypes";
-import { getClubProvider } from "../../../prisma/clubProviders";
-import { Admin } from "../../../@types/AdminsClubProviderTypes";
 import { getAdmin } from "../../../prisma/adminsClubProviders";
+import { getClubProvider } from "../../../prisma/clubProviders";
+
+import { ClubProvider } from "../../../@types/ClubProviderTypes";
+import { Subscriber } from "../../../@types/SubscriberTypes";
+import { Admin } from "../../../@types/AdminsClubProviderTypes";
+
 
 const githubId = process.env.GITHUB_ID
 const githubSecret = process.env.GITHUB_SECRET

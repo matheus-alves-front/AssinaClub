@@ -1,18 +1,18 @@
-import { GetSessionParams, useSession } from "next-auth/react"
+import { useRouter } from "next/router"
+import { GetSessionParams } from "next-auth/react"
 import { GetServerSideProps } from "next"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "../../api/auth/[...nextauth]"
+
 import { getClubProviderByName } from "../../../prisma/clubProviders"
 import { getDataObjectPrismaDateFormat } from "../../../utils/getDataPrismaDateFormat"
 
 import type { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { Plan } from "../../../@types/PlansTypes"
 import { Product } from "../../../@types/ProductTypes"
+import { Subscriber } from "../../../@types/SubscriberTypes"
 
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap"
-import { Subscriber } from "../../../@types/SubscriberTypes"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../api/auth/[...nextauth]"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
 
 type ClubProviderHomeProps = {
   clubProvider: ClubProvider
