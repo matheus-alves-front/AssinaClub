@@ -1,44 +1,51 @@
-import { Subscriber } from "../../../@types/SubscriberTypes"
 import { GetServerSideProps } from "next"
-import { getSubscriber } from "../../../prisma/subscribers"
-import { Container, Row } from "react-bootstrap"
-import { ClubProvider } from "../../../@types/ClubProviderTypes"
-import { prisma } from "../../../prisma/PrismaClient"
+import { GetSessionParams, getSession, useSession } from "next-auth/react"
 
-type DashboardType = {
-  subscriberData: Subscriber,
-  signatures: ClubProvider[]
+import { Subscriber } from "../../../@types/SubscriberTypes"
+import { ClubProvider } from "../../../@types/ClubProviderTypes"
+
+import { Col, Container, Row } from "react-bootstrap"
+import { prisma } from "../../../prisma/PrismaClient"
+import { MyInformationsCard } from "../../../components/Dashboard/Subscriber/MyInformationsCard"
+import { MySignaturesCard } from "../../../components/Dashboard/Subscriber/MySignatures"
+
+export type DashboardType = {
+  subscriberData?: Subscriber,
+  signatures?: ClubProvider[]
 }
 
 export default function Dashboard({subscriberData, signatures}: DashboardType) {
   return (
     <Container>
-      <h1>Olá {subscriberData.name}</h1>
       <Row>
-        <h5>Suas informações:</h5>
-        <ul>
-          <li>Nascimento: {subscriberData.birthDate}</li>
-          <li>Email: {subscriberData.email}</li>
-          <li>CPF: {subscriberData.cpf}</li>
-          <li>Assinaturas: 
-          <ul>
-            {signatures?.map((club, index) => (
-              <li key={index}>{club.clubName}</li>
-            ))}
-          </ul>
-          </li>
-        </ul>
-      </Row>
+        <Col>
+          <MyInformationsCard subscriberData={subscriberData} />
+        </Col>
+        <Col>
+          <MySignaturesCard signatures={signatures} />
+        </Col>
+      </Row> 
     </Container>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const {
-    AssinaClubUserId
-  } = context.req?.cookies
+interface GetSubscriberData extends GetSessionParams {
+  userData?: Subscriber
+}
 
-  const subscriberData = await getSubscriber(String(AssinaClubUserId))
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const sessions = await getSession(context) as GetSubscriberData 
+
+  if (!sessions) {
+    return {
+      redirect: {
+        destination: '/login/subscriber',
+        permanent: false
+      }
+    }
+  }
+
+  const subscriberData = sessions?.userData
 
   let assinantOfClubs = JSON.stringify(await prisma.clubProvider.findMany({
     where: {

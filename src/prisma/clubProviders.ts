@@ -7,10 +7,19 @@ export async function getClubProviders() {
     return clubProviders
 }
 
-export async function getClubProvider(UserId: string) {
+export async function getClubProvider(ClubProviderId: string) {
     const clubProvider = await prisma.clubProvider.findUnique({
         where: {
-            id: UserId
+            id: ClubProviderId
+        }
+    })     
+    return clubProvider
+}
+
+export async function getClubProviderByName(clubName: string) {
+    const clubProvider = await prisma.clubProvider.findUnique({
+        where: {
+            clubName: clubName
         }
     })     
     return clubProvider

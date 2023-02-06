@@ -1,30 +1,18 @@
-import { FormEvent, useContext } from "react";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { FormEvent } from "react";
+import Link from "next/link";
+import axios from "axios";
+import { getSession, signIn } from 'next-auth/react'
+
+import styles from '../../styles/pages/login.module.scss'
 import { 
   Container,
   Button,
   Form,
   Card
 } from 'react-bootstrap';
-import Link from "next/link";
-import axios from "axios";
 
-import styles from '../../styles/pages/login.module.scss'
-import { AuthContext } from "../../contexts/AuthContext";
-
-export default function Login() {
-  const router = useRouter()
-
-  const {
-    isAuthenticated,
-    signIn,
-    updateTypeOfPerson
-  } = useContext(AuthContext)
-
-  if (isAuthenticated) {
-    router.push('/subscriber/dashboard')
-  }
-
+export default function Login(session: any) {
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -41,18 +29,12 @@ export default function Login() {
 
     try {
       const loginPost = await axios.post('/api/login', data)
-      
-      const { token, subscriberId } = loginPost.data.data 
-
-      const cookie = {
-        token,
-        userId: subscriberId
-      }
-
-      updateTypeOfPerson('subscriber')
-      await signIn(cookie)
-
-      router.push('/subscriber/dashboard')
+      const {token} = loginPost.data.data
+      signIn('SubscriberLogin', {
+        email: email.value,
+        token, 
+        typeOfUser: 'subscriber', 
+      })
     }
     catch(err: any) {
       alert(String(err.response.data.message))
@@ -85,6 +67,7 @@ export default function Login() {
             </Button>
           </Form>
           
+          <Button onClick={() => signIn('github')} variant={'danger'}>Github</Button>
           <Link href={'/register/subscriber'}>
             <Button variant="warning" className="my-2 text-white w-100">Quero Ser Assinante</Button>
           </Link>
@@ -92,4 +75,23 @@ export default function Login() {
       </Container>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+
+  if (session) {
+    return {
+      redirect: {
+        destination: '/subscriber/dashboard',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session
+    }
+  }
 }
