@@ -22,8 +22,10 @@ type ClubProviderHomeProps = {
   clubProviderProducts: {
     data: Product[]
   }
-  userData: Subscriber,
-  typeOfUser: string
+  userProps: {
+    userData: Subscriber,
+    typeOfUser: string
+  }
 }
 interface GetSubscriberData extends GetSessionParams {
   userData?: Subscriber | null
@@ -34,10 +36,13 @@ export default function ClubProvidersHome({
   clubProvider,
   clubProviderPlans,
   clubProviderProducts,
-  userData,
-  typeOfUser
+  userProps
 }: ClubProviderHomeProps) {
   const router = useRouter()
+
+  const userData = userProps?.userData
+  const typeOfUser = userProps?.typeOfUser ?? 'subscriber'
+  
   const clubProviderId = String(clubProvider?.id)
   
   function productIncludesInPlan(plansId: string[], productId: string | string[]) {
@@ -45,6 +50,12 @@ export default function ClubProvidersHome({
   }
 
   async function makeAssignature(clubAssinatureId: string, planId: string | string[], isCancel: boolean) {
+    if (!userData) {
+      router.push(`/login/${typeOfUser}`)
+
+      return
+    }
+
     const data = {
       isPaid: true,
       clubAssinatureId,
@@ -152,7 +163,16 @@ export default function ClubProvidersHome({
 export const getServerSideProps: GetServerSideProps = async(context) => {
   const session = await getServerSession(context.req, context.res, authOptions) as GetSubscriberData
 
-  const { userData, typeOfUser } = session
+  let userProps = null
+
+  if (session) {
+    const { userData, typeOfUser } = session
+
+    userProps = {
+      userData,
+      typeOfUser
+    }
+  }
 
   const { host } = context.req.headers
   const clubProviderName = String(context?.params?.clubProvider)
@@ -181,8 +201,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
       clubProvider,
       clubProviderPlans,
       clubProviderProducts,
-      userData,
-      typeOfUser
+      userProps
     }
   }
 }
