@@ -15,8 +15,6 @@ export default async function handleClubProviders(
 ) {
     const { method } = req
 
-    await prisma.$connect()
-
     if (method === "GET") {
         const clubProviders = await getClubProviders()
 

@@ -6,6 +6,7 @@ import {
 
 
 export default function Home() {
+
   return (
     <Container className="d-flex flex-column justify-content-center gap-2 text-center">
       <h1>Assina Club</h1>

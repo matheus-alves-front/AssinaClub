@@ -15,8 +15,6 @@ export default async function handleAdminOfClubProviders(
   const clubProviderId = String(req.query.clubProvider)
   const clubProviderAdmin = String(req.query.clubProviderAdmin)
 
-  await prisma.$connect()
-
   if (!await checkIfClubProviderExists(clubProviderId)) {
     return res.status(404).json({
       message: "Provider not found!"
