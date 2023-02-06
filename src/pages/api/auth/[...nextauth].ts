@@ -25,6 +25,11 @@ type UserTypes = {
   adminId?: string
 }
 
+type AccountType = {
+  userId: string
+  typeOfUser: string
+}
+
 interface NewSession extends DefaultSession, UserTypes {
   userData: Subscriber | ClubProvider | Admin | null
 }
@@ -85,27 +90,23 @@ export const authOptions: NextAuthOptions = {
       return true
     },
     async jwt({ token, account, profile }) {
-      if (account) {
-        const {
-          userId,
-          typeOfUser
-        } = account
-
-        if (typeOfUser === 'subscriber') {
-          token.userData = await getSubscriber(String(userId))
-
-        } else if ((typeOfUser === 'clubProvider')) { 
-          token.userData = await getClubProvider(String(userId))
-          
-        } else if ((typeOfUser === 'admin')) { 
-          token.userData = await getAdmin(String(userId))
-        }
-      }
-
+      if (account) token.account = account
       return token
     },
     async session({ session, token, user }) {
-      const { userData } = token
+      const {typeOfUser, userId} = token.account as AccountType
+
+      let userData
+
+      if (typeOfUser === 'subscriber') {
+        userData = await getSubscriber(String(userId))
+
+      } else if ((typeOfUser === 'clubProvider')) { 
+        userData = await getClubProvider(String(userId))
+        
+      } else if ((typeOfUser === 'admin')) { 
+        userData = await getAdmin(String(userId))
+      }    
 
       const newSession = {
         ...session, userData
