@@ -1,4 +1,5 @@
 import NextAuth, { DefaultSession } from "next-auth"
+import type { NextAuthOptions } from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
@@ -30,7 +31,7 @@ interface NewSession extends DefaultSession, UserTypes {
 
 const secret = process.env.SECRET
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       clientId: String(githubId),
@@ -114,4 +115,6 @@ export default NextAuth({
     }
   },
   secret: secret
-})
+}
+
+export default NextAuth(authOptions)
