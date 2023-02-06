@@ -30,7 +30,7 @@ export default function Login(session: any) {
     try {
       const loginPost = await axios.post('/api/login', data)
       const {token} = loginPost.data.data
-      signIn('SubscriberLogin', {
+      signIn('GeneralLogin', {
         email: email.value,
         token, 
         typeOfUser: 'subscriber', 
