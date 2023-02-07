@@ -4,21 +4,31 @@ import { getClubProviderByName } from "../../../../prisma/clubProviders"
 import { ClubProvider } from "../../../../@types/ClubProviderTypes"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
+import { getServerSession } from "next-auth"
+import { GetSubscriberData } from "../../../register/admin"
+import { authOptions } from "../../../api/auth/[...nextauth]"
+import { GetSessionParams } from "next-auth/react"
 
 type ClubProviderHomeProps = {
     clubProviderAdmins: {
         data: Admin[]
     }
+    userData: any //! Corrigir tipagem
 }
 
-export default function ClubProvidersHome({ clubProviderAdmins }: ClubProviderHomeProps) {
+export default function ClubProvidersHome({ clubProviderAdmins, userData }: ClubProviderHomeProps) {
 
     const [canDisplayModal, setCamDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
 
     useEffect(() => {
         setCamDisplayModal(true)
+        lookForAdmin(userData)
     }, [])
+
+    function lookForAdmin(userData: any) { //! Corrigir tipagem
+        if(userData.occupation !== undefined) setCamDisplayModal(false)
+    }
 
     return (
         <>
@@ -34,8 +44,18 @@ export default function ClubProvidersHome({ clubProviderAdmins }: ClubProviderHo
     )
 }
 
+export interface GetClubProviderData extends GetSessionParams {
+    userData?: ClubProvider
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+
+    const session = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData 
+
+    const { userData } = session
+
+    // console.log(userData)
+    
     const { host } = context.req.headers
     const clubProviderName = String(context?.params?.clubProvider)
 
@@ -47,7 +67,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
         props: {
-            clubProviderAdmins
+            clubProviderAdmins,
+            userData
         }
     }
 }
