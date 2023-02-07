@@ -1,6 +1,6 @@
 import { prisma } from './PrismaClient'
 
-export async function createSubscriberRelation(SubscriberId: string, ClubProviderId: string | undefined) {
+export async function createSubscriberRelation(SubscriberId: string, ClubProviderId: string | undefined, PlanId: string) {
     const subscribers = await prisma.subscriber.update({
       where: {
         id: SubscriberId
@@ -8,6 +8,9 @@ export async function createSubscriberRelation(SubscriberId: string, ClubProvide
       data: {
         signaturesClubs: {
           connect: [{id: ClubProviderId}]
+        },
+        signaturePlans: {
+          connect: [{id: PlanId}]
         }
       }
     })
@@ -15,7 +18,8 @@ export async function createSubscriberRelation(SubscriberId: string, ClubProvide
     return subscribers
 }
 
-export async function removeSubscriberRelation(SubscriberId: string, ClubProviderId: string | undefined) {
+
+export async function removeSubscriberRelation(SubscriberId: string, ClubProviderId: string | undefined, PlanId: string) {
   const subscribers = await prisma.subscriber.update({
     where: {
       id: SubscriberId
@@ -23,6 +27,9 @@ export async function removeSubscriberRelation(SubscriberId: string, ClubProvide
     data: {
       signaturesClubs: {
         disconnect: [{id: ClubProviderId}]
+      },
+      signaturePlans: {
+        disconnect: [{id: PlanId}]
       }
     }
   })

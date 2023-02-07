@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next"
-import { GetSessionParams, getSession, useSession } from "next-auth/react"
+import { GetSessionParams, getSession } from "next-auth/react"
 
 import { Subscriber } from "../../../@types/SubscriberTypes"
 import { ClubProvider } from "../../../@types/ClubProviderTypes"

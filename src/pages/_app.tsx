@@ -29,7 +29,9 @@ export default function App({ Component, pageProps: {session, ...pageProps} }: A
       {isLoad ? 
         <Component {...pageProps} />
         : 
-        <Spinner className='position-fixed top-50 start-50' animation="border" />
+        <section className='w-100 position-relative' style={{'height': '80vh'}}>
+          <Spinner className='position-absolute top-50 start-50' animation="border" />
+        </section>
       }
       <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
     </SessionProvider>
