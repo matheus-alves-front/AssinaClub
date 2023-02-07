@@ -15,8 +15,6 @@ export default async function handleLogin(
 ) {
     const { method } = req
 
-    await prisma.$connect()
-
     if (method === "POST") {
 
         const {

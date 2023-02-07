@@ -15,9 +15,7 @@ export default async function handleAdminsOfClubProviders(
   res: NextApiResponse<AdminType>
 ) {
   const { method } = req
-  const clubProviderId = String(req.query.clubProvider)
-
-  await prisma.$connect()
+  const clubProviderId = String(req.query.clubProvider)  
 
   if (!await checkIfClubProviderExists(clubProviderId)) {
     return res.status(404).json({
