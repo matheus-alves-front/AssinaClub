@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { getClubProviderByName } from "../../../../prisma/clubProviders"
-import { ClubProvider } from "../../../../@types/ClubProviderTypes"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../../api/auth/[...nextauth]"
 import { GetSessionParams } from "next-auth/react"
-import Table from 'react-bootstrap/Table';
 import axios from "axios"
+import { SubscribersTable } from "../../../../components/Dashboard/ClubProvider/SubscribersTable"
+import { PlansTable } from "../../../../components/Dashboard/ClubProvider/PlansTable"
+import { ProductsTable } from "../../../../components/Dashboard/ClubProvider/ProductsTable"
+import Nav from 'react-bootstrap/Nav';
+import styles from "../../../../styles/pages/clubDashboard.module.scss"
+import { Col, Row } from "react-bootstrap"
 
 type ClubProviderHomeProps = {
     clubProviderAdmins: {
@@ -19,9 +23,12 @@ type ClubProviderHomeProps = {
 
 export default function ClubProvidersHome({ clubProviderAdmins, userData }: ClubProviderHomeProps) {
 
+    const defaultActiveKey = "subscribers"
+    const [screenSelected, setScreenSelected] = useState(defaultActiveKey)
     const [canDisplayModal, setCanDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
     const [clubProviderInfo, setClubProviderInfo] = useState(null)
+    const [subscribersInfo, setSubscribersInfo] = useState(null)
 
     useEffect(() => {
         setCanDisplayModal(true)
@@ -29,29 +36,33 @@ export default function ClubProvidersHome({ clubProviderAdmins, userData }: Club
     }, [])
 
     useEffect(() => {
-        if(adminIsDefined) getClubProviderInfo()
+        if (adminIsDefined) getClubProviderInfo()
     }, [adminIsDefined])
 
     async function getClubProviderInfo() {
         try {
-            const response = await axios.get(`http://localhost:3000/api/club_providers/${userData.id}`) 
+            const response = await axios.get(`http://localhost:3000/api/club_providers/${userData.id}`)
             const clubProvider = response.data.data
             setClubProviderInfo(clubProvider)
-            const subscriberIds = clubProvider.subscriberIds
-            console.log(subscriberIds)
-            getSubscribersInfo(subscriberIds)
+            getSubscribersInfo(clubProvider.id)
         } catch (err) {
             console.log(err)
             alert("Algo deu errado!")
         }
     }
 
-    function getSubscribersInfo(subscriberIds: any) {
-        
+    async function getSubscribersInfo(clubProviderId: any) { //! Corrigir tipagem
+        const response = await axios.get(`http://localhost:3000/api/subscribers?clubProviderId=${clubProviderId}`)
+        const subscribers = response.data.data
+        setSubscribersInfo(subscribers)
     }
 
     function lookForAdmin(userData: any) { //! Corrigir tipagem
         if (userData.occupation !== undefined) setCanDisplayModal(false)
+    }
+
+    function handleSelect(eventKey: any) {
+        setScreenSelected(eventKey)
     }
 
     return (
@@ -64,51 +75,67 @@ export default function ClubProvidersHome({ clubProviderAdmins, userData }: Club
 
                 />
             }
-            {adminIsDefined &&
-                <div>
-                    <Table responsive="sm">
-                        <thead>
-                            <tr>
-                                <th>Assinantes</th>
-                                <th>Table heading</th>
-                                <th>Table heading</th>
-                                <th>Table heading</th>
-                                <th>Table heading</th>
-                                <th>Table heading</th>
-                                <th>Table heading</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                                <td>Table cell</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </div>
+            {(!canDisplayModal || adminIsDefined) &&
+                <Row>
+                    <Col md={2} className="ms-3">
+                        <Nav
+                            variant="pills"
+                            defaultActiveKey={defaultActiveKey}
+                            onSelect={handleSelect}
+                            className="d-flex flex-column"
+                        >
+                            <Nav.Item>
+                                <Nav.Link
+                                    eventKey="subscribers"
+                                    className={`text-center ${screenSelected === "subscribers" ? "text-white" : ""}`}
+                                >
+                                    Meus Assinantes
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link
+                                    eventKey="plans"
+                                    className={`text-center ${screenSelected === "plans" ? "text-white" : ""}`}
+                                >
+                                    Meus Planos
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link
+                                    eventKey="products"
+                                    className={`text-center ${screenSelected === "products" ? "text-white" : ""}`}
+                                >
+                                    Meus Produtos
+                                </Nav.Link>
+                            </Nav.Item>
+                        </Nav>
+                    </Col>
+                    <Col>
+                        {screenSelected === "subscribers" &&
+                            <div className={`${styles.easeCome}`}>
+                                <SubscribersTable
+                                    subscribersInfo={subscribersInfo}
+                                    clubProviderInfo={clubProviderInfo}
+                                />
+                            </div>
+                        }
+                        {screenSelected === "plans" &&
+                            <div className={`${styles.easeCome}`}>
+                                <PlansTable
+                                    subscribersInfo={subscribersInfo}
+                                    clubProviderInfo={clubProviderInfo}
+                                />
+                            </div>}
+                        {screenSelected === "products" &&
+                            <div className={`${styles.easeCome}`}>
+                                <ProductsTable
+                                    subscribersInfo={subscribersInfo}
+                                    clubProviderInfo={clubProviderInfo}
+                                />
+                            </div>
+                        }
+                    </Col>
+                </Row>
             }
         </>
     )

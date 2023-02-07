@@ -1,0 +1,12 @@
+.easeCome {
+    // transition: all 1s;
+    animation: ease-come 0.4s ease-out;
+
+    @keyframes ease-come {
+        from {
+            opacity: 0;
+        } to {
+            opacity: 1;
+        }
+    }
+}
