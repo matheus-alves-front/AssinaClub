@@ -51,7 +51,7 @@ export default function ClubsBoard({clubProviders}: ClubProviderProps) {
 
 
 export const getServerSideProps: GetServerSideProps = async(context) => {
-  const clubProviders = getDataPrismaDateFormat(await getClubProviders())
+  const clubProviders = await getClubProviders()
 
   return {
     props: {

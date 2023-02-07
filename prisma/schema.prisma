@@ -29,7 +29,7 @@ model ClubProvider {
   hostName String
   cpf String
   cnpj String
-  creationDate DateTime @default(now())
+  creationDate String
   email String @unique
   password String
   description String
