@@ -15,8 +15,6 @@ export default async function handleClubProviders(
 ) {
     const { method } = req
 
-    await prisma.$connect()
-
     if (method === "GET") {
         const clubProviders = await getClubProviders() 
 
@@ -38,9 +36,11 @@ export default async function handleClubProviders(
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
+        const clubNameCleaned = clubName.trim().replaceAll(" ","-")
+
         const clubProviderCreation = {
             data: {
-                clubName,
+                clubName: clubNameCleaned,
                 hostName,
                 cpf,
                 cnpj,

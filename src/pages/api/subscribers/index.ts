@@ -16,8 +16,6 @@ export default async function handleSubscribers(
 ) {
     const { method } = req
 
-    await prisma.$connect()
-
     if (method === "GET") {
         const subscribers = await getSubscribers()
 

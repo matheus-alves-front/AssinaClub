@@ -14,7 +14,7 @@ import { GetServerSideProps } from "next";
 import { getSession, GetSessionParams, signIn } from 'next-auth/react'
 import { ClubProvider } from "../../@types/ClubProviderTypes";
 
-interface GetClubProviderData extends GetSessionParams {
+export interface GetClubProviderData extends GetSessionParams {
   userData?: ClubProvider
 }
 
@@ -92,7 +92,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (session) {
     return {
       redirect: {
-        destination: `/club_providers/${clubProviderName}`,
+        destination: `/club_providers/${clubProviderName}/dashboard`,
         permanent: false
       }
     }
