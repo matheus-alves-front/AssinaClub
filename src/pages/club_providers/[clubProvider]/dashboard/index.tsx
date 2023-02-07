@@ -1,34 +1,47 @@
 import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
+import { GetSessionParams } from "next-auth/react"
+import { getServerSession } from "next-auth"
+import { Col, Container, Row } from "react-bootstrap";
+import axios from "axios"
 import { getClubProviderByName } from "../../../../prisma/clubProviders"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
-import { getServerSession } from "next-auth"
 import { authOptions } from "../../../api/auth/[...nextauth]"
-import { GetSessionParams } from "next-auth/react"
-import axios from "axios"
-import { SubscribersTable } from "../../../../components/Dashboard/ClubProvider/SubscribersTable"
-import { PlansTable } from "../../../../components/Dashboard/ClubProvider/PlansTable"
-import { ProductsTable } from "../../../../components/Dashboard/ClubProvider/ProductsTable"
-import Nav from 'react-bootstrap/Nav';
+import { SubscribersTable } from "../../../../components/Dashboard/ClubProvider/Tables/SubscribersTable"
+import { PlansTable } from "../../../../components/Dashboard/ClubProvider/Tables/PlansTable"
+import { ProductsTable } from "../../../../components/Dashboard/ClubProvider/Tables/ProductsTable"
 import styles from "../../../../styles/pages/clubDashboard.module.scss"
-import { Col, Row } from "react-bootstrap"
+import { DivisionLine } from "../../../../components/Divisions/DivisionLine"
+import { ProductsRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Products/ProductsRegister"
+import { MyNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/MyNavigation";
+import { ClubRegisterNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/ClubRegisterNavigation";
+import { PlansRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Plans/PlansRegister";
+import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn";
 
-type ClubProviderHomeProps = {
+type ClubProviderDashboardProps = {
     clubProviderAdmins: {
         data: Admin[]
     }
     userData: any //! Corrigir tipagem
 }
 
-export default function ClubProvidersHome({ clubProviderAdmins, userData }: ClubProviderHomeProps) {
+export default function ClubProvidersDashboard({ clubProviderAdmins, userData }: ClubProviderDashboardProps) {
 
-    const defaultActiveKey = "subscribers"
-    const [screenSelected, setScreenSelected] = useState(defaultActiveKey)
+    const myNavDefaultActiveKey = "subscribers"
+    const clubRegNavDefaultActiveKey = "products"
+
+    const [myNavScreenSelected, setMyNavScreenSelected] = useState(myNavDefaultActiveKey)
+    const [clubRegNavScreenSelected, setClubRegNavScreenSelected] = useState(clubRegNavDefaultActiveKey)
+
     const [canDisplayModal, setCanDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
-    const [clubProviderInfo, setClubProviderInfo] = useState(null)
+
+    const [clubProviderInfo, setClubProviderInfo] = useState<any>(null) //! Corrigir tipagem
     const [subscribersInfo, setSubscribersInfo] = useState(null)
+
+    const [updateProducts, setUpdateProducts] = useState(false)
+    const [updatePlans, setUpdatePlans] = useState(false)
 
     useEffect(() => {
         setCanDisplayModal(true)
@@ -61,12 +74,8 @@ export default function ClubProvidersHome({ clubProviderAdmins, userData }: Club
         if (userData.occupation !== undefined) setCanDisplayModal(false)
     }
 
-    function handleSelect(eventKey: any) {
-        setScreenSelected(eventKey)
-    }
-
     return (
-        <>
+        <main>
             {canDisplayModal &&
                 <AdminLoginModal
                     adminIsDefined={adminIsDefined}
@@ -76,68 +85,84 @@ export default function ClubProvidersHome({ clubProviderAdmins, userData }: Club
                 />
             }
             {(!canDisplayModal || adminIsDefined) &&
-                <Row>
-                    <Col md={2} className="ms-3">
-                        <Nav
-                            variant="pills"
-                            defaultActiveKey={defaultActiveKey}
-                            onSelect={handleSelect}
-                            className="d-flex flex-column"
-                        >
-                            <Nav.Item>
-                                <Nav.Link
-                                    eventKey="subscribers"
-                                    className={`text-center ${screenSelected === "subscribers" ? "text-white" : ""}`}
-                                >
-                                    Meus Assinantes
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link
-                                    eventKey="plans"
-                                    className={`text-center ${screenSelected === "plans" ? "text-white" : ""}`}
-                                >
-                                    Meus Planos
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link
-                                    eventKey="products"
-                                    className={`text-center ${screenSelected === "products" ? "text-white" : ""}`}
-                                >
-                                    Meus Produtos
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col>
-                        {screenSelected === "subscribers" &&
-                            <div className={`${styles.easeCome}`}>
-                                <SubscribersTable
-                                    subscribersInfo={subscribersInfo}
-                                    clubProviderInfo={clubProviderInfo}
-                                />
-                            </div>
-                        }
-                        {screenSelected === "plans" &&
-                            <div className={`${styles.easeCome}`}>
-                                <PlansTable
-                                    subscribersInfo={subscribersInfo}
-                                    clubProviderInfo={clubProviderInfo}
-                                />
-                            </div>}
-                        {screenSelected === "products" &&
-                            <div className={`${styles.easeCome}`}>
-                                <ProductsTable
-                                    subscribersInfo={subscribersInfo}
-                                    clubProviderInfo={clubProviderInfo}
-                                />
-                            </div>
-                        }
-                    </Col>
-                </Row>
+                <>
+                    <Row className="p-4 w-100">
+                        <Col md="auto" className="d-flex justify-content-start">
+                            <MyNavigation
+                                myNavDefaultActiveKey={myNavDefaultActiveKey}
+                                myNavScreenSelected={myNavScreenSelected}
+                                setMyNavScreenSelected={setMyNavScreenSelected}
+                            />
+                        </Col>
+                        <Col md="auto">
+                            <DivisionColumn />
+                        </Col>
+                        <Col>
+                            {myNavScreenSelected === "subscribers" &&
+                                <Container className={`${styles.easeCome}`}>
+                                    <SubscribersTable
+                                        subscribersInfo={subscribersInfo}
+                                        clubProviderInfo={clubProviderInfo}
+                                    />
+                                </Container>
+                            }
+                            {myNavScreenSelected === "plans" &&
+                                <Container className={`${styles.easeCome}`}>
+                                    <PlansTable
+                                        subscribersInfo={subscribersInfo}
+                                        clubProviderInfo={clubProviderInfo}
+                                        updatePlans={updatePlans}
+                                        setUpdatePlans={setUpdatePlans}
+                                    />
+                                </Container>}
+                            {myNavScreenSelected === "products" &&
+                                <Container className={`${styles.easeCome}`}>
+                                    <ProductsTable
+                                        subscribersInfo={subscribersInfo}
+                                        clubProviderInfo={clubProviderInfo}
+                                        updateProducts={updateProducts}
+                                        setUpdateProducts={setUpdateProducts}
+                                    />
+                                </Container>
+                            }
+                        </Col>
+                    </Row>
+                    <Row className="w-100">
+                        <DivisionLine />
+                    </Row>
+                    <Row className="p-4 w-100">
+                        <Col md="auto" className="d-flex justify-content-start">
+                            <ClubRegisterNavigation
+                                clubRegNavDefaultActiveKey={clubRegNavDefaultActiveKey}
+                                clubRegNavScreenSelected={clubRegNavScreenSelected}
+                                setClubRegNavScreenSelected={setClubRegNavScreenSelected}
+                            />
+                        </Col>
+                        <Col md="auto">
+                            <DivisionColumn />
+                        </Col>
+                        <Col md={5}>
+                            {clubRegNavScreenSelected === "products" &&
+                                <Container className={`${styles.easeCome}`}>
+                                    <ProductsRegister
+                                        clubProviderInfo={clubProviderInfo}
+                                        setUpdateProducts={setUpdateProducts}
+                                    />
+                                </Container>
+                            }
+                            {clubRegNavScreenSelected === "plans" &&
+                                <Container className={`${styles.easeCome}`}>
+                                    <PlansRegister
+                                        clubProviderInfo={clubProviderInfo}
+                                        setUpdatePlans={setUpdatePlans}
+                                    />
+                                </Container>
+                            }
+                        </Col>
+                    </Row>
+                </>
             }
-        </>
+        </main>
     )
 }
 

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { getPlansInfo } from '../../../utils/getPlansInfo';
-import { getProductsInfo } from '../../../utils/getProductsInfo';
+import { getPlansInfo } from '../../../../utils/getPlansInfo';
+import { getProductsInfo } from '../../../../utils/getProductsInfo';
+import { PRODUCTS_PROPERTIES } from './utils/myClubProperties';
 
-export function ProductsTable({ clubProviderInfo, subscribersInfo }: any) {
-
-    const PRODUCTS_PROPERTIES = ['nº', 'Nome', 'Descrição', 'Preço', 'SKU', 'Opções adicionais', 'Planos']
+export function ProductsTable({ clubProviderInfo, subscribersInfo, updateProducts, setUpdateProducts }: any) {
 
     const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
     const [productsInfo, setProductsInfo] = useState<any[]>([]) //! Corrigir tipagem
@@ -16,8 +15,11 @@ export function ProductsTable({ clubProviderInfo, subscribersInfo }: any) {
     }, [subscribersInfo])
 
     useEffect(() => {
-        console.log(clubProviderInfo)
-    }, [clubProviderInfo])
+        if(updateProducts) {
+            handleProductsInfo()
+            setUpdateProducts(false)
+        }
+    }, [updateProducts])
 
     async function handlePlansInfo() {
         if (subscribersInfo) setPlansInfo(await getPlansInfo(clubProviderInfo?.id))
@@ -27,7 +29,7 @@ export function ProductsTable({ clubProviderInfo, subscribersInfo }: any) {
         if (clubProviderInfo) setProductsInfo(await getProductsInfo(clubProviderInfo.id))
     }
 
-    function displayPlansNames(plansIds: any) { //! Corrigir tipagem
+    function displayPlansNames(plansIds: any[]) { //! Corrigir tipagem
         const plansNames: any = [] //! Corrigir tipagem
 
         if(!plansIds) return ""

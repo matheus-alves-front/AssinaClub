@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { getPlansInfo } from '../../../utils/getPlansInfo';
-import { getSubscriberPlansFormatted } from '../../../utils/getSubscriberPlans';
+import { getPlansInfo } from '../../../../utils/getPlansInfo';
+import { PLANS_PROPERTIES } from './utils/myClubProperties';
 
-export function SubscribersTable({ subscribersInfo, clubProviderInfo }: any) {
-
-    const SUBS_PROPERTIES = ['nº', 'Assinantes', 'Email', 'CPF', 'Planos']
+export function PlansTable({ subscribersInfo, clubProviderInfo, updatePlans, setUpdatePlans }: any) {
 
     const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
 
     useEffect(() => {
         handlePlansInfo()
     }, [subscribersInfo])
+
+    useEffect(() => {
+        if(updatePlans) {
+            handlePlansInfo()
+            setUpdatePlans(false)
+        }
+    }, [updatePlans])
 
     async function handlePlansInfo() {
         if (subscribersInfo) setPlansInfo(await getPlansInfo(clubProviderInfo.id))
@@ -22,19 +27,19 @@ export function SubscribersTable({ subscribersInfo, clubProviderInfo }: any) {
             <Table bordered hover responsive="sm" >
                 <thead>
                     <tr>
-                        {SUBS_PROPERTIES.map((property, i) => <th key={i}>{property}</th>)}
+                        {PLANS_PROPERTIES.map((property, i) => <th key={i}>{property}</th>)}
                     </tr>
                 </thead>
                 <tbody>
-                    {subscribersInfo ?
+                    {plansInfo ?
                         (<>
-                            {subscribersInfo.map((subscriber: any, index: number) => ( //! Corrigir tipagem
+                            {plansInfo.map((plan: any, index: number) => ( //! Corrigir tipagem
                                 <tr key={index}>
                                     <td>{++index}</td>
-                                    <td>{subscriber.name}</td>
-                                    <td>{subscriber.email}</td>
-                                    <td>{subscriber.cpf}</td>
-                                    <td>{plansInfo[0] ? getSubscriberPlansFormatted(subscriber.planIds, plansInfo) : ""}</td>
+                                    <td>{plan.title}</td>
+                                    <td>{plan.description}</td>
+                                    <td>{"R$ " + plan.price.toFixed(2)}</td>
+                                    <td>{plan.deliveryFrequency}</td>
                                 </tr>
                             ))}
                         </>)

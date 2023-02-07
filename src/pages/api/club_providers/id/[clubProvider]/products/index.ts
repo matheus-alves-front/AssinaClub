@@ -26,12 +26,12 @@ export default async function handleProducts(
             const filteredProducts = products.filter(product => product.plansId.includes(String(planId)))
             
             return res.status(200).json({
-                data: filteredProducts,
+                data: filteredProducts.reverse(),
             })
         }
 
         return res.status(200).json({
-            data: products,
+            data: products.reverse(),
         })
 
     } else if (method === "POST") {

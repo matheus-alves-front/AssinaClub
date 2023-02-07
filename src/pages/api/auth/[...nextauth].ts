@@ -119,8 +119,6 @@ export const authOptions: NextAuthOptions = {
       const newSession = {
         ...session, userData, typeOfUser
       } as NewSession
-
-      console.log(newSession)
       
       return newSession
     }
