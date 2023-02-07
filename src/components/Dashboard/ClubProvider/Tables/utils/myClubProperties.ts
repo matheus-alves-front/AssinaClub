@@ -10,7 +10,7 @@ export const PRODUCTS_PROPERTIES = [
     'nº',
     'Nome',
     'Descrição',
-    'Preço',
+    'Valor',
     'SKU',
     'Opções adicionais',
     'Planos'

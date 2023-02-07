@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next"
 import { GetSessionParams } from "next-auth/react"
 import { getServerSession } from "next-auth"
 import { Col, Container, Row } from "react-bootstrap";
-import axios from "axios"
 import { getClubProviderByName } from "../../../../prisma/clubProviders"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
@@ -18,6 +17,9 @@ import { MyNavigation } from "../../../../components/Dashboard/ClubProvider/Navi
 import { ClubRegisterNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/ClubRegisterNavigation";
 import { PlansRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Plans/PlansRegister";
 import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn";
+import { handlePlansInfo } from "../../../../utils/ClubDashboard/plansInfo";
+import { handleProductsInfo } from "../../../../utils/ClubDashboard/productsInfo";
+import { getClubProviderInfo } from "../../../../utils/ClubDashboard/getClubProviderInfo";
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
@@ -43,32 +45,38 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
     const [updateProducts, setUpdateProducts] = useState(false)
     const [updatePlans, setUpdatePlans] = useState(false)
 
+    const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
+    const [productsInfo, setProductsInfo] = useState<any[]>([]) //! Corrigir tipagem
+
+    useEffect(() => {
+        handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo)
+        handleProductsInfo(setProductsInfo, clubProviderInfo)
+    }, [subscribersInfo])
+
+    useEffect(() => {
+        if (updateProducts) {
+            handleProductsInfo(setProductsInfo, clubProviderInfo)
+            setUpdateProducts(false)
+        }
+    }, [updateProducts])
+
+    useEffect(() => {
+        if (updatePlans) {
+            handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo)
+            setUpdatePlans(false)
+        }
+    }, [updatePlans])
+
     useEffect(() => {
         setCanDisplayModal(true)
         lookForAdmin(userData)
     }, [])
 
     useEffect(() => {
-        if (adminIsDefined) getClubProviderInfo()
-    }, [adminIsDefined])
-
-    async function getClubProviderInfo() {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/club_providers/${userData.id}`)
-            const clubProvider = response.data.data
-            setClubProviderInfo(clubProvider)
-            getSubscribersInfo(clubProvider.id)
-        } catch (err) {
-            console.log(err)
-            alert("Algo deu errado!")
+        if (adminIsDefined) {
+            getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo)
         }
-    }
-
-    async function getSubscribersInfo(clubProviderId: any) { //! Corrigir tipagem
-        const response = await axios.get(`http://localhost:3000/api/subscribers?clubProviderId=${clubProviderId}`)
-        const subscribers = response.data.data
-        setSubscribersInfo(subscribers)
-    }
+    }, [adminIsDefined])
 
     function lookForAdmin(userData: any) { //! Corrigir tipagem
         if (userData.occupation !== undefined) setCanDisplayModal(false)
@@ -87,11 +95,17 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
             {(!canDisplayModal || adminIsDefined) &&
                 <>
                     <Row className="p-4 w-100">
-                        <Col md="auto" className="d-flex justify-content-start">
+                        <Col md={2} className="d-flex justify-content-center">
                             <MyNavigation
                                 myNavDefaultActiveKey={myNavDefaultActiveKey}
                                 myNavScreenSelected={myNavScreenSelected}
                                 setMyNavScreenSelected={setMyNavScreenSelected}
+                                plansInfo={plansInfo}
+                                setPlansInfo={setPlansInfo}
+                                productsInfo={productsInfo}
+                                setProductsInfo={setProductsInfo}
+                                subscribersInfo={subscribersInfo}
+                                setSubscribersInfo={setSubscribersInfo}
                             />
                         </Col>
                         <Col md="auto">
@@ -102,26 +116,21 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                                 <Container className={`${styles.easeCome}`}>
                                     <SubscribersTable
                                         subscribersInfo={subscribersInfo}
-                                        clubProviderInfo={clubProviderInfo}
+                                        plansInfo={plansInfo}
                                     />
                                 </Container>
                             }
                             {myNavScreenSelected === "plans" &&
                                 <Container className={`${styles.easeCome}`}>
                                     <PlansTable
-                                        subscribersInfo={subscribersInfo}
-                                        clubProviderInfo={clubProviderInfo}
-                                        updatePlans={updatePlans}
-                                        setUpdatePlans={setUpdatePlans}
+                                        plansInfo={plansInfo}
                                     />
                                 </Container>}
                             {myNavScreenSelected === "products" &&
                                 <Container className={`${styles.easeCome}`}>
                                     <ProductsTable
-                                        subscribersInfo={subscribersInfo}
-                                        clubProviderInfo={clubProviderInfo}
-                                        updateProducts={updateProducts}
-                                        setUpdateProducts={setUpdateProducts}
+                                        plansInfo={plansInfo}
+                                        productsInfo={productsInfo}
                                     />
                                 </Container>
                             }
@@ -131,7 +140,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                         <DivisionLine />
                     </Row>
                     <Row className="p-4 w-100">
-                        <Col md="auto" className="d-flex justify-content-start">
+                        <Col md={2} className="d-flex justify-content-center">
                             <ClubRegisterNavigation
                                 clubRegNavDefaultActiveKey={clubRegNavDefaultActiveKey}
                                 clubRegNavScreenSelected={clubRegNavScreenSelected}

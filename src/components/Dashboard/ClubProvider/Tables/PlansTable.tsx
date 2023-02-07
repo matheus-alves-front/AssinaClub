@@ -1,26 +1,7 @@
-import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { getPlansInfo } from '../../../../utils/getPlansInfo';
 import { PLANS_PROPERTIES } from './utils/myClubProperties';
 
-export function PlansTable({ subscribersInfo, clubProviderInfo, updatePlans, setUpdatePlans }: any) {
-
-    const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
-
-    useEffect(() => {
-        handlePlansInfo()
-    }, [subscribersInfo])
-
-    useEffect(() => {
-        if(updatePlans) {
-            handlePlansInfo()
-            setUpdatePlans(false)
-        }
-    }, [updatePlans])
-
-    async function handlePlansInfo() {
-        if (subscribersInfo) setPlansInfo(await getPlansInfo(clubProviderInfo.id))
-    }
+export function PlansTable({ plansInfo }: any) {
 
     return (
         <section>

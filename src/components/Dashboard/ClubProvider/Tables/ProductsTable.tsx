@@ -1,33 +1,7 @@
-import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
-import { getPlansInfo } from '../../../../utils/getPlansInfo';
-import { getProductsInfo } from '../../../../utils/getProductsInfo';
 import { PRODUCTS_PROPERTIES } from './utils/myClubProperties';
 
-export function ProductsTable({ clubProviderInfo, subscribersInfo, updateProducts, setUpdateProducts }: any) {
-
-    const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
-    const [productsInfo, setProductsInfo] = useState<any[]>([]) //! Corrigir tipagem
-
-    useEffect(() => {
-        handlePlansInfo()
-        handleProductsInfo()
-    }, [subscribersInfo])
-
-    useEffect(() => {
-        if(updateProducts) {
-            handleProductsInfo()
-            setUpdateProducts(false)
-        }
-    }, [updateProducts])
-
-    async function handlePlansInfo() {
-        if (subscribersInfo) setPlansInfo(await getPlansInfo(clubProviderInfo?.id))
-    }
-
-    async function handleProductsInfo() {
-        if (clubProviderInfo) setProductsInfo(await getProductsInfo(clubProviderInfo.id))
-    }
+export function ProductsTable({ plansInfo, productsInfo }: any) {
 
     function displayPlansNames(plansIds: any[]) { //! Corrigir tipagem
         const plansNames: any = [] //! Corrigir tipagem

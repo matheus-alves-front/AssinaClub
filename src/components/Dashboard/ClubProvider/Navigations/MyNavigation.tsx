@@ -1,12 +1,22 @@
-import { Button, Container } from 'react-bootstrap';
-import { FiEdit } from "react-icons/fi";
-import Nav from 'react-bootstrap/Nav';
+import { Button } from 'react-bootstrap';
+import { FiAlignJustify } from "react-icons/fi";
 import { DivisionLine } from '../../../Divisions/DivisionLine';
 import { useEffect, useState } from 'react';
 import { FilterOptions } from '../FilterOptions/FilterOptions';
+import Nav from 'react-bootstrap/Nav';
 
 //! Corrigir tipagem
-export function MyNavigation({ myNavDefaultActiveKey, myNavScreenSelected, setMyNavScreenSelected }: any) {
+export function MyNavigation({
+    myNavDefaultActiveKey,
+    myNavScreenSelected,
+    setMyNavScreenSelected,
+    plansInfo,
+    setPlansInfo,
+    productsInfo,
+    setProductsInfo,
+    subscribersInfo,
+    setSubscribersInfo
+}: any) {
 
     const [whatToFilter, setWhatToFilter] = useState("Assinantes")
     const [showFilterOptions, setShowFilterOptions] = useState(false)
@@ -18,7 +28,7 @@ export function MyNavigation({ myNavDefaultActiveKey, myNavScreenSelected, setMy
     }, [myNavScreenSelected])
 
     return (
-        <section>
+        <section className='d-flex flex-column'>
             <Nav
                 variant="pills"
                 defaultActiveKey={myNavDefaultActiveKey}
@@ -56,12 +66,20 @@ export function MyNavigation({ myNavDefaultActiveKey, myNavScreenSelected, setMy
             </Nav>
 
             <Button
-                variant="outline-dark"
+                variant="outline-dark d-flex align-items-center justify-content-center"
                 onClick={() => setShowFilterOptions(!showFilterOptions)}
             >
-                Filtrar {whatToFilter} <FiEdit />
+                Filtrar {whatToFilter} <FiAlignJustify style={{marginLeft: "4px"}} />
             </Button>
-            {showFilterOptions && <FilterOptions whatToFilter={whatToFilter} />}
+            {showFilterOptions && <FilterOptions
+                whatToFilter={whatToFilter}
+                plansInfo={plansInfo}
+                setPlansInfo={setPlansInfo}
+                productsInfo={productsInfo}
+                setProductsInfo={setProductsInfo}
+                subscribersInfo={subscribersInfo}
+                setSubscribersInfo={setSubscribersInfo}
+            />}
         </section>
     )
 }
