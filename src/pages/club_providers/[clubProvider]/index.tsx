@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "../../api/auth/[...nextauth]"
 
 import { getClubProviderByName } from "../../../prisma/clubProviders"
-import { getDataObjectPrismaDateFormat } from "../../../utils/getDataPrismaDateFormat"
 
 import type { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { Plan } from "../../../@types/PlansTypes"
@@ -177,7 +176,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
   const { host } = context.req.headers
   const clubProviderName = String(context?.params?.clubProvider)
 
-  const clubProvider = getDataObjectPrismaDateFormat(await getClubProviderByName(clubProviderName))
+  const clubProvider = await getClubProviderByName(clubProviderName)
   
   const fetchClubProviderPlans = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/plans/`)
   const fetchClubProviderProducts = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/products/`)

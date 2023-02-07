@@ -1,15 +1,16 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import styles from "../../styles/pages/register.module.scss"
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { GetSessionParams, useSession } from "next-auth/react";
 import { GetClubProviderData } from "../login/club_provider";
 import { RegisterFormAdmin } from "../../components/RegisterForms/RegisterAdmins";
+import { GetServerSideProps } from "next";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+import { Subscriber } from "@prisma/client";
 
-export default function RegisterAdmin() {
-
-    const session = useSession() as any //! Corrigir tipagem
-
-    const { id, clubName } = session?.data?.userData 
+export default function RegisterAdmin({userData}: any) {
+    const { id, clubName } = userData 
 
     return (
         <Container className={styles.containerSubscriber}>
@@ -32,4 +33,19 @@ export default function RegisterAdmin() {
             </Card>
         </Container>
     )
+}
+
+interface GetSubscriberData extends GetSessionParams {
+    userData?: Subscriber
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const session = await getServerSession(context.req, context.res, authOptions) as GetSubscriberData 
+    const { userData } = session
+    
+    return {
+        props: {
+            userData
+        }
+    }
 }

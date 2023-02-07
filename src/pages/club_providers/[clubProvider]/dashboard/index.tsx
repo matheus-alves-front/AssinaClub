@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { getClubProviderByName } from "../../../../prisma/clubProviders"
-import { getDataObjectPrismaDateFormat } from "../../../../utils/getDataPrismaDateFormat"
 import { ClubProvider } from "../../../../@types/ClubProviderTypes"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
@@ -40,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { host } = context.req.headers
     const clubProviderName = String(context?.params?.clubProvider)
 
-    const clubProvider = getDataObjectPrismaDateFormat(await getClubProviderByName(clubProviderName))
+    const clubProvider = await getClubProviderByName(clubProviderName)
 
     const fetchClubProviderAdmins = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/admins/`)
 
