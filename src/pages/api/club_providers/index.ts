@@ -16,10 +16,10 @@ export default async function handleClubProviders(
     const { method } = req
 
     if (method === "GET") {
-        const clubProviders = await getClubProviders()
+        const clubProviders = await getClubProviders() 
 
         return res.status(200).json({
-            data: clubProviders.reverse(),
+            data: clubProviders,
         })
     } else if (method === "POST") {
         const {
@@ -46,7 +46,8 @@ export default async function handleClubProviders(
                 cnpj,
                 password: hashedPassword,
                 email,
-                description
+                description,
+                creationDate: new Date(Date.now()).toISOString()
             }
         }
 

@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt'
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 
 import { getSubscriber } from '../../../prisma/subscribers'
-import { createSubscriberRelation, removeSubscriberRelation } from '../../../prisma/signaturesRelation'
 
 import { prisma } from '../../../prisma/PrismaClient'
 
@@ -29,10 +28,7 @@ export default async function updateSubscriber(
             cpf,
             birthDate,
             email,
-            password,
-            isPaid,
-            clubAssinatureId,
-            unsubscribe
+            password
         }: Subscriber = req.body
 
         const subscriberExists = await getSubscriber(subscriberId)
@@ -40,34 +36,6 @@ export default async function updateSubscriber(
         if(!subscriberExists) return res.status(404).json({
             message: 'Subscriber does not exist'
         })
-
-        if (unsubscribe) {
-            if (!clubAssinatureId) {
-                return res.status(400).json({
-                    message: "Missing ClubId"
-                })
-            }
-
-            removeSubscriberRelation(subscriberId, clubAssinatureId)
-
-            return res.status(201).json({
-                message: "Signature Removed"
-            })
-        }
-
-        if (isPaid) {
-            if (!clubAssinatureId) {
-                return res.status(400).json({
-                    message: "Missing ClubId"
-                })
-            }
-            
-            createSubscriberRelation(subscriberId, clubAssinatureId)
-
-            return res.status(201).json({
-                message: "Signature Completed"
-            })
-        }
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 

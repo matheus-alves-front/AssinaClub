@@ -7,6 +7,7 @@ export type Subscriber = {
   password: string
   signatures?: string[]
   clubProviderIds?: string[]
+  planIds: string | string[]
 
   // For Signatures
   isPaid?: boolean
