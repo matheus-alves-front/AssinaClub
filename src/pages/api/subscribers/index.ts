@@ -19,6 +19,16 @@ export default async function handleSubscribers(
     if (method === "GET") {
         const subscribers = await getSubscribers()
 
+        const { clubProviderId } = req.query
+
+        if(clubProviderId) {
+            const filteredSubs = subscribers.filter(subscriber => subscriber.clubProviderIds.includes(String(clubProviderId)))
+
+            return res.status(200).json({
+                data: filteredSubs.reverse(),
+            })
+        }
+
         return res.status(200).json({
             data: subscribers.reverse(),
         })

@@ -5,9 +5,10 @@ import { ClubProvider } from "../../../../@types/ClubProviderTypes"
 import { Admin } from "../../../../@types/AdminsClubProviderTypes"
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
 import { getServerSession } from "next-auth"
-import { GetSubscriberData } from "../../../register/admin"
 import { authOptions } from "../../../api/auth/[...nextauth]"
 import { GetSessionParams } from "next-auth/react"
+import Table from 'react-bootstrap/Table';
+import axios from "axios"
 
 type ClubProviderHomeProps = {
     clubProviderAdmins: {
@@ -18,16 +19,39 @@ type ClubProviderHomeProps = {
 
 export default function ClubProvidersHome({ clubProviderAdmins, userData }: ClubProviderHomeProps) {
 
-    const [canDisplayModal, setCamDisplayModal] = useState(false)
+    const [canDisplayModal, setCanDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
+    const [clubProviderInfo, setClubProviderInfo] = useState(null)
 
     useEffect(() => {
-        setCamDisplayModal(true)
+        setCanDisplayModal(true)
         lookForAdmin(userData)
     }, [])
 
+    useEffect(() => {
+        if(adminIsDefined) getClubProviderInfo()
+    }, [adminIsDefined])
+
+    async function getClubProviderInfo() {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/club_providers/${userData.id}`) 
+            const clubProvider = response.data.data
+            setClubProviderInfo(clubProvider)
+            const subscriberIds = clubProvider.subscriberIds
+            console.log(subscriberIds)
+            getSubscribersInfo(subscriberIds)
+        } catch (err) {
+            console.log(err)
+            alert("Algo deu errado!")
+        }
+    }
+
+    function getSubscribersInfo(subscriberIds: any) {
+        
+    }
+
     function lookForAdmin(userData: any) { //! Corrigir tipagem
-        if(userData.occupation !== undefined) setCamDisplayModal(false)
+        if (userData.occupation !== undefined) setCanDisplayModal(false)
     }
 
     return (
@@ -40,22 +64,64 @@ export default function ClubProvidersHome({ clubProviderAdmins, userData }: Club
 
                 />
             }
+            {adminIsDefined &&
+                <div>
+                    <Table responsive="sm">
+                        <thead>
+                            <tr>
+                                <th>Assinantes</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                                <th>Table heading</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                                <td>Table cell</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
+            }
         </>
     )
 }
 
 export interface GetClubProviderData extends GetSessionParams {
-    userData?: ClubProvider
+    userData?: any
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-    const session = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData 
+    const { userData } = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData
 
-    const { userData } = session
-
-    // console.log(userData)
-    
     const { host } = context.req.headers
     const clubProviderName = String(context?.params?.clubProvider)
 
