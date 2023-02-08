@@ -34,56 +34,25 @@ interface GetSubscriberData extends GetSessionParams {
 export default function ClubProvidersHome({
   clubProvider,
   clubProviderPlans,
-  clubProviderProducts,
-  userProps
+  clubProviderProducts
 }: ClubProviderHomeProps) {
   const router = useRouter()
-
-  const userData = userProps?.userData
-  const typeOfUser = userProps?.typeOfUser ?? 'subscriber'
-  
-  const clubProviderId = String(clubProvider?.id)
   
   function productIncludesInPlan(plansId: string[], productId: string | string[]) {
     return plansId.some(item => productId.includes(item));
   }
 
-  async function makeAssignature(clubAssinatureId: string, planId: string | string[], isCancel: boolean) {
-    if (!userData) {
-      router.push(`/login/${typeOfUser}`)
-
-      return
-    }
-
-    const data = {
-      isPaid: true,
-      clubAssinatureId,
-      planIds: planId,
-      unsubscribe: isCancel
-    }
-
-    try {
-      const response = await fetch(`/api/subscribers/${userData.id}/signatures`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) {
-        throw new Error('Falha ao criar assinatura');
+  function handleCheckout(
+    clubAssignatureId: string, 
+    planId: string | string[], 
+  ) {
+    router.push({
+      pathname: '/checkout/clube-do-matheus',
+      query: {
+        clubAssignatureId,
+        planId
       }
-      const result = await response.json();
-
-      if (result) {
-        alert(!isCancel ? 'Assinatura efetuada' : 'Assinatura cancelada')
-      }
-    } catch(err) {
-      alert(err)
-    }
-
-    router.reload()
+    })
   }
 
   return (
@@ -95,7 +64,7 @@ export default function ClubProvidersHome({
         <h3>Planos</h3>
 
         {clubProviderPlans.data.map((plan, index) => (
-          <Col key={index} md={4}>
+          <Col className="mb-4" key={index} md={4}>
             <Card>
               <Image 
                 src={'https://www.nerdaocubo.com.br/media/wysiwyg/img_nossos-cubos_nerd-ao-cubo.jpg'} 
@@ -120,37 +89,13 @@ export default function ClubProvidersHome({
                   }
                 })}
               </Card.Body>
-              {typeOfUser == 'subscriber' ? (
-                <>
-                  {userData?.clubProviderIds?.includes(clubProviderId) ? (
-                    <>
-                      {userData?.planIds.includes(String(plan.id)) ?
-                        <Button 
-                          className="m-2"
-                          variant="danger"
-                          onClick={() => makeAssignature(plan.clubProviderId, plan.id, true)}
-                        >
-                          Cancelar Assinatura
-                        </Button>
-                      : 
-                      <p className="text-center text-danger">Você já é assinante desse clube</p>
-                      }
-                    </>
-                  )
-                  : 
-                    <Button 
-                      onClick={() => makeAssignature(plan.clubProviderId, plan.id, false)}
-                      variant="success" 
-                      className="m-2"
-                    >
-                      Assinar
-                    </Button>
-                  }
-                </>
-              )
-                :
-                ''
-              }
+              <Button 
+                onClick={() => handleCheckout(plan.clubProviderId, plan.id)}
+                variant="success" 
+                className="m-2"
+              >
+                Assinar
+              </Button>
             </Card>
           </Col>
         ))}
@@ -160,26 +105,12 @@ export default function ClubProvidersHome({
 }
 
 export const getServerSideProps: GetServerSideProps = async(context) => {
-  const session = await getServerSession(context.req, context.res, authOptions) as GetSubscriberData
-
-  let userProps = null
-
-  if (session) {
-    const { userData, typeOfUser } = session
-
-    userProps = {
-      userData,
-      typeOfUser
-    }
-  }
-
-  const { host } = context.req.headers
   const clubProviderName = String(context?.params?.clubProvider)
 
   const clubProvider = await getClubProviderByName(clubProviderName)
   
-  const fetchClubProviderPlans = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/plans/`)
-  const fetchClubProviderProducts = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/products/`)
+  const fetchClubProviderPlans = await fetch(`${process.env.BASE_URL}/api/club_providers/id/${clubProvider?.id}/plans/`)
+  const fetchClubProviderProducts = await fetch(`${process.env.BASE_URL}/api/club_providers/id/${clubProvider?.id}/products/`)
   
   if (!fetchClubProviderPlans.ok) {
     console.error(await fetchClubProviderPlans.text())
@@ -199,8 +130,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
     props: {
       clubProvider,
       clubProviderPlans,
-      clubProviderProducts,
-      userProps
+      clubProviderProducts
     }
   }
 }

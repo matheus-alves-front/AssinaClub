@@ -1,11 +1,10 @@
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
-import { Subscriber } from "../../../../@types/SubscriberTypes"
+import { Card, Col, Form, Row } from "react-bootstrap"
 import { DashboardType } from "../../../../pages/subscriber/dashboard"
 
 export function MyInformationsCard({subscriberData}: DashboardType) {
   return (
     <Card>
-      <Card.Header>Suas informações:</Card.Header>
+      <Card.Header><strong>Suas informações:</strong></Card.Header>
       <Card.Body>
         <Form 
           name="editFormSubscriber" 

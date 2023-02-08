@@ -11,7 +11,7 @@ import { MySignatures, MySignaturesCard } from "../../../components/Dashboard/Su
 import { ChangeAccount } from "../../../components/Dashboard/Subscriber/ChangeAccount"
 
 import { Col, Container, Nav, Row, Tab } from "react-bootstrap"
-import axios from "axios"
+import { useEffect, useState } from "react"
 
 export interface ClubWithPlan extends Plan {
   club?: ClubProvider
@@ -24,36 +24,84 @@ export type DashboardType = {
 }
 
 export default function Dashboard({subscriberData, signatures, AssignatureDetails}: DashboardType) {
+  const [eventKey, setEventKey] = useState('my-signatures')
+
+  useEffect(() => {
+    console.log(eventKey)
+  }, [eventKey])
+  
   return (
-      <Container>
+      <Container fluid>
         <Tab.Container 
             id="my-account-dashboard" 
             defaultActiveKey="my-signatures"
+            onSelect={(eventKey) => {
+              setEventKey(String(eventKey))
+            }}
         >
-          <Row>
-            <Col sm={3}>
-              <Nav variant="pills" className="flex-column">
+          <Row className="justify-content-around">
+            <Col 
+              xl={3}
+              lg={4}
+              sm={12} 
+              className="border-end"
+            >
+              <Nav variant="pills" className="flex-column px-5">
                 <Nav.Item>
-                  <Nav.Link eventKey="my-account">Minha Conta</Nav.Link>
+                  <Nav.Link 
+                    eventKey="my-account"
+                    className={eventKey === "my-account" ? 'text-white' : ''}
+                  >
+                    Minha Conta
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="my-signatures">Minhas Assinaturas</Nav.Link>
+                  <Nav.Link 
+                    eventKey="my-signatures"
+                    className={eventKey === "my-signatures" ? 'text-white' : ''}
+                  >
+                    Minhas Assinaturas
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="wish-list">Lista de Desejos</Nav.Link>
+                  <Nav.Link 
+                    eventKey="wish-list"
+                    className={eventKey === "wish-list" ? 'text-white' : ''}
+                  >
+                    Lista de Desejos
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="my-address">Meus Endereços</Nav.Link>
+                  <Nav.Link 
+                    eventKey="my-address"
+                    className={eventKey === "my-address" ? 'text-white' : ''}
+                  >
+                    Meus Endereços
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="my-credit-cards">Meus Cartões</Nav.Link>
+                  <Nav.Link 
+                    eventKey="my-credit-cards"
+                    className={eventKey === "my-credit-cards" ? 'text-white' : ''}
+                  >
+                    Meus Cartões
+                  </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="change-account">Alterar Conta</Nav.Link>
+                  <Nav.Link 
+                    eventKey="change-account"
+                    className={eventKey === "change-account" ? 'text-white' : ''}
+                  >
+                    Alterar Conta
+                  </Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
-            <Col sm={9}>
+            <Col 
+              sm={12} 
+              lg={7}
+              xl={8}
+            >
               <Tab.Content>
                 <Tab.Pane eventKey="my-account">
                   <h1>Minha Conta</h1>
@@ -68,7 +116,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 </Tab.Pane>
                 <Tab.Pane eventKey="my-signatures">
                   <h1>Minhas Assinaturas</h1>
-                  <MySignatures AssignatureDetails={AssignatureDetails} />
+                  <MySignatures userId={String(subscriberData?.id)} AssignatureDetails={AssignatureDetails} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="wish-list">
                   <h1>Minhas Lista de Desejos</h1>
