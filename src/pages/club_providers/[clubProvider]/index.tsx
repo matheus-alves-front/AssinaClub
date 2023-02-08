@@ -48,13 +48,15 @@ export default function ClubProvidersHome({
   function handleCheckout(
     clubAssignatureId: string, 
     planId: string | string[], 
-    clubName: string
+    clubName: string,
+    planName: string
   ) {
     router.push({
-      pathname: `/checkout/${clubName}`,
+      pathname: `/checkout/${clubName}/payment`,
       query: {
         clubAssignatureId,
-        planId
+        planId,
+        planName
       }
     })
   }
@@ -94,7 +96,7 @@ export default function ClubProvidersHome({
                 })}
               </Card.Body>
               <Button 
-                onClick={() => handleCheckout(plan.clubProviderId, plan.id, clubProvider?.clubName)}
+                onClick={() => handleCheckout(plan.clubProviderId, plan.id, clubProvider?.clubName, plan.title)}
                 variant="success" 
                 className="m-2"
               >
