@@ -1,5 +1,4 @@
 .easeCome {
-    // transition: all 1s;
     animation: ease-come 0.4s ease-out;
 
     @keyframes ease-come {
@@ -7,6 +6,18 @@
             opacity: 0;
         } to {
             opacity: 1;
+        }
+    }
+}
+
+.growScale {
+    animation: grow-scale 0.2s ease-out;
+
+    @keyframes grow-scale {
+        from {
+            scale: 0;
+        } to {
+            scale: 1;
         }
     }
 }

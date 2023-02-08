@@ -150,12 +150,14 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                         <Col md="auto">
                             <DivisionColumn />
                         </Col>
-                        <Col md={5}>
+                        <Col md="auto" className="mx-auto">
                             {clubRegNavScreenSelected === "products" &&
                                 <Container className={`${styles.easeCome}`}>
                                     <ProductsRegister
                                         clubProviderInfo={clubProviderInfo}
                                         setUpdateProducts={setUpdateProducts}
+                                        plansInfo={plansInfo}
+                                        productsInfo={productsInfo}
                                     />
                                 </Container>
                             }

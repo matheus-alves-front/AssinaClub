@@ -9,3 +9,13 @@ export function DivisionLine() {
             }} />
     );
 }
+
+export function DivisionLineWithoutMargin() {
+    return (
+        <div
+            className="bg-secondary-subtle"
+            style={{
+                height: '3px',
+            }} />
+    );
+}

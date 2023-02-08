@@ -41,7 +41,7 @@ export function MyNavigation({
                 <Nav.Item>
                     <Nav.Link
                         eventKey="subscribers"
-                        className={`text-center ${myNavScreenSelected === "subscribers" ? "text-white" : ""}`}
+                        className={`text-center ${myNavScreenSelected === "subscribers" ? "text-white bg-dark" : ""}`}
                     >
                         Meus Assinantes
                     </Nav.Link>
@@ -49,7 +49,7 @@ export function MyNavigation({
                 <Nav.Item>
                     <Nav.Link
                         eventKey="plans"
-                        className={`text-center ${myNavScreenSelected === "plans" ? "text-white" : ""}`}
+                        className={`text-center ${myNavScreenSelected === "plans" ? "text-white bg-dark" : ""}`}
                     >
                         Meus Planos
                     </Nav.Link>
@@ -57,19 +57,21 @@ export function MyNavigation({
                 <Nav.Item>
                     <Nav.Link
                         eventKey="products"
-                        className={`text-center ${myNavScreenSelected === "products" ? "text-white" : ""}`}
+                        className={`text-center ${myNavScreenSelected === "products" ? "text-white bg-dark" : ""}`}
                     >
                         Meus Produtos
                     </Nav.Link>
                 </Nav.Item>
-                <DivisionLine />
             </Nav>
 
+            <DivisionLine />
+
             <Button
-                variant="outline-dark d-flex align-items-center justify-content-center"
+                variant="outline-dark"
+                className="d-flex align-items-center justify-content-center mt-10"
                 onClick={() => setShowFilterOptions(!showFilterOptions)}
             >
-                Filtrar {whatToFilter} <FiAlignJustify style={{marginLeft: "4px"}} />
+                Filtrar {whatToFilter} <FiAlignJustify style={{ marginLeft: "4px" }} />
             </Button>
             {showFilterOptions && <FilterOptions
                 whatToFilter={whatToFilter}

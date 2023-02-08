@@ -40,6 +40,7 @@ export function PlansRegister({ clubProviderInfo, setUpdatePlans }: any) { //! C
                 <Row className="my-1 justify-content-end">
                     <Col md={5}>
                         <Button
+                            variant="dark"
                             type="submit"
                             className="w-100 p-2 mt-4"
                         >

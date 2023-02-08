@@ -16,7 +16,7 @@ export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavSc
                 <Nav.Item>
                     <Nav.Link
                         eventKey="products"
-                        className={`text-center ${clubRegNavScreenSelected === "products" ? "text-white" : ""}`}
+                        className={`text-center ${clubRegNavScreenSelected === "products" ? "text-white bg-dark" : ""}`}
                     >
                         Registrar Produtos
                     </Nav.Link>
@@ -24,7 +24,7 @@ export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavSc
                 <Nav.Item>
                     <Nav.Link
                         eventKey="plans"
-                        className={`text-center ${clubRegNavScreenSelected === "plans" ? "text-white" : ""}`}
+                        className={`text-center ${clubRegNavScreenSelected === "plans" ? "text-white bg-dark" : ""}`}
                     >
                         Registrar Planos
                     </Nav.Link>
