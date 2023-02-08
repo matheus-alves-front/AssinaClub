@@ -1,10 +1,8 @@
 import { useRouter } from "next/router"
 import { GetSessionParams } from "next-auth/react"
-import { GetServerSideProps } from "next"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "../../api/auth/[...nextauth]"
+import { GetStaticPaths, GetStaticProps } from "next"
 
-import { getClubProviderByName } from "../../../prisma/clubProviders"
+import { getClubProviderByName, getClubProviders } from "../../../prisma/clubProviders"
 
 import type { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { Plan } from "../../../@types/PlansTypes"
@@ -12,6 +10,7 @@ import { Product } from "../../../@types/ProductTypes"
 import { Subscriber } from "../../../@types/SubscriberTypes"
 
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap"
+import { LoaderSpinner } from "../../../components/Loader"
 
 type ClubProviderHomeProps = {
   clubProvider: ClubProvider
@@ -37,6 +36,12 @@ export default function ClubProvidersHome({
   clubProviderProducts
 }: ClubProviderHomeProps) {
   const router = useRouter()
+
+  if (router.isFallback) {
+    return (
+      <LoaderSpinner />
+    )
+  }
   
   function productIncludesInPlan(plansId: string[], productId: string | string[]) {
     return plansId.some(item => productId.includes(item));
@@ -45,9 +50,10 @@ export default function ClubProvidersHome({
   function handleCheckout(
     clubAssignatureId: string, 
     planId: string | string[], 
+    clubName: string
   ) {
     router.push({
-      pathname: '/checkout/clube-do-matheus',
+      pathname: `/checkout/${clubName}`,
       query: {
         clubAssignatureId,
         planId
@@ -90,7 +96,7 @@ export default function ClubProvidersHome({
                 })}
               </Card.Body>
               <Button 
-                onClick={() => handleCheckout(plan.clubProviderId, plan.id)}
+                onClick={() => handleCheckout(plan.clubProviderId, plan.id, clubProvider?.clubName)}
                 variant="success" 
                 className="m-2"
               >
@@ -104,7 +110,7 @@ export default function ClubProvidersHome({
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async(context) => {
+export const getStaticProps: GetStaticProps = async(context) => {
   const clubProviderName = String(context?.params?.clubProvider)
 
   const clubProvider = await getClubProviderByName(clubProviderName)
@@ -134,3 +140,21 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
     }
   }
 }
+
+export const getStaticPaths: GetStaticPaths = async (context) => {
+  const clubProvider = await getClubProviders()
+ 
+  const paths = clubProvider?.map(club => {
+    return {
+      params: {
+        clubProvider: `${club.clubName}`
+      }
+    }
+  })
+ 
+  return {
+    paths: paths,
+    fallback: true
+  }
+}
+

@@ -1,13 +1,13 @@
 export async function handleAssignature(
   clubAssinatureId: string, 
-  planId: string | string[], 
+  planIds: string | string[], 
   isCancel: boolean,
   userId: string
 ) {
   const data = {
     isPaid: true,
     clubAssinatureId,
-    planIds: planId,
+    planIds,
     unsubscribe: isCancel
   }
 

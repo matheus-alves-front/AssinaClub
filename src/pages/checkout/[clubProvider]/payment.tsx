@@ -1,4 +1,4 @@
-export function Checkout() {
+export default function Checkout() {
   return (
     <>
     {/* {typeOfUser == 'subscriber' ? (

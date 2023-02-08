@@ -31,7 +31,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
   }, [eventKey])
   
   return (
-      <Container fluid>
+      <Container fluid={'xl'}>
         <Tab.Container 
             id="my-account-dashboard" 
             defaultActiveKey="my-signatures"
@@ -42,11 +42,11 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
           <Row className="justify-content-around">
             <Col 
               xl={3}
-              lg={4}
+              lg={3}
               sm={12} 
               className="border-end"
             >
-              <Nav variant="pills" className="flex-column px-5">
+              <Nav variant="pills" className="flex-column">
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="my-account"
@@ -99,8 +99,8 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
             </Col>
             <Col 
               sm={12} 
-              lg={7}
-              xl={8}
+              lg={9}
+              xl={9}
             >
               <Tab.Content>
                 <Tab.Pane eventKey="my-account">
