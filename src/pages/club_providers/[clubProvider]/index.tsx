@@ -11,15 +11,13 @@ import { Subscriber } from "../../../@types/SubscriberTypes"
 
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap"
 import { LoaderSpinner } from "../../../components/Loader"
+import { getPlans } from "../../../prisma/plans"
+import { getProducts } from "../../../prisma/products"
 
 type ClubProviderHomeProps = {
   clubProvider: ClubProvider
-  clubProviderPlans: {
-    data: Plan[]
-  }
-  clubProviderProducts: {
-    data: Product[]
-  }
+  clubProviderPlans:  Plan[]
+  clubProviderProducts: Product[]
   userProps: {
     userData: Subscriber,
     typeOfUser: string
@@ -69,7 +67,7 @@ export default function ClubProvidersHome({
         <p>{clubProvider?.description}</p>
         <h3>Planos</h3>
 
-        {clubProviderPlans.data.map((plan, index) => (
+        {clubProviderPlans.map((plan, index) => (
           <Col className="mb-4" key={index} md={4}>
             <Card>
               <Image 
@@ -83,7 +81,7 @@ export default function ClubProvidersHome({
                 <p>{plan.description}</p>
                 <p>Entrega de {plan.deliveryFrequency} em {plan.deliveryFrequency} mês</p>
                 <h6 className="mb-3">Produtos que você irá receber:</h6>
-                {clubProviderProducts.data.map((product, index) => {
+                {clubProviderProducts.map((product, index) => {
                   if (productIncludesInPlan(plan.productId, product.id)) {
                     return (
                       <div key={index}>
@@ -115,22 +113,9 @@ export const getStaticProps: GetStaticProps = async(context) => {
 
   const clubProvider = await getClubProviderByName(clubProviderName)
   
-  const fetchClubProviderPlans = await fetch(`${process.env.BASE_URL}/api/club_providers/id/${clubProvider?.id}/plans/`)
-  const fetchClubProviderProducts = await fetch(`${process.env.BASE_URL}/api/club_providers/id/${clubProvider?.id}/products/`)
-  
-  if (!fetchClubProviderPlans.ok) {
-    console.error(await fetchClubProviderPlans.text())
-    throw new Error(`Failed to fetch club provider plans, status: ${fetchClubProviderPlans.status}`)
-  }
-  
-  const clubProviderPlans = await fetchClubProviderPlans.json()
+  const clubProviderPlans = await getPlans(String(clubProvider?.id))
 
-  if (!fetchClubProviderProducts.ok) {
-    console.error(await fetchClubProviderPlans.text())
-    throw new Error(`Failed to fetch club provider plans, status: ${fetchClubProviderPlans.status}`)
-  } 
-
-  const clubProviderProducts = await fetchClubProviderProducts.json()
+  const clubProviderProducts = await getProducts(String(clubProvider?.id))
 
   return {
     props: {
