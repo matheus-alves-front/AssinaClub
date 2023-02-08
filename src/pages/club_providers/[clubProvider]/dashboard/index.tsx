@@ -45,11 +45,15 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
     const [updateProducts, setUpdateProducts] = useState(false)
     const [updatePlans, setUpdatePlans] = useState(false)
 
+    const [deletingPlans, setDeletingPlans] = useState(false)
+
     const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
     const [productsInfo, setProductsInfo] = useState<any[]>([]) //! Corrigir tipagem
 
+    const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<any>([]) //! Corrigir tipagem
+
     useEffect(() => {
-        handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo)
+        handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
         handleProductsInfo(setProductsInfo, clubProviderInfo)
     }, [subscribersInfo])
 
@@ -62,7 +66,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
 
     useEffect(() => {
         if (updatePlans) {
-            handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo)
+            handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
             setUpdatePlans(false)
         }
     }, [updatePlans])
@@ -106,6 +110,10 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                                 setProductsInfo={setProductsInfo}
                                 subscribersInfo={subscribersInfo}
                                 setSubscribersInfo={setSubscribersInfo}
+                                setDeletingPlans={setDeletingPlans}
+                                deletingPlans={deletingPlans}
+                                setPlansThatCanBeDeleted={setPlansThatCanBeDeleted}
+
                             />
                         </Col>
                         <Col md="auto">
@@ -121,11 +129,28 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                                 </Container>
                             }
                             {myNavScreenSelected === "plans" &&
-                                <Container className={`${styles.easeCome}`}>
-                                    <PlansTable
-                                        plansInfo={plansInfo}
-                                    />
-                                </Container>}
+                                (
+                                    !deletingPlans ? (
+                                        <Container className={`${styles.easeCome}`}>
+                                            <PlansTable
+                                                plansInfo={plansInfo}
+                                                deletingPlans={deletingPlans}
+                                                clubProviderInfo={clubProviderInfo}
+                                                setUpdatePlans={setUpdatePlans}
+                                            />
+                                        </Container>
+                                    ) : (
+                                        <Container className={`${styles.easeCome}`}>
+                                            <PlansTable
+                                                plansInfo={plansThatCanBeDeleted}
+                                                deletingPlans={deletingPlans}
+                                                clubProviderInfo={clubProviderInfo}
+                                                setUpdatePlans={setUpdatePlans}
+                                            />
+                                        </Container>
+                                    )
+                                )
+                            }
                             {myNavScreenSelected === "products" &&
                                 <Container className={`${styles.easeCome}`}>
                                     <ProductsTable
@@ -173,7 +198,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
                     </Row>
                 </>
             }
-        </main>
+        </main >
     )
 }
 

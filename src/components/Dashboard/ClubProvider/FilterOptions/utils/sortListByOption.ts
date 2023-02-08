@@ -11,7 +11,16 @@ export function sortListByOption( //! Corrigir tipagem
     const productsCopy = [...productsInfo] as any[]
     const subscribersCopy = [...subscribersInfo] as any[]
 
-    function sortByParam(param: any, copy: any[], setCopy: any) { //! Corrigir tipagem
+    //! Corrigir tipagem
+    function sortByParam(param: any, copy: any[], setCopy: any) {
+        if (param === "subscriberIds") {
+            copy.sort((a, b) => {
+                if (a[param].length > b[param].length) return 1
+                if (a[param].length < b[param].length) return -1
+                return 0
+            })
+            return setCopy(copy)
+        }
         copy.sort((a, b) => {
             if (a[param] > b[param]) return 1
             if (a[param] < b[param]) return -1
@@ -32,6 +41,9 @@ export function sortListByOption( //! Corrigir tipagem
         case 'Frequência':
             sortByParam("deliveryFrequency", plansCopy, setPlansInfo)
             break;
+        case 'nº de Assinantes':
+            sortByParam("subscriberIds", plansCopy, setPlansInfo)
+            break;
 
         //! Products Filter Options
         case 'Valor':
@@ -51,7 +63,7 @@ export function sortListByOption( //! Corrigir tipagem
         case 'CPF':
             sortByParam("cpf", subscribersCopy, setSubscribersInfo)
             break;
-            
+
         default:
             break;
     }

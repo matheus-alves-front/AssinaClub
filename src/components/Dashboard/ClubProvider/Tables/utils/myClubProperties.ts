@@ -2,6 +2,7 @@ export const PLANS_PROPERTIES = [
     'nº',
     'Título',
     'Descrição',
+    'nº de Assinantes',
     'Preço',
     'Frequência'
 ]

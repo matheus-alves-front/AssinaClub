@@ -9,7 +9,13 @@ async function getPlansInfo(clubProviderId: string) {
 export async function handlePlansInfo( //! Corrigir Tipagem
     subscribersInfo: any,
     setPlansInfo: any,
-    clubProviderInfo: any
-) { 
-    if (subscribersInfo) setPlansInfo(await getPlansInfo(clubProviderInfo?.id))
+    clubProviderInfo: any,
+    setPlansThatCanBeDeleted: any
+) {
+    if (subscribersInfo) {
+        const updatedPlans = await getPlansInfo(clubProviderInfo?.id)
+        const filteredPlans = [...updatedPlans].filter(plan => plan.subscriberIds.length === 0)
+        setPlansInfo(updatedPlans)
+        setPlansThatCanBeDeleted(filteredPlans)
+    }
 }

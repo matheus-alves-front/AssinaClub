@@ -1,5 +1,5 @@
 import { Button } from 'react-bootstrap';
-import { FiAlignJustify } from "react-icons/fi";
+import { FiAlignJustify, FiTrash2 } from "react-icons/fi";
 import { DivisionLine } from '../../../Divisions/DivisionLine';
 import { useEffect, useState } from 'react';
 import { FilterOptions } from '../FilterOptions/FilterOptions';
@@ -15,11 +15,20 @@ export function MyNavigation({
     productsInfo,
     setProductsInfo,
     subscribersInfo,
-    setSubscribersInfo
+    setSubscribersInfo,
+    setDeletingPlans,
+    deletingPlans,
+    setPlansThatCanBeDeleted
 }: any) {
 
     const [whatToFilter, setWhatToFilter] = useState("Assinantes")
     const [showFilterOptions, setShowFilterOptions] = useState(false)
+
+    function deletePlans(plansInfo: any[]) {
+        const filteredPlans = [...plansInfo].filter(plan => plan.subscriberIds.length === 0)
+        setPlansThatCanBeDeleted(filteredPlans)
+        setDeletingPlans(true)
+    }
 
     useEffect(() => {
         if (myNavScreenSelected === "subscribers") return setWhatToFilter('Assinantes')
@@ -68,12 +77,13 @@ export function MyNavigation({
 
             <Button
                 variant="outline-dark"
-                className="d-flex align-items-center justify-content-center mt-10"
+                disabled={deletingPlans}
+                className="d-flex align-items-center justify-content-center"
                 onClick={() => setShowFilterOptions(!showFilterOptions)}
             >
                 Filtrar {whatToFilter} <FiAlignJustify style={{ marginLeft: "4px" }} />
             </Button>
-            {showFilterOptions && <FilterOptions
+            {showFilterOptions && !deletingPlans && <FilterOptions
                 whatToFilter={whatToFilter}
                 plansInfo={plansInfo}
                 setPlansInfo={setPlansInfo}
@@ -82,6 +92,30 @@ export function MyNavigation({
                 subscribersInfo={subscribersInfo}
                 setSubscribersInfo={setSubscribersInfo}
             />}
+            {
+                (myNavScreenSelected === "plans") && (
+                    <>
+                        <Button
+                            style={{ marginTop: "20px" }}
+                            variant={deletingPlans ? "danger" : "outline-danger"}
+                            className="d-flex align-items-center justify-content-center"
+                            onClick={() => deletePlans(plansInfo)}
+                        >
+                            Deletar Planos <FiTrash2 style={{ marginLeft: "4px" }} />
+                        </Button>
+                        <Button
+                            style={{ marginTop: "10px" }}
+                            variant="outline-danger"
+                            className={deletingPlans ? "" : "visually-hidden"}
+                            onClick={() => setDeletingPlans(false)}
+                        >
+                            Cancelar
+                        </Button>
+                    </>
+
+                )
+            }
+
         </section>
     )
 }
