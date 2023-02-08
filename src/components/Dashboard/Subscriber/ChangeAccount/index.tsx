@@ -1,15 +1,67 @@
-import { Card, Col, Form, Row } from "react-bootstrap"
-import { DashboardType } from "../../../../pages/subscriber/dashboard"
+import axios from "axios";
+import router from "next/router";
+import { FormEvent } from "react";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { DashboardType } from "../../../../pages/subscriber/dashboard";
 
-export function MyInformationsCard({subscriberData}: DashboardType) {
+export function ChangeAccount({subscriberData}: DashboardType) {
+  const firstName = subscriberData?.name.split(" ")[0]
+
+  async function changeSubscriberInformationSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const form = event.target as HTMLFormElement;
+
+    const {
+      firstNameSubscriber,
+      lastNameSubscriber,
+      cpfSubscriber,
+      birthDateSubscriber,
+      emailSubscriber,
+      passwordSubscriber,
+    } = form
+
+    if (
+      !firstNameSubscriber.value || 
+      !lastNameSubscriber.value || 
+      !cpfSubscriber.value || 
+      !birthDateSubscriber.value || 
+      !emailSubscriber.value || 
+      !passwordSubscriber.value
+    ) {
+      alert('Campos Faltando')
+
+      return
+    }
+
+    const data = {
+      "name": `${firstNameSubscriber.value} ${lastNameSubscriber.value} `,
+      "cpf": cpfSubscriber.value,
+      "birthDate": birthDateSubscriber.value,
+      "email": emailSubscriber.value,
+      "password": passwordSubscriber.value
+    }
+    
+    try {
+      await axios.put(`/api/subscribers/${subscriberData?.id}`, data)
+      
+      router.reload()
+    }
+    catch(err: any) {
+      alert(err.response.data.message)
+      console.log(err.response.data.message)
+    }
+  }
+
+
   return (
     <Card>
-      <Card.Header><strong>Suas informações:</strong></Card.Header>
       <Card.Body>
         <Form 
           name="editFormSubscriber" 
+          onSubmit={(e) => changeSubscriberInformationSubmit(e)}
         >
-          <fieldset disabled>
+          <fieldset>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
@@ -20,7 +72,7 @@ export function MyInformationsCard({subscriberData}: DashboardType) {
                     placeholder="Nome"
                     maxLength={14}
                     minLength={2} 
-                    defaultValue={subscriberData?.name}
+                    defaultValue={firstName}
                   />
                 </Form.Group>
               </Col>
@@ -33,7 +85,7 @@ export function MyInformationsCard({subscriberData}: DashboardType) {
                     placeholder="Sobrenome" 
                     maxLength={14}
                     minLength={2} 
-                    defaultValue={subscriberData?.name}
+                    defaultValue={subscriberData?.name.split(' ').slice(1).join(' ')}
                   />
                 </Form.Group>
               </Col>
@@ -73,6 +125,13 @@ export function MyInformationsCard({subscriberData}: DashboardType) {
                 </Form.Group>
               </Col>
             </Row>
+            <Button 
+              className="float-end mt-2 px-4" 
+              variant={'primary'}
+              type="submit"
+            >
+              Salvar
+            </Button>
           </fieldset>
         </Form>
       </Card.Body>

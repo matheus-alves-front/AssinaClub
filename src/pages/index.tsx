@@ -6,13 +6,14 @@ import {
 
 
 export default function Home() {
-
   return (
     <Container className="d-flex flex-column justify-content-center gap-2 text-center">
       <h1>Assina Club</h1>
-      <Button variant="info" className="text-white">
-        <Link href={"/login/subscriber"}>Sou Assinante</Link>
-      </Button>
+      <Link href={"/login/subscriber"}>
+        <Button variant="info" className="text-white">
+          Sou Assinante
+        </Button>
+      </Link>
       <Link href={"/login/club_provider"}>
         <Button variant="warning" className="text-white">
           Sou Um Clube    

@@ -27,3 +27,13 @@ export async function checkIfProductExists(ProductId: string) {
 
     return true
 }
+
+// export async function getProductsOfPlan(planId: string[]) {
+//     return await prisma.product.findMany({
+//       where: {
+//         plansId: {
+//           in: planId
+//         }
+//       }
+//     });
+//   }
