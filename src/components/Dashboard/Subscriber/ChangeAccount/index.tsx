@@ -7,7 +7,7 @@ import { DashboardType } from "../../../../pages/subscriber/dashboard";
 export function ChangeAccount({subscriberData}: DashboardType) {
   const firstName = subscriberData?.name.split(" ")[0]
 
-  async function RegisterSubscriberSubmit(event: FormEvent<HTMLFormElement>) {
+  async function changeSubscriberInformationSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -59,7 +59,7 @@ export function ChangeAccount({subscriberData}: DashboardType) {
       <Card.Body>
         <Form 
           name="editFormSubscriber" 
-          onSubmit={(e) => RegisterSubscriberSubmit(e)}
+          onSubmit={(e) => changeSubscriberInformationSubmit(e)}
         >
           <fieldset>
             <Row>
