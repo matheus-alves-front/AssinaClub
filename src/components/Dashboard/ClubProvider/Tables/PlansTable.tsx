@@ -14,10 +14,6 @@ export function PlansTable({
 
     const [planBeingDeleted, setPlanBeingDeleted] = useState<any>(null) //! Corrigir tipagem
 
-    useEffect(() => {
-        console.log(planBeingDeleted)
-    }, [planBeingDeleted])
-
     return (
         <section>
             <div className={deletingPlans ? "d-flex justify-content-center" : ""}>
