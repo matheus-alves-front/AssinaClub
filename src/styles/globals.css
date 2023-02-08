@@ -29,3 +29,7 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  h1, h2, h3 {
+    margin-bottom: 1.5rem !important;
+  }
