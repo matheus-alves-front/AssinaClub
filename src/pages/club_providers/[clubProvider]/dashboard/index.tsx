@@ -20,16 +20,17 @@ import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn"
 import { handlePlansInfo } from "../../../../utils/ClubDashboard/plansInfo";
 import { handleProductsInfo } from "../../../../utils/ClubDashboard/productsInfo";
 import { getClubProviderInfo } from "../../../../utils/ClubDashboard/getClubProviderInfo";
+import { ClubProvider } from "../../../../@types/ClubProviderTypes";
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
         data: Admin[]
     }
-    userData: any //! Corrigir tipagem
+    userData: ClubProvider
+    typeOfUser: string
 }
 
-export default function ClubProvidersDashboard({ clubProviderAdmins, userData }: ClubProviderDashboardProps) {
-
+export default function ClubProvidersDashboard({ clubProviderAdmins, userData, typeOfUser }: ClubProviderDashboardProps) {
     const myNavDefaultActiveKey = "subscribers"
     const clubRegNavDefaultActiveKey = "products"
 
@@ -74,11 +75,15 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
     useEffect(() => {
         setCanDisplayModal(true)
         lookForAdmin(userData)
+
+        if (typeOfUser === "admin") {
+            getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
+        }
     }, [])
 
     useEffect(() => {
         if (adminIsDefined) {
-            getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo)
+            getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
         }
     }, [adminIsDefined])
 
@@ -203,12 +208,25 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData }:
 }
 
 export interface GetClubProviderData extends GetSessionParams {
-    userData?: any
+    userData?: ClubProvider
+    typeOfUser: string
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
-    const { userData } = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData
+    const session = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/login/club_provider',
+                permanent: false
+            }
+        }
+    }
+
+    const userData = session?.userData
+    const typeOfUser = session?.typeOfUser
 
     const { host } = context.req.headers
     const clubProviderName = String(context?.params?.clubProvider)
@@ -222,7 +240,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             clubProviderAdmins,
-            userData
+            userData,
+            typeOfUser
         }
     }
 }
