@@ -35,7 +35,7 @@ export default function RegisterAdmin({userData}: any) {
     )
 }
 
-interface GetSubscriberData extends GetSessionParams {
+export interface GetSubscriberData extends GetSessionParams {
     userData?: Subscriber
 }
 

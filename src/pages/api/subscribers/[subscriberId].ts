@@ -33,11 +33,15 @@ export default async function updateSubscriber(
 
         const subscriberExists = await getSubscriber(subscriberId)
 
-        if(!subscriberExists) return res.status(404).json({
+        if (!subscriberExists) return res.status(404).json({
             message: 'Subscriber does not exist'
         })
 
-        const hashedPassword = bcrypt.hashSync(password, 10)
+        let hashedPassword
+
+        if (password) {
+            hashedPassword = bcrypt.hashSync(password, 10)
+        }
 
         const subscriber = await prisma.subscriber.update({
             where: { id: subscriberId },
@@ -46,7 +50,7 @@ export default async function updateSubscriber(
                 cpf,
                 birthDate,
                 email,
-                password: hashedPassword
+                password: hashedPassword ? hashedPassword : password
             }
         })
 
@@ -59,7 +63,7 @@ export default async function updateSubscriber(
 
         const subscriberExists = await getSubscriber(subscriberId)
 
-        if(!subscriberExists) return res.status(404).json({
+        if (!subscriberExists) return res.status(404).json({
             message: 'Subscriber does not exist'
         })
 
