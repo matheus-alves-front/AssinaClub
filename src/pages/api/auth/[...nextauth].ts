@@ -71,8 +71,8 @@ export const authOptions: NextAuthOptions = {
           id = String(clubProviderId)
 
         } else if (typeOfUser === "admin") {
-          const { adminId } = jwt.decode(token) as UserTypes
-          id = String(adminId)
+          const { adminId, clubProviderId } = jwt.decode(token) as UserTypes
+          id = String(adminId) + "-" + String(clubProviderId)
         }
 
         return {
@@ -100,21 +100,26 @@ export const authOptions: NextAuthOptions = {
       const {typeOfUser, userId} = token.account as AccountType
 
       let userData
-
+      
       if (typeOfUser === 'subscriber') {
         userData = await getSubscriber(String(userId))
-
+        
       } else if ((typeOfUser === 'clubProvider')) { 
         userData = await getClubProvider(String(userId))
         
       } else if ((typeOfUser === 'admin')) { 
-        userData = await getAdmin(String(userId))
+        const adminId = userId.split('-')[0]
+        const clubProviderId = userId.split('-')[1]
+        userData = await getAdmin(String(adminId))      
+        if(userData) {
+          userData.clubProviderId = clubProviderId
+        }
       }    
-
+      
       const newSession = {
         ...session, userData, typeOfUser
       } as NewSession
-
+      
       return newSession
     }
   },

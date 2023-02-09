@@ -92,7 +92,7 @@ async function login(
                 }
             })
 
-            if (!admin) return res.status(404).json({ message: "No account found" })
+            if (!admin) return res.status(404).json({ message: "No account found" })         
 
             const hashedPassword = bcrypt.compareSync(password, admin.password)
 
@@ -101,7 +101,7 @@ async function login(
             })
 
             const token = jwt.sign(
-                { adminId: admin.id },
+                { adminId: admin.id, clubProviderId: admin.clubProviderId },
                 process.env.SECRET ?? "",
                 { expiresIn: 60 * 60 * 12 } // 12 hours
             )

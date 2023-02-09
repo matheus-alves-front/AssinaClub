@@ -141,6 +141,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
 
 export interface GetSubscriberData extends GetSessionParams {
   userData?: Subscriber
+  typeOfUser?: string
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -150,6 +151,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       redirect: {
         destination: '/login/subscriber',
+        permanent: false
+      }
+    }
+  }
+
+  if (sessions?.typeOfUser !== "subscriber") {
+    return {
+      redirect: {
+        destination: '/login/club_provider',
         permanent: false
       }
     }

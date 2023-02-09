@@ -10,7 +10,7 @@ interface SubscriberRegisterSchema {
 
 export const subscriberRegisterSchema = Joi.object<SubscriberRegisterSchema>({
     name: Joi.string().min(1).max(30).required(),
-    cpf: Joi.string().length(11),
+    cpf: Joi.string().length(11).required(),
     birthDate: Joi.date().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(1).required(), 

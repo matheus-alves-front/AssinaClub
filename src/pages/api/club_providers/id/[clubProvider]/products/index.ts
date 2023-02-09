@@ -20,8 +20,18 @@ export default async function handleProducts(
     if (method === "GET") {
         const products = await getProducts(clubProviderId)
 
+        const { planId } = req.query
+
+        if(planId) {
+            const filteredProducts = products.filter(product => product.plansId.includes(String(planId)))
+            
+            return res.status(200).json({
+                data: filteredProducts.reverse(),
+            })
+        }
+
         return res.status(200).json({
-            data: products,
+            data: products.reverse(),
         })
 
     } else if (method === "POST") {
