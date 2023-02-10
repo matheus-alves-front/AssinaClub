@@ -1,3 +1,5 @@
+import {Option} from './OptionTypes'
+
 export type Product = {
     id: string | string[]
     name: string
@@ -6,6 +8,7 @@ export type Product = {
     value: number
     clubProviderId: string
     plansId: string[]
+    additionalOptions?: Option[]
 }
 
 export type ProductType = {

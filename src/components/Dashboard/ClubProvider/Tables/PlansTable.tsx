@@ -1,18 +1,28 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { Oval } from 'react-loader-spinner';
+import { ClubProvider } from '../../../../@types/ClubProviderTypes';
+import { Plan } from '../../../../@types/PlansTypes';
 import { deletePlanAndDontUpdate, deletePlanAndUpdate } from './utils/deletePlan';
 import { PLANS_PROPERTIES } from './utils/myClubProperties';
+
+type PlansTableProps = {
+    plansInfo: Plan[]
+    deletingPlans: boolean 
+    clubProviderInfo: ClubProvider | null
+    setUpdatePlans: (value: SetStateAction<boolean>) => void
+}
 
 export function PlansTable({
     plansInfo,
     deletingPlans,
     clubProviderInfo,
     setUpdatePlans
-}: any) { //! Corrigir tipagem
+}: PlansTableProps) {
 
     const [planBeingDeleted, setPlanBeingDeleted] = useState<any>(null) //! Corrigir tipagem
+    const clubProviderId = String(clubProviderInfo?.id)
 
     return (
         <section>
@@ -26,7 +36,7 @@ export function PlansTable({
                     <tbody>
                         {plansInfo ?
                             (<>
-                                {plansInfo.map((plan: any, index: number) => ( //! Corrigir tipagem
+                                {plansInfo.map((plan, index) => (
                                     <>
                                         <tr key={index}>
                                             <td>{++index}</td>
@@ -47,14 +57,14 @@ export function PlansTable({
                 {plansInfo && deletingPlans ?
                     (
                         <div style={{ marginTop: "45px", marginLeft: "20px" }}>
-                            {plansInfo.map((plan: any, index: number) => ( //! Corrigir tipagem
+                            {plansInfo.map((plan, index) => (
                                 <section key={index}>
                                     <Button
                                         onClick={() => {
                                             setPlanBeingDeleted(plan)
                                             deletePlanAndUpdate(
                                                 plan?.id,
-                                                clubProviderInfo?.id,
+                                                clubProviderId,
                                                 setPlanBeingDeleted,
                                                 setUpdatePlans
                                             )
@@ -95,10 +105,10 @@ export function PlansTable({
                     <Button
                         variant="danger"
                         onClick={() => {
-                            plansInfo.forEach(plan => { //! Corrigir tipagem
+                            plansInfo.forEach(plan => {
                                 deletePlanAndDontUpdate(
                                     plan?.id,
-                                    clubProviderInfo?.id,
+                                    clubProviderId,
                                 )
                             })
                             setTimeout(() => {

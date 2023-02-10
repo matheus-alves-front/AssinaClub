@@ -1,11 +1,18 @@
 import { Dropdown, DropdownButton } from "react-bootstrap"
 
+type DropDownSelectorProps = {
+    selectedInfoInAddPlan: any
+    infoType: string
+    selectedInfo: any
+    setSelectedInfoInAddPlan: any
+}
+
 export function DropDownSelector({
     selectedInfoInAddPlan,
     infoType,
     selectedInfo,
     setSelectedInfoInAddPlan
-}: any) { //! Corrigir tipagem
+}: DropDownSelectorProps) { //! Corrigir tipagem
 
     return (
         <>

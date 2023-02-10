@@ -1,7 +1,17 @@
+import { SetStateAction } from 'react';
 import Nav from 'react-bootstrap/Nav';
 
-//! Corrigir tipagem
-export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavScreenSelected, setClubRegNavScreenSelected}: any) { 
+type ClubProviderNavigationProps = {
+    clubRegNavDefaultActiveKey: string 
+    clubRegNavScreenSelected: string
+    setClubRegNavScreenSelected: (value: SetStateAction<string | null>) => void
+}
+
+export function ClubRegisterNavigation({
+    clubRegNavDefaultActiveKey, 
+    clubRegNavScreenSelected, 
+    setClubRegNavScreenSelected
+}: ClubProviderNavigationProps) { 
     
     return (
         <>
