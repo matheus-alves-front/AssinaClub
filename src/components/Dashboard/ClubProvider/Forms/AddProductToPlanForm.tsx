@@ -1,7 +1,23 @@
-import { Button, CloseButton, Col, Container, Dropdown, DropdownButton, Form, Row } from "react-bootstrap"
+import { SetStateAction } from "react"
+import { Button, CloseButton, Col, Container, Form, Row } from "react-bootstrap"
+import { ClubProvider } from "../../../../@types/ClubProviderTypes"
+import { Plan } from "../../../../@types/PlansTypes"
+import { Product } from "../../../../@types/ProductTypes"
 import { DivisionLine, DivisionLineWithoutMargin } from "../../../Divisions/DivisionLine"
 import { addProductToPlan } from "../Registers/Products/utils/addProductToPlan"
 import { DropDownSelector } from "./DropDownSelector"
+
+type AddProductToPlanFormType = {
+    setShowAddPlanModal: (value: SetStateAction<boolean>) => void,
+    setSelectedPlanInAddPlan: (value: SetStateAction<Plan | null>) => void, 
+    setSelectedProductInAddPlan: (value: SetStateAction<Product | null>) => void, 
+    selectedPlanInAddPlan: Plan | null,
+    plansInfo: Plan[],
+    selectedProductInAddPlan: Product | null,
+    productsInfo: Product[],
+    clubProviderInfo: ClubProvider | null,
+    setUpdateProducts: (value: SetStateAction<boolean>) => void
+}
 
 export function AddProductToPlanForm({
     setShowAddPlanModal,
@@ -14,7 +30,7 @@ export function AddProductToPlanForm({
     clubProviderInfo,
     setUpdateProducts
 
-}: any) { //! Corrigir tipagem
+}: AddProductToPlanFormType) {
     return (
         <>
             <div
@@ -88,8 +104,8 @@ export function AddProductToPlanForm({
                                                     {`R$${selectedProductInAddPlan.value.toFixed(2)}`}
                                                 </strong>
                                                 <p className="text-center">
-                                                    {selectedProductInAddPlan.additionalOptions[0] ?
-                                                        ("") : "Nenhuma opção"}
+                                                    {/* Realizar lógica para pegar título da opção */}
+                                                    {"Nenhuma opção"} 
                                                 </p>
                                             </Container>
                                             <DivisionLine />
@@ -111,6 +127,13 @@ export function AddProductToPlanForm({
                         <Col md={12}>
                             <Button
                                 onClick={(e) => {
+
+                                    if(
+                                        !selectedPlanInAddPlan || 
+                                        !selectedProductInAddPlan ||
+                                        !clubProviderInfo
+                                    ) return 
+
                                     addProductToPlan(
                                         e,
                                         selectedPlanInAddPlan.id,

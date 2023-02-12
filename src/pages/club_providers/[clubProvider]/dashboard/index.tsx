@@ -34,7 +34,7 @@ type ClubProviderDashboardProps = {
     clubProviderAdmins: {
         data: Admin[]
     }
-    userData: ClubProvider
+    userData: ClubProvider | Admin
     typeOfUser: string
 }
 
@@ -49,7 +49,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     const [adminIsDefined, setAdminIsDefined] = useState(false)
 
     const [clubProviderInfo, setClubProviderInfo] = useState<ClubProvider | null>(null)
-    const [subscribersInfo, setSubscribersInfo] = useState<Subscriber[] | null>(null)
+    const [subscribersInfo, setSubscribersInfo] = useState<Subscriber[]>([])
 
     const [updateProducts, setUpdateProducts] = useState(false)
     const [updatePlans, setUpdatePlans] = useState(false)
@@ -62,6 +62,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<Plan[]>([])
 
     useEffect(() => {
+        if(subscribersInfo === null || clubProviderInfo === null) return
         handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
         handleProductsInfo({setProductsInfo, clubProviderInfo})
     }, [subscribersInfo])
@@ -75,6 +76,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     useEffect(() => {
         if (updatePlans) {
+            if(subscribersInfo === null || clubProviderInfo === null) return
             handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
             setUpdatePlans(false)
         }
@@ -82,9 +84,9 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     useEffect(() => {
         setCanDisplayModal(true)
-        lookForAdmin(userData)
 
         if (typeOfUser === "admin") {
+            setCanDisplayModal(false)
             getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
         }
     }, [])
@@ -94,10 +96,6 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
             getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
         }
     }, [adminIsDefined])
-
-    function lookForAdmin(userData: Admin) { //! Corrigir tipagem
-        if (userData.occupation !== undefined) setCanDisplayModal(false)
-    }
 
     return (
         <main>

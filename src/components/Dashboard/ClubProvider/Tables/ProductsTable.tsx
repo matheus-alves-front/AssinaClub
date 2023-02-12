@@ -40,7 +40,8 @@ export function ProductsTable({ plansInfo, productsInfo }: productsTable) {
                                     <td>{product.description}</td>
                                     <td>{"R$ " + product.value.toFixed(2)}</td>
                                     <td>{product.sku}</td>
-                                    <td>{product.additionalOptions?.[0] ? product.additionalOptions.map(product => product.title).join(", ") : "Nenhuma"}</td>
+                                    {/* <td>{product.additionalOptions?.[0] ? product.additionalOptions.map(product => product.title).join(", ") : "Nenhuma"}</td> */}
+                                    <td>{"Nenhuma"}</td>
                                     <td>{product.plansId[0] ? displayPlansNames(product.plansId) : "Nenhum"}</td>
                                 </tr>
                             ))}

@@ -21,7 +21,7 @@ export function PlansTable({
     setUpdatePlans
 }: PlansTableProps) {
 
-    const [planBeingDeleted, setPlanBeingDeleted] = useState<any>(null) //! Corrigir tipagem
+    const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
     const clubProviderId = String(clubProviderInfo?.id)
 
     return (
@@ -37,7 +37,6 @@ export function PlansTable({
                         {plansInfo ?
                             (<>
                                 {plansInfo.map((plan, index) => (
-                                    <>
                                         <tr key={index}>
                                             <td>{++index}</td>
                                             <td>{plan.title}</td>
@@ -46,7 +45,6 @@ export function PlansTable({
                                             <td>{"R$ " + plan.price.toFixed(2)}</td>
                                             <td>{plan.deliveryFrequency}</td>
                                         </tr>
-                                    </>
                                 ))}
                             </>)
                             :
@@ -69,17 +67,17 @@ export function PlansTable({
                                                 setUpdatePlans
                                             )
                                         }}
-                                        disabled={planBeingDeleted}
+                                        disabled={!!planBeingDeleted}
                                         className='d-flex justify-content-center align-items-center'
                                         variant=
                                         {
-                                            planBeingDeleted?.title === plan.title ?
+                                            planBeingDeleted?.id === plan.id ?
                                                 "danger" :
                                                 "outline-danger"
                                         }
                                         style={{ width: "15px", height: "30px", marginBottom: "11px" }}
                                     >
-                                        {planBeingDeleted?.title === plan.title ?
+                                        {planBeingDeleted?.id === plan.id ?
                                             <Oval
                                                 width={18}
                                                 color="#FFFFFF"

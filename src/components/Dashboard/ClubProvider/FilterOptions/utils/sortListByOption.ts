@@ -1,27 +1,40 @@
-export function sortListByOption( //! Corrigir tipagem
-    option: string,
-    plansInfo: any,
-    setPlansInfo: any,
-    productsInfo: any,
-    setProductsInfo: any,
-    subscribersInfo: any,
-    setSubscribersInfo: any,
-) {
-    const plansCopy = [...plansInfo] as any[]
-    const productsCopy = [...productsInfo] as any[]
-    const subscribersCopy = [...subscribersInfo] as any[]
 
-    //! Corrigir tipagem
-    function sortByParam(param: any, copy: any[], setCopy: any) {
-        if (param === "subscriberIds") {
-            copy.sort((a, b) => {
+import { SetStateAction } from "react"
+import { Plan } from "../../../../../@types/PlansTypes"
+import { Product } from "../../../../../@types/ProductTypes"
+import { Subscriber } from "../../../../../@types/SubscriberTypes"
+
+export function sortListByOption(
+    option: string,
+    plansInfo: Plan[],
+    setPlansInfo: (value: SetStateAction<Plan[]>) => void,
+    productsInfo: Product[],
+    setProductsInfo: (value: SetStateAction<Product[]>) => void,
+    subscribersInfo: Subscriber[],
+    setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void,
+) {
+
+    
+    const plansCopy = [...plansInfo] as Plan[]
+    const productsCopy = [...productsInfo] as Product[]
+    const subscribersCopy = [...subscribersInfo] as Subscriber[]
+
+    type Copy = Plan | Product | Subscriber
+
+    function sortByParam(
+        param: keyof Copy,
+        copy: Copy[],
+        setCopy: any
+    ) {
+        if (param === "subscriberIds" as keyof Copy) {
+            copy.sort((a: Copy, b: Copy) => {
                 if (a[param].length > b[param].length) return 1
                 if (a[param].length < b[param].length) return -1
                 return 0
             })
             return setCopy(copy)
         }
-        copy.sort((a, b) => {
+        copy.sort((a: Copy, b: Copy) => {
             if (a[param] > b[param]) return 1
             if (a[param] < b[param]) return -1
             return 0
@@ -31,37 +44,37 @@ export function sortListByOption( //! Corrigir tipagem
 
     switch (option) {
 
-        //! Plans Filter Options
+        //* Plans Filter Options
         case 'Título':
-            sortByParam("title", plansCopy, setPlansInfo)
+            sortByParam("title" as keyof Copy, plansCopy, setPlansInfo)
             break;
         case 'Preço':
-            sortByParam("price", plansCopy, setPlansInfo)
+            sortByParam("price" as keyof Copy, plansCopy, setPlansInfo)
             break;
         case 'Frequência':
-            sortByParam("deliveryFrequency", plansCopy, setPlansInfo)
+            sortByParam("deliveryFrequency" as keyof Copy, plansCopy, setPlansInfo)
             break;
         case 'nº de Assinantes':
-            sortByParam("subscriberIds", plansCopy, setPlansInfo)
+            sortByParam("subscriberIds" as keyof Copy, plansCopy, setPlansInfo)
             break;
 
-        //! Products Filter Options
+        //* Products Filter Options
         case 'Valor':
-            sortByParam("value", productsCopy, setProductsInfo)
+            sortByParam("value" as keyof Copy, productsCopy, setProductsInfo)
             break;
         case 'Nome':
-            sortByParam("name", productsCopy, setProductsInfo)
+            sortByParam("name" as keyof Copy, productsCopy, setProductsInfo)
             break;
         case 'SKU':
-            sortByParam("sku", productsCopy, setProductsInfo)
+            sortByParam("sku" as keyof Copy, productsCopy, setProductsInfo)
             break;
 
-        //! Subscribers Filter Options
+        //* Subscribers Filter Options
         case 'Email':
-            sortByParam("email", subscribersCopy, setSubscribersInfo)
+            sortByParam("email" as keyof Copy, subscribersCopy, setSubscribersInfo)
             break;
         case 'CPF':
-            sortByParam("cpf", subscribersCopy, setSubscribersInfo)
+            sortByParam("cpf" as keyof Copy, subscribersCopy, setSubscribersInfo)
             break;
 
         default:

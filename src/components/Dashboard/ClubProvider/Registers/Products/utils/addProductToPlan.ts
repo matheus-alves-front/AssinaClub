@@ -1,15 +1,17 @@
 import axios from "axios"
+import { FormEvent, MouseEvent, SetStateAction } from "react"
+import { Plan } from "../../../../../../@types/PlansTypes"
+import { Product } from "../../../../../../@types/ProductTypes"
 
-//! Corrigir tipagem
 export async function addProductToPlan(
-    e: any,
+    e: MouseEvent<HTMLButtonElement>,
     planId: string | string[],
     productId: string | string[],
     clubProviderId: string,
-    setUpdateProducts: any,
-    setShowAddPlanModal: any,
-    setSelectedPlanInAddPlan: any,
-    setSelectedProductInAddPlan: any
+    setUpdateProducts: (value: SetStateAction<boolean>) => void,
+    setShowAddPlanModal: (value: SetStateAction<boolean>) => void,
+    setSelectedPlanInAddPlan: (value: SetStateAction<Plan | null>) => void,
+    setSelectedProductInAddPlan: (value: SetStateAction<Product | null>) => void,
 
 ) {
     e.preventDefault()

@@ -12,10 +12,7 @@ export function PlansRegister({ clubProviderInfo, setUpdatePlans }: PlansRegiste
     return (
         <>
             <Form onSubmit={(e) => {
-                RegisterPlan(e, clubProviderInfo?.id)
-                setTimeout(() => { //! Corrigir essa gambiarra
-                    setUpdatePlans(true)
-                }, 500)
+                RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
             }}
             >
                 <Form.Group className="mb-2">

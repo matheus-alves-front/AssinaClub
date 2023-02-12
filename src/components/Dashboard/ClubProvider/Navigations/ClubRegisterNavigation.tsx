@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 type ClubProviderNavigationProps = {
     clubRegNavDefaultActiveKey: string 
     clubRegNavScreenSelected: string
-    setClubRegNavScreenSelected: (value: SetStateAction<string | null>) => void
+    setClubRegNavScreenSelected: (value: SetStateAction<string>) => void
 }
 
 export function ClubRegisterNavigation({
@@ -19,7 +19,7 @@ export function ClubRegisterNavigation({
                 variant="pills"
                 defaultActiveKey={clubRegNavDefaultActiveKey}
                 onSelect={(eventKey) => {
-                    setClubRegNavScreenSelected(eventKey)
+                    setClubRegNavScreenSelected(String(eventKey))
                 }}
                 className="d-flex flex-column"
             >

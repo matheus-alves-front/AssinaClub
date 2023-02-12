@@ -1,11 +1,28 @@
 import { Button } from 'react-bootstrap';
 import { FiAlignJustify, FiTrash2 } from "react-icons/fi";
 import { DivisionLine } from '../../../Divisions/DivisionLine';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { FilterOptions } from '../FilterOptions/FilterOptions';
 import Nav from 'react-bootstrap/Nav';
+import { Plan } from '../../../../@types/PlansTypes';
+import { Product } from '../../../../@types/ProductTypes';
+import { Subscriber } from '../../../../@types/SubscriberTypes';
 
-//! Corrigir tipagem
+type MyNavigationType = {
+    myNavDefaultActiveKey: string,
+    myNavScreenSelected: string,
+    plansInfo: Plan[],
+    productsInfo: Product[],
+    subscribersInfo: Subscriber[],
+    deletingPlans: boolean,
+    setMyNavScreenSelected: (value: SetStateAction<string>) => void,
+    setPlansInfo: (value: SetStateAction<Plan[]>) => void,
+    setProductsInfo: (value: SetStateAction<Product[]>) => void,
+    setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void,
+    setDeletingPlans: (value: SetStateAction<boolean>) => void,
+    setPlansThatCanBeDeleted: (value: SetStateAction<Plan[]>) => void,
+}
+
 export function MyNavigation({
     myNavDefaultActiveKey,
     myNavScreenSelected,
@@ -19,12 +36,12 @@ export function MyNavigation({
     setDeletingPlans,
     deletingPlans,
     setPlansThatCanBeDeleted
-}: any) {
+}: MyNavigationType) {
 
     const [whatToFilter, setWhatToFilter] = useState("Assinantes")
     const [showFilterOptions, setShowFilterOptions] = useState(false)
 
-    function deletePlans(plansInfo: any[]) {
+    function deletePlans(plansInfo: Plan[]) {
         const filteredPlans = [...plansInfo].filter(plan => plan.subscriberIds.length === 0)
         setPlansThatCanBeDeleted(filteredPlans)
         setDeletingPlans(true)
@@ -42,7 +59,7 @@ export function MyNavigation({
                 variant="pills"
                 defaultActiveKey={myNavDefaultActiveKey}
                 onSelect={(eventKey) => {
-                    setMyNavScreenSelected(eventKey)
+                    setMyNavScreenSelected(String(eventKey))
                     setShowFilterOptions(false)
                 }}
                 className="d-flex flex-column"
