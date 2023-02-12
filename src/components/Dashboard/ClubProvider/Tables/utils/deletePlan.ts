@@ -1,10 +1,12 @@
 import axios from "axios"
+import { SetStateAction } from "react"
+import { Plan } from "../../../../../@types/PlansTypes"
 
 export async function deletePlanAndUpdate(
     planId: string | string[],
     clubProviderId: string,
-    setPlanBeingDeleted: any, //! Corrigir Tipagem
-    setUpdatePlans: any
+    setPlanBeingDeleted: (value: SetStateAction<Plan | null>) => void,
+    setUpdatePlans: (value: SetStateAction<boolean>) => void 
 ) {
 
     const deletePlanUrl = `http://localhost:3000/api/club_providers/id/${clubProviderId}/plans/${planId}`

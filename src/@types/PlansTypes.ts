@@ -10,6 +10,7 @@ export type Plan = {
   productId: string[]
   removeProduct?: boolean
   clubProviderId: string
+  subscriberIds: string | string[]
 }
 
 export type PlansType = {

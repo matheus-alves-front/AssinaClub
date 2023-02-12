@@ -5,13 +5,14 @@ import Button from 'react-bootstrap/Button';
 import { AdminOption } from './AdminOption';
 import { ClubProvider } from '../../../../@types/ClubProviderTypes';
 import { Row } from 'react-bootstrap';
+import { Dispatch, SetStateAction } from 'react';
 
 type ClubProviderAdminsType = {
     clubProviderAdmins: {
         data: Admin[]
     }
     adminIsDefined: boolean
-    setAdminIsDefined: any //! Corrigir tipagem
+    setAdminIsDefined: (value: SetStateAction<boolean>) => void
 }
 
 export function AdminLoginModal({ clubProviderAdmins, adminIsDefined, setAdminIsDefined }: ClubProviderAdminsType) {

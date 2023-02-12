@@ -2,31 +2,39 @@ import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { GetSessionParams } from "next-auth/react"
 import { getServerSession } from "next-auth"
-import { Col, Container, Row } from "react-bootstrap";
-import { getClubProviderByName } from "../../../../prisma/clubProviders"
-import { Admin } from "../../../../@types/AdminsClubProviderTypes"
-import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
 import { authOptions } from "../../../api/auth/[...nextauth]"
+import { getClubProviderByName } from "../../../../prisma/clubProviders"
+
+import { Admin } from "../../../../@types/AdminsClubProviderTypes"
+import { ClubProvider } from "../../../../@types/ClubProviderTypes";
+import { Subscriber } from "../../../../@types/SubscriberTypes"
+import { Plan } from "../../../../@types/PlansTypes"
+import { Product } from "../../../../@types/ProductTypes"
+
+import { handlePlansInfo } from "../../../../utils/ClubDashboard/plansInfo";
+import { handleProductsInfo } from "../../../../utils/ClubDashboard/productsInfo";
+import { getClubProviderInfo } from "../../../../utils/ClubDashboard/getClubProviderInfo";
+
+import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
 import { SubscribersTable } from "../../../../components/Dashboard/ClubProvider/Tables/SubscribersTable"
 import { PlansTable } from "../../../../components/Dashboard/ClubProvider/Tables/PlansTable"
 import { ProductsTable } from "../../../../components/Dashboard/ClubProvider/Tables/ProductsTable"
-import styles from "../../../../styles/pages/clubDashboard.module.scss"
 import { DivisionLine } from "../../../../components/Divisions/DivisionLine"
 import { ProductsRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Products/ProductsRegister"
 import { MyNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/MyNavigation";
 import { ClubRegisterNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/ClubRegisterNavigation";
 import { PlansRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Plans/PlansRegister";
 import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn";
-import { handlePlansInfo } from "../../../../utils/ClubDashboard/plansInfo";
-import { handleProductsInfo } from "../../../../utils/ClubDashboard/productsInfo";
-import { getClubProviderInfo } from "../../../../utils/ClubDashboard/getClubProviderInfo";
-import { ClubProvider } from "../../../../@types/ClubProviderTypes";
+
+import { Col, Container, Row } from "react-bootstrap";
+import styles from "../../../../styles/pages/clubDashboard.module.scss"
+
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
         data: Admin[]
     }
-    userData: ClubProvider
+    userData: ClubProvider | Admin
     typeOfUser: string
 }
 
@@ -40,33 +48,35 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     const [canDisplayModal, setCanDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
 
-    const [clubProviderInfo, setClubProviderInfo] = useState<any>(null) //! Corrigir tipagem
-    const [subscribersInfo, setSubscribersInfo] = useState(null)
+    const [clubProviderInfo, setClubProviderInfo] = useState<ClubProvider | null>(null)
+    const [subscribersInfo, setSubscribersInfo] = useState<Subscriber[]>([])
 
     const [updateProducts, setUpdateProducts] = useState(false)
     const [updatePlans, setUpdatePlans] = useState(false)
 
     const [deletingPlans, setDeletingPlans] = useState(false)
 
-    const [plansInfo, setPlansInfo] = useState<any[]>([]) //! Corrigir tipagem
-    const [productsInfo, setProductsInfo] = useState<any[]>([]) //! Corrigir tipagem
+    const [plansInfo, setPlansInfo] = useState<Plan[]>([])
+    const [productsInfo, setProductsInfo] = useState<Product[]>([])
 
-    const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<any>([]) //! Corrigir tipagem
+    const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<Plan[]>([])
 
     useEffect(() => {
+        if(subscribersInfo === null || clubProviderInfo === null) return
         handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
-        handleProductsInfo(setProductsInfo, clubProviderInfo)
+        handleProductsInfo({setProductsInfo, clubProviderInfo})
     }, [subscribersInfo])
 
     useEffect(() => {
         if (updateProducts) {
-            handleProductsInfo(setProductsInfo, clubProviderInfo)
+            handleProductsInfo({setProductsInfo, clubProviderInfo})
             setUpdateProducts(false)
         }
     }, [updateProducts])
 
     useEffect(() => {
         if (updatePlans) {
+            if(subscribersInfo === null || clubProviderInfo === null) return
             handlePlansInfo(subscribersInfo, setPlansInfo, clubProviderInfo, setPlansThatCanBeDeleted)
             setUpdatePlans(false)
         }
@@ -74,9 +84,9 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     useEffect(() => {
         setCanDisplayModal(true)
-        lookForAdmin(userData)
 
         if (typeOfUser === "admin") {
+            setCanDisplayModal(false)
             getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
         }
     }, [])
@@ -86,10 +96,6 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
             getClubProviderInfo(userData, setClubProviderInfo, setSubscribersInfo, typeOfUser)
         }
     }, [adminIsDefined])
-
-    function lookForAdmin(userData: any) { //! Corrigir tipagem
-        if (userData.occupation !== undefined) setCanDisplayModal(false)
-    }
 
     return (
         <main>

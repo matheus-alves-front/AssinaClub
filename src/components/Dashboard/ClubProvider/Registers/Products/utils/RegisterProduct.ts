@@ -1,7 +1,11 @@
-import { FormEvent } from "react";
+import { FormEvent, SetStateAction } from "react";
 import axios from "axios";
 
-export async function RegisterProduct(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
+export async function RegisterProduct(
+    event: FormEvent<HTMLFormElement>,
+    clubProviderId: string | string[] | undefined,
+    setUpdateProducts: (value: SetStateAction<boolean>) => void
+) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -20,7 +24,11 @@ export async function RegisterProduct(event: FormEvent<HTMLFormElement>, clubPro
     }
 
     try {
-        await axios.post(`/api/club_providers/id/${clubProviderId}/products`, data)
+        const response = await axios.post(`/api/club_providers/id/${clubProviderId}/products`, data)
+        if (response.status === 201) {
+            setUpdateProducts(true)
+        }
+
     } catch (err) {
         console.log(err)
     }

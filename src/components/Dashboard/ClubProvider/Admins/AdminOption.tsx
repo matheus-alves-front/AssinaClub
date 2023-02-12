@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, SetStateAction, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Admin } from '../../../../@types/AdminsClubProviderTypes';
 
@@ -14,7 +14,7 @@ import { signIn } from 'next-auth/react';
 
 type ClubProviderAdminType = {
     admin: Admin
-    setAdminIsDefined: any //! Corrigir tipagem
+    setAdminIsDefined: (value: SetStateAction<boolean>) => void
 }
 
 export function AdminOption({ admin, setAdminIsDefined }: ClubProviderAdminType) {

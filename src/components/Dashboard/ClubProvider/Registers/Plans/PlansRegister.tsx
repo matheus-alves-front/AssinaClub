@@ -1,15 +1,18 @@
+import { SetStateAction } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
+import { ClubProvider } from "../../../../../@types/ClubProviderTypes"
 import { RegisterPlan } from "./utils/RegisterPlan"
 
-export function PlansRegister({ clubProviderInfo, setUpdatePlans }: any) { //! Corrigir tipagem
+type PlansRegisterProps = {
+    clubProviderInfo: ClubProvider | null
+    setUpdatePlans: (value: SetStateAction<boolean>) => void
+}
 
+export function PlansRegister({ clubProviderInfo, setUpdatePlans }: PlansRegisterProps) {
     return (
         <>
             <Form onSubmit={(e) => {
-                RegisterPlan(e, clubProviderInfo?.id)
-                setTimeout(() => { //! Corrigir essa gambiarra
-                    setUpdatePlans(true)
-                }, 500)
+                RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
             }}
             >
                 <Form.Group className="mb-2">

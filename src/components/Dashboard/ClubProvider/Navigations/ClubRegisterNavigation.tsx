@@ -1,7 +1,17 @@
+import { SetStateAction } from 'react';
 import Nav from 'react-bootstrap/Nav';
 
-//! Corrigir tipagem
-export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavScreenSelected, setClubRegNavScreenSelected}: any) { 
+type ClubProviderNavigationProps = {
+    clubRegNavDefaultActiveKey: string 
+    clubRegNavScreenSelected: string
+    setClubRegNavScreenSelected: (value: SetStateAction<string>) => void
+}
+
+export function ClubRegisterNavigation({
+    clubRegNavDefaultActiveKey, 
+    clubRegNavScreenSelected, 
+    setClubRegNavScreenSelected
+}: ClubProviderNavigationProps) { 
     
     return (
         <>
@@ -9,7 +19,7 @@ export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavSc
                 variant="pills"
                 defaultActiveKey={clubRegNavDefaultActiveKey}
                 onSelect={(eventKey) => {
-                    setClubRegNavScreenSelected(eventKey)
+                    setClubRegNavScreenSelected(String(eventKey))
                 }}
                 className="d-flex flex-column"
             >

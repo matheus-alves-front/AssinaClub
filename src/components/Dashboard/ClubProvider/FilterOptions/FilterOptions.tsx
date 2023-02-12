@@ -1,7 +1,20 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { ListGroup, Tab } from "react-bootstrap";
+import { Plan } from "../../../../@types/PlansTypes";
+import { Product } from "../../../../@types/ProductTypes";
+import { Subscriber } from "../../../../@types/SubscriberTypes";
 import { PLANS_PROPERTIES, PRODUCTS_PROPERTIES, SUBS_PROPERTIES } from "../Tables/utils/myClubProperties";
 import { sortListByOption } from "./utils/sortListByOption";
+
+type FilterOptionsType = {
+    whatToFilter: string | null;
+    plansInfo: Plan[],
+    setPlansInfo: (value: SetStateAction<Plan[]>) => void,
+    productsInfo: Product[] , 
+    setProductsInfo: (value: SetStateAction<Product[]>) => void,
+    subscribersInfo: Subscriber[], 
+    setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void,
+}
 
 export function FilterOptions({
     whatToFilter,
@@ -11,10 +24,10 @@ export function FilterOptions({
     setProductsInfo,
     subscribersInfo,
     setSubscribersInfo,
-}: any) { //! Corrigir tipagem
+}: FilterOptionsType) {
 
-    const [filterOptions, setFIlterOptions] = useState<any[]>([]) //! Corrigir tipagem
-    const [optionSelected, setOptionSelected] = useState(null)
+    const [filterOptions, setFIlterOptions] = useState<string[] | []>([]) 
+    const [optionSelected, setOptionSelected] = useState<string | null>(null)
 
     useEffect(() => {
         switch (whatToFilter) {

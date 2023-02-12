@@ -1,20 +1,26 @@
+import { SetStateAction } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
+import { ClubProvider } from "../../../../@types/ClubProviderTypes"
 import { RegisterProduct } from "../Registers/Products/utils/RegisterProduct"
+
+type ProductFormType = {
+    clubProviderInfo: ClubProvider | null,
+    setShowAddPlanModal: (value: SetStateAction<boolean>) => void ,
+    setUpdateProducts: (value: SetStateAction<boolean>) => void ,
+    showAddPlanModal: boolean
+}
 
 export function ProductForm({
     clubProviderInfo,
     setShowAddPlanModal,
     setUpdateProducts,
     showAddPlanModal
-}: any) {
+}: ProductFormType) {
     return (
         <Form
             onSubmit={(e) => {
-                RegisterProduct(e, clubProviderInfo?.id)
+                RegisterProduct(e, clubProviderInfo?.id, setUpdateProducts)
                 setShowAddPlanModal(true)
-                setTimeout(() => { //! Corrigir essa gambiarra
-                    setUpdateProducts(true)
-                }, 500)
             }}
         >
             <Row>

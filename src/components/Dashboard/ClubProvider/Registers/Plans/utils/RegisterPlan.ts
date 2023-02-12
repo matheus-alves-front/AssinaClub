@@ -1,7 +1,11 @@
-import { FormEvent } from "react";
+import { FormEvent, SetStateAction } from "react";
 import axios from "axios";
 
-export async function RegisterPlan(event: FormEvent<HTMLFormElement>, clubProviderId: string | string[] | undefined) {
+export async function RegisterPlan(
+    event: FormEvent<HTMLFormElement>,
+    clubProviderId: string | string[] | undefined,
+    setUpdatePlans: (value: SetStateAction<boolean>) => void
+) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
@@ -20,7 +24,11 @@ export async function RegisterPlan(event: FormEvent<HTMLFormElement>, clubProvid
     }
 
     try {
-        await axios.post(`/api/club_providers/id/${clubProviderId}/plans`, data)
+        const response = await axios.post(`/api/club_providers/id/${clubProviderId}/plans`, data)
+
+        if (response.status === 201) {
+            setUpdatePlans(true)
+        }
     } catch (err) {
         console.log(err)
     }
