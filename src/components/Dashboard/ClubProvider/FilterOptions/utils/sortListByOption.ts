@@ -1,10 +1,11 @@
 
-import { SetStateAction } from "react"
+import { MouseEvent, SetStateAction } from "react"
 import { Plan } from "../../../../../@types/PlansTypes"
 import { Product } from "../../../../../@types/ProductTypes"
 import { Subscriber } from "../../../../../@types/SubscriberTypes"
 
 export function sortListByOption(
+    event: MouseEvent,
     option: string,
     plansInfo: Plan[],
     setPlansInfo: (value: SetStateAction<Plan[]>) => void,
@@ -12,9 +13,11 @@ export function sortListByOption(
     setProductsInfo: (value: SetStateAction<Product[]>) => void,
     subscribersInfo: Subscriber[],
     setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void,
+    listOrder: string,
 ) {
 
-    
+    event.stopPropagation()
+
     const plansCopy = [...plansInfo] as Plan[]
     const productsCopy = [...productsInfo] as Product[]
     const subscribersCopy = [...subscribersInfo] as Subscriber[]
@@ -26,19 +29,40 @@ export function sortListByOption(
         copy: Copy[],
         setCopy: any
     ) {
+
         if (param === "subscriberIds" as keyof Copy) {
-            copy.sort((a: Copy, b: Copy) => {
-                if (a[param].length > b[param].length) return 1
-                if (a[param].length < b[param].length) return -1
-                return 0
-            })
+
+            if (listOrder === "descendant") {
+                copy.sort((a: Copy, b: Copy) => {
+                    if (a[param].length > b[param].length) return -1
+                    if (a[param].length < b[param].length) return 1
+                    return 0
+                })
+            } else {
+                copy.sort((a: Copy, b: Copy) => {
+                    if (a[param].length > b[param].length) return 1
+                    if (a[param].length < b[param].length) return -1
+                    return 0
+                })
+            }
+
             return setCopy(copy)
         }
-        copy.sort((a: Copy, b: Copy) => {
-            if (a[param] > b[param]) return 1
-            if (a[param] < b[param]) return -1
-            return 0
-        })
+        
+        if (listOrder === "descendant") {
+            copy.sort((a: Copy, b: Copy) => {
+                if (a[param] > b[param]) return -1
+                if (a[param] < b[param]) return 1
+                return 0
+            })
+        } else {
+            copy.sort((a: Copy, b: Copy) => {
+                if (a[param] > b[param]) return 1
+                if (a[param] < b[param]) return -1
+                return 0
+            })
+        }
+
         setCopy(copy)
     }
 

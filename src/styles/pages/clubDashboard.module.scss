@@ -21,3 +21,21 @@
         }
     }
 }
+
+.filterOptions {
+    transition: 0.2s all;
+}
+
+.filterOptions:hover {
+    background-color: #212529;
+    color: #FFFFFF;   
+}
+
+.filterOptionsBlack {
+    transition: 0.2s all;
+}
+
+.filterOptionsBlack:hover {
+    background-color: #FFFFFF;   
+    color: #212529;
+}

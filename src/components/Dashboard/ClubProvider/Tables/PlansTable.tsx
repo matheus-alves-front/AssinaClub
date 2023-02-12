@@ -27,7 +27,7 @@ export function PlansTable({
     return (
         <section>
             <div className={deletingPlans ? "d-flex justify-content-center" : ""}>
-                <Table bordered hover responsive="sm" >
+                <Table bordered hover responsive="sm">
                     <thead>
                         <tr>
                             {PLANS_PROPERTIES.map((property, i) => <th key={i}>{property}</th>)}
