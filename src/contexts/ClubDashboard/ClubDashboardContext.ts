@@ -6,7 +6,7 @@ import {
     ClubNavigationContextType,
     DeletingPlansContextType,
     InfoContextType
-} from "../@types/ClubDashboardContextTypes";
+} from "../../@types/ClubDashboardContextTypes";
 
 
 export const DeletingPlansContext = createContext({} as DeletingPlansContextType)

@@ -4,18 +4,13 @@ import { DivisionLine } from '../../../Divisions/DivisionLine';
 import { useContext, useEffect, useState } from 'react';
 import { FilterOptions } from '../FilterOptions/FilterOptions';
 import Nav from 'react-bootstrap/Nav';
-import { ClubNavigationContext, DeletingPlansContext, InfoContext } from '../../../../contexts/ClubDashboardContext';
+import { ClubNavigationContext, DeletingPlansContext, InfoContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
 import { myNavDefaultActiveKey } from '../../../../utils/ClubDashboard/navDefaultKeys';
 
 export function MyNavigation() {
 
     const {
-        subscribersInfo,
-        setSubscribersInfo,
         plansInfo,
-        setPlansInfo,
-        productsInfo, 
-        setProductsInfo
     } = useContext(InfoContext)
 
     const {
@@ -85,15 +80,9 @@ export function MyNavigation() {
             >
                 Filtrar {whatToFilter} <FiAlignJustify style={{ marginLeft: "4px" }} />
             </Button>
-            {showFilterOptions && !deletingPlans && <FilterOptions
-                whatToFilter={whatToFilter}
-                plansInfo={plansInfo}
-                setPlansInfo={setPlansInfo}
-                productsInfo={productsInfo}
-                setProductsInfo={setProductsInfo}
-                subscribersInfo={subscribersInfo}
-                setSubscribersInfo={setSubscribersInfo}
-            />}
+
+            {showFilterOptions && !deletingPlans && <FilterOptions whatToFilter={whatToFilter} />}
+
             {
                 (myNavScreenSelected === "plans") && (
                     <>

@@ -1,32 +1,26 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListGroup, Tab } from "react-bootstrap";
 import { FiChevronsDown, FiChevronsUp } from "react-icons/fi";
-import { Plan } from "../../../../@types/PlansTypes";
-import { Product } from "../../../../@types/ProductTypes";
-import { Subscriber } from "../../../../@types/SubscriberTypes";
 import { PLANS_PROPERTIES, PRODUCTS_PROPERTIES, SUBS_PROPERTIES } from "../Tables/utils/myClubProperties";
 import { sortListByOption } from "./utils/sortListByOption";
 import styles from "../../../../styles/pages/clubDashboard.module.scss"
+import { InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
 
 type FilterOptionsType = {
     whatToFilter: string | null;
-    plansInfo: Plan[],
-    setPlansInfo: (value: SetStateAction<Plan[]>) => void,
-    productsInfo: Product[],
-    setProductsInfo: (value: SetStateAction<Product[]>) => void,
-    subscribersInfo: Subscriber[],
-    setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void,
 }
 
-export function FilterOptions({
-    whatToFilter,
-    plansInfo,
-    setPlansInfo,
-    productsInfo,
-    setProductsInfo,
-    subscribersInfo,
-    setSubscribersInfo,
-}: FilterOptionsType) {
+export function FilterOptions({ whatToFilter }: FilterOptionsType) {
+
+    const {
+        subscribersInfo,
+        setSubscribersInfo,
+        plansInfo,
+        setPlansInfo,
+        productsInfo,
+        setProductsInfo
+    } = useContext(InfoContext)
+
 
     const [filterOptions, setFIlterOptions] = useState<string[] | []>([])
     const [optionSelected, setOptionSelected] = useState<string | null>(null)

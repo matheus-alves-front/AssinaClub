@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
-import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboardContext"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { RegisterPlan } from "./utils/RegisterPlan"
 
 export function PlansRegister() {

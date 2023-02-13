@@ -1,21 +1,24 @@
-import { SetStateAction } from "react"
+import { SetStateAction, useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
-import { ClubProvider } from "../../../../@types/ClubProviderTypes"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ProductRegisterContext } from "../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext"
 import { RegisterProduct } from "../Registers/Products/utils/RegisterProduct"
 
-type ProductFormType = {
-    clubProviderInfo: ClubProvider | null,
-    setShowAddPlanModal: (value: SetStateAction<boolean>) => void ,
-    setUpdateProducts: (value: SetStateAction<boolean>) => void ,
-    showAddPlanModal: boolean
-}
+export function ProductForm() {
 
-export function ProductForm({
-    clubProviderInfo,
-    setShowAddPlanModal,
-    setUpdateProducts,
-    showAddPlanModal
-}: ProductFormType) {
+    const {
+        clubProviderInfo,
+    } = useContext(InfoContext)
+
+    const {
+        setUpdateProducts
+    } = useContext(ClubDashboardUpdateContext)
+
+    const {
+        showAddPlanModal,
+        setShowAddPlanModal,
+    } = useContext(ProductRegisterContext)
+
     return (
         <Form
             onSubmit={(e) => {

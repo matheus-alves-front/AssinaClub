@@ -1,36 +1,31 @@
-import { SetStateAction } from "react"
+import { useContext } from "react"
 import { Button, CloseButton, Col, Container, Form, Row } from "react-bootstrap"
-import { ClubProvider } from "../../../../@types/ClubProviderTypes"
-import { Plan } from "../../../../@types/PlansTypes"
-import { Product } from "../../../../@types/ProductTypes"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ProductRegisterContext } from "../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext"
 import { DivisionLine, DivisionLineWithoutMargin } from "../../../Divisions/DivisionLine"
 import { addProductToPlan } from "../Registers/Products/utils/addProductToPlan"
 import { DropDownSelector } from "./DropDownSelector"
 
-type AddProductToPlanFormType = {
-    setShowAddPlanModal: (value: SetStateAction<boolean>) => void,
-    setSelectedPlanInAddPlan: (value: SetStateAction<Plan | null>) => void, 
-    setSelectedProductInAddPlan: (value: SetStateAction<Product | null>) => void, 
-    selectedPlanInAddPlan: Plan | null,
-    plansInfo: Plan[],
-    selectedProductInAddPlan: Product | null,
-    productsInfo: Product[],
-    clubProviderInfo: ClubProvider | null,
-    setUpdateProducts: (value: SetStateAction<boolean>) => void
-}
+export function AddProductToPlanForm() {
 
-export function AddProductToPlanForm({
-    setShowAddPlanModal,
-    setSelectedPlanInAddPlan,
-    setSelectedProductInAddPlan,
-    selectedPlanInAddPlan,
-    plansInfo,
-    selectedProductInAddPlan,
-    productsInfo,
-    clubProviderInfo,
-    setUpdateProducts
+    const {
+        setShowAddPlanModal,
+        selectedPlanInAddPlan, 
+        setSelectedPlanInAddPlan,
+        selectedProductInAddPlan, 
+        setSelectedProductInAddPlan,
+    } = useContext(ProductRegisterContext)
 
-}: AddProductToPlanFormType) {
+    const {
+        clubProviderInfo,
+        plansInfo,
+        productsInfo
+    } = useContext(InfoContext)
+
+    const {
+        setUpdateProducts
+    } = useContext(ClubDashboardUpdateContext)
+
     return (
         <>
             <div

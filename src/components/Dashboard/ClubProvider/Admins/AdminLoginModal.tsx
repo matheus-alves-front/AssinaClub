@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { AdminOption } from './AdminOption';
 import { useContext } from 'react';
-import { ClubAdminContext } from '../../../../contexts/ClubDashboardContext';
+import { ClubAdminContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
 
 export function AdminLoginModal() {
 

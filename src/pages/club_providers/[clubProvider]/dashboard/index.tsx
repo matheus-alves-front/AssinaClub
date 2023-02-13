@@ -28,7 +28,7 @@ import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn"
 
 import { Col, Container, Row } from "react-bootstrap";
 import styles from "../../../../styles/pages/clubDashboard.module.scss"
-import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoContext, ClubDashboardUpdateContext } from "../../../../contexts/ClubDashboardContext"
+import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoContext, ClubDashboardUpdateContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { clubRegNavDefaultActiveKey, myNavDefaultActiveKey } from "../../../../utils/ClubDashboard/navDefaultKeys"
 
 type ClubProviderDashboardProps = {

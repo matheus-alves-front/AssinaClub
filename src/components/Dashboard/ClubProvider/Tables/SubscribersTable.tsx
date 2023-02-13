@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Table from 'react-bootstrap/Table';
-import { InfoContext } from '../../../../contexts/ClubDashboardContext';
+import { InfoContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
 import { getSubscriberPlansFormatted } from '../../../../utils/getSubscriberPlans';
 import { SUBS_PROPERTIES } from './utils/myClubProperties';
 
