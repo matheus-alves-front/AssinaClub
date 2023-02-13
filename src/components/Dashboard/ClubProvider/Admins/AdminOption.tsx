@@ -1,23 +1,19 @@
-import { FormEvent, SetStateAction, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
-import { Admin } from '../../../../@types/AdminsClubProviderTypes';
-
-import {
-    Button,
-    Form,
-    Card
-} from 'react-bootstrap';
+import { FormEvent, useContext, useState } from 'react';
+import { Col, Row, Button, Form, Card } from 'react-bootstrap';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
+import { Admin } from '../../../../@types/AdminsClubProviderTypes';
 
+import { ClubAdminContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
 
 type ClubProviderAdminType = {
     admin: Admin
-    setAdminIsDefined: (value: SetStateAction<boolean>) => void
 }
 
-export function AdminOption({ admin, setAdminIsDefined }: ClubProviderAdminType) {
+export function AdminOption({ admin }: ClubProviderAdminType) {
+
+    const { setAdminIsDefined, } = useContext(ClubAdminContext)
 
     const [canOpenLoginInputs, setCanOpenLoginInputs] = useState(false)
 

@@ -11,10 +11,9 @@ export function AdminLoginModal() {
     const router = useRouter()
 
     const {
-        adminIsDefined, 
-        setAdminIsDefined,
+        adminIsDefined,
         clubProviderAdmins
-    } = useContext(ClubAdminContext) 
+    } = useContext(ClubAdminContext)
 
     const admins = clubProviderAdmins.data
     const thereAreAdmins = admins.length > 0
@@ -33,7 +32,10 @@ export function AdminLoginModal() {
             </Modal.Header>
             <Modal.Body>
                 {thereAreAdmins && admins.map((admin, i) => (
-                    <AdminOption key={i} admin={admin} setAdminIsDefined={setAdminIsDefined} />
+                    <AdminOption
+                        key={i}
+                        admin={admin}
+                    />
                 ))}
                 {!thereAreAdmins &&
                     <>
