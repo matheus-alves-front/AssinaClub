@@ -1,14 +1,14 @@
+import { useContext } from 'react';
 import Table from 'react-bootstrap/Table';
-import { Plan } from '../../../../@types/PlansTypes';
-import { Product } from '../../../../@types/ProductTypes';
+import { InfoContext } from '../../../../contexts/ClubDashboardContext';
 import { PRODUCTS_PROPERTIES } from './utils/myClubProperties';
 
-type productsTable = {
-    plansInfo: Plan[]
-    productsInfo: Product[]
-}
+export function ProductsTable() {
 
-export function ProductsTable({ plansInfo, productsInfo }: productsTable) {
+    const {
+        plansInfo,
+        productsInfo
+    } = useContext(InfoContext)
 
     function displayPlansNames(plansIds: string[]) {
         const plansNames: string[] = []

@@ -94,6 +94,9 @@ export function sortListByOption(
             break;
 
         //* Subscribers Filter Options
+        case 'Assinantes':
+            sortByParam("name" as keyof Copy, subscribersCopy, setSubscribersInfo)
+            break;
         case 'Email':
             sortByParam("email" as keyof Copy, subscribersCopy, setSubscribersInfo)
             break;

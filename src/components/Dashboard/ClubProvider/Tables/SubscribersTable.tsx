@@ -1,15 +1,16 @@
+import { useContext } from 'react';
 import Table from 'react-bootstrap/Table';
-import { Plan } from '../../../../@types/PlansTypes';
-import { Subscriber } from '../../../../@types/SubscriberTypes';
+import { InfoContext } from '../../../../contexts/ClubDashboardContext';
 import { getSubscriberPlansFormatted } from '../../../../utils/getSubscriberPlans';
 import { SUBS_PROPERTIES } from './utils/myClubProperties';
 
-type SubscribersTableProps = {
-    subscribersInfo: Subscriber[] | null
-    plansInfo: Plan[]
-}
+export function SubscribersTable() {
 
-export function SubscribersTable({ subscribersInfo, plansInfo }: SubscribersTableProps) {
+    const {
+        subscribersInfo,
+        plansInfo
+    } = useContext(InfoContext)
+
     return (
         <section>
             <Table bordered hover responsive="sm" >

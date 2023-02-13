@@ -3,21 +3,18 @@ import { Admin } from '../../../../@types/AdminsClubProviderTypes';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { AdminOption } from './AdminOption';
-import { ClubProvider } from '../../../../@types/ClubProviderTypes';
-import { Row } from 'react-bootstrap';
-import { Dispatch, SetStateAction } from 'react';
+import { useContext } from 'react';
+import { ClubAdminContext } from '../../../../contexts/ClubDashboardContext';
 
-type ClubProviderAdminsType = {
-    clubProviderAdmins: {
-        data: Admin[]
-    }
-    adminIsDefined: boolean
-    setAdminIsDefined: (value: SetStateAction<boolean>) => void
-}
-
-export function AdminLoginModal({ clubProviderAdmins, adminIsDefined, setAdminIsDefined }: ClubProviderAdminsType) {
+export function AdminLoginModal() {
 
     const router = useRouter()
+
+    const {
+        adminIsDefined, 
+        setAdminIsDefined,
+        clubProviderAdmins
+    } = useContext(ClubAdminContext) 
 
     const admins = clubProviderAdmins.data
     const thereAreAdmins = admins.length > 0

@@ -1,14 +1,18 @@
-import { SetStateAction } from "react"
+import { useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
-import { ClubProvider } from "../../../../../@types/ClubProviderTypes"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboardContext"
 import { RegisterPlan } from "./utils/RegisterPlan"
 
-type PlansRegisterProps = {
-    clubProviderInfo: ClubProvider | null
-    setUpdatePlans: (value: SetStateAction<boolean>) => void
-}
+export function PlansRegister() {
 
-export function PlansRegister({ clubProviderInfo, setUpdatePlans }: PlansRegisterProps) {
+    const {
+        clubProviderInfo
+    } = useContext(InfoContext)
+
+    const {
+        setUpdatePlans
+    } = useContext(ClubDashboardUpdateContext)
+
     return (
         <>
             <Form onSubmit={(e) => {

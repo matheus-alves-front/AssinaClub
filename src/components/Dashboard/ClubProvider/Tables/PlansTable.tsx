@@ -1,25 +1,31 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { Oval } from 'react-loader-spinner';
-import { ClubProvider } from '../../../../@types/ClubProviderTypes';
 import { Plan } from '../../../../@types/PlansTypes';
+import { InfoContext, DeletingPlansContext, ClubDashboardUpdateContext } from '../../../../contexts/ClubDashboardContext';
 import { deletePlanAndDontUpdate, deletePlanAndUpdate } from './utils/deletePlan';
 import { PLANS_PROPERTIES } from './utils/myClubProperties';
 
 type PlansTableProps = {
     plansInfo: Plan[]
-    deletingPlans: boolean 
-    clubProviderInfo: ClubProvider | null
-    setUpdatePlans: (value: SetStateAction<boolean>) => void
 }
 
 export function PlansTable({
-    plansInfo,
-    deletingPlans,
-    clubProviderInfo,
-    setUpdatePlans
+    plansInfo
 }: PlansTableProps) {
+
+    const {
+        clubProviderInfo
+    } = useContext(InfoContext)
+    
+    const {
+        deletingPlans,
+    } = useContext(DeletingPlansContext)
+
+    const {
+        setUpdatePlans
+    } = useContext(ClubDashboardUpdateContext)
 
     const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
     const clubProviderId = String(clubProviderInfo?.id)

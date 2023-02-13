@@ -1,18 +1,15 @@
-import { SetStateAction } from 'react';
+import { SetStateAction, useContext } from 'react';
 import Nav from 'react-bootstrap/Nav';
+import { ClubNavigationContext } from '../../../../contexts/ClubDashboardContext';
+import { clubRegNavDefaultActiveKey } from '../../../../utils/ClubDashboard/navDefaultKeys';
 
-type ClubProviderNavigationProps = {
-    clubRegNavDefaultActiveKey: string 
-    clubRegNavScreenSelected: string
-    setClubRegNavScreenSelected: (value: SetStateAction<string>) => void
-}
+export function ClubRegisterNavigation() {
 
-export function ClubRegisterNavigation({
-    clubRegNavDefaultActiveKey, 
-    clubRegNavScreenSelected, 
-    setClubRegNavScreenSelected
-}: ClubProviderNavigationProps) { 
-    
+    const {
+        clubRegNavScreenSelected,
+        setClubRegNavScreenSelected
+    } = useContext(ClubNavigationContext)
+
     return (
         <>
             <Nav

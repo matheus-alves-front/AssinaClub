@@ -1,26 +1,25 @@
-import { SetStateAction, useEffect, useState } from "react";
+import {  useContext, useState } from "react";
 import { Col } from "react-bootstrap";
 import { DivisionColumn } from "../../../../Divisions/DivisionColumn";
 import styles from "../../../../../styles/pages/clubDashboard.module.scss"
 import { ProductForm } from "../../Forms/ProductForm";
 import { AddProductToPlanForm } from "../../Forms/AddProductToPlanForm";
-import { ClubProvider } from "../../../../../@types/ClubProviderTypes";
 import { Product } from "../../../../../@types/ProductTypes";
-import { Plan, PlansType } from "../../../../../@types/PlansTypes";
+import { Plan } from "../../../../../@types/PlansTypes";
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboardContext";
 
-type ProductsRegisterProps = {
-    clubProviderInfo: ClubProvider | null
-    setUpdateProducts: (value: SetStateAction<boolean>) => void
-    plansInfo: Plan[]
-    productsInfo: Product[]
-}
+export function ProductsRegister() {
 
-export function ProductsRegister({
-    clubProviderInfo,
-    setUpdateProducts,
-    plansInfo,
-    productsInfo
-}: ProductsRegisterProps) {
+    const {
+        clubProviderInfo,
+        plansInfo,
+        productsInfo
+    } = useContext(InfoContext)
+
+    const {
+        setUpdateProducts
+    } = useContext(ClubDashboardUpdateContext)
+
     const [showAddPlanModal, setShowAddPlanModal] = useState(false)
     const [selectedPlanInAddPlan, setSelectedPlanInAddPlan] = useState<Plan | null>(null)
     const [selectedProductInAddPlan, setSelectedProductInAddPlan] = useState<Product | null>(null)
