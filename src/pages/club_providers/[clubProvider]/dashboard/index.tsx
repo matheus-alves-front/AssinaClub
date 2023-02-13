@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { GetSessionParams } from "next-auth/react"
 import { getServerSession } from "next-auth"
@@ -30,6 +30,8 @@ import { Col, Container, Row } from "react-bootstrap";
 import styles from "../../../../styles/pages/clubDashboard.module.scss"
 import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoContext, ClubDashboardUpdateContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { clubRegNavDefaultActiveKey, myNavDefaultActiveKey } from "../../../../utils/ClubDashboard/navDefaultKeys"
+import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
+import { DefaultClubDashboardView } from "../../../../components/Dashboard/ClubProvider/Views/DefaultClubDashboardView"
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
@@ -41,20 +43,25 @@ type ClubProviderDashboardProps = {
 
 export default function ClubProvidersDashboard({ clubProviderAdmins, userData, typeOfUser }: ClubProviderDashboardProps) {
 
+    const {
+        clubProviderInfo,
+        setClubProviderInfo,
+        showOnlyAdminsInDashboard
+    } = useContext(ClubDashboardGlobalContext)
+
     const [myNavScreenSelected, setMyNavScreenSelected] = useState(myNavDefaultActiveKey)
     const [clubRegNavScreenSelected, setClubRegNavScreenSelected] = useState(clubRegNavDefaultActiveKey)
 
     const [canDisplayModal, setCanDisplayModal] = useState(false)
     const [adminIsDefined, setAdminIsDefined] = useState(false)
 
-    const [clubProviderInfo, setClubProviderInfo] = useState<ClubProvider | null>(null)
     const [subscribersInfo, setSubscribersInfo] = useState<Subscriber[]>([])
     const [plansInfo, setPlansInfo] = useState<Plan[]>([])
     const [productsInfo, setProductsInfo] = useState<Product[]>([])
 
     const [updateProducts, setUpdateProducts] = useState(false)
     const [updatePlans, setUpdatePlans] = useState(false)
-    
+
     const [deletingPlans, setDeletingPlans] = useState(false)
     const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<Plan[]>([])
 
@@ -102,7 +109,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     return (
         <DeletingPlansContext.Provider value={{
-            deletePlans, 
+            deletePlans,
             deletingPlans, setDeletingPlans,
             plansThatCanBeDeleted, setPlansThatCanBeDeleted
         }}>
@@ -114,7 +121,6 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
                     adminIsDefined, setAdminIsDefined, clubProviderAdmins
                 }}>
                     <InfoContext.Provider value={{
-                        clubProviderInfo,
                         subscribersInfo, setSubscribersInfo,
                         plansInfo, setPlansInfo,
                         productsInfo, setProductsInfo
@@ -127,68 +133,12 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
                                 {canDisplayModal && <AdminLoginModal />}
 
                                 {(!canDisplayModal || adminIsDefined) &&
-                                    <>
-                                        <Row className="p-4 w-100">
-                                            <Col md={2} className="d-flex justify-content-center">
-                                                <MyNavigation/>
-                                            </Col>
-                                            <Col md="auto">
-                                                <DivisionColumn />
-                                            </Col>
-                                            <Col>
-                                                {myNavScreenSelected === "subscribers" &&
-                                                    <Container className={`${styles.easeCome}`}>
-                                                        <SubscribersTable/>
-                                                    </Container>
-                                                }
-                                                {myNavScreenSelected === "plans" &&
-                                                    (
-                                                        !deletingPlans ? (
-                                                            <Container className={`${styles.easeCome}`}>
-                                                                <PlansTable
-                                                                    plansInfo={plansInfo}
-                                                                />
-                                                            </Container>
-                                                        ) : (
-                                                            <Container className={`${styles.easeCome}`}>
-                                                                <PlansTable
-                                                                    plansInfo={plansThatCanBeDeleted}
-                                                                />
-                                                            </Container>
-                                                        )
-                                                    )
-                                                }
-                                                {myNavScreenSelected === "products" &&
-                                                    <Container className={`${styles.easeCome}`}>
-                                                        <ProductsTable/>
-                                                    </Container>
-                                                }
-                                            </Col>
-                                        </Row>
-                                        <Row className="w-100">
-                                            <DivisionLine />
-                                        </Row>
-                                        <Row className="p-4 w-100">
-                                            <Col md={2} className="d-flex justify-content-center">
-                                                <ClubRegisterNavigation />
-                                            </Col>
-                                            <Col md="auto">
-                                                <DivisionColumn />
-                                            </Col>
-                                            <Col md="auto" className="mx-auto">
-                                                {clubRegNavScreenSelected === "products" &&
-                                                    <Container className={`${styles.easeCome}`}>
-                                                        <ProductsRegister/>
-                                                    </Container>
-                                                }
-                                                {clubRegNavScreenSelected === "plans" &&
-                                                    <Container className={`${styles.easeCome}`}>
-                                                        <PlansRegister/>
-                                                    </Container>
-                                                }
-                                            </Col>
-                                        </Row>
-                                    </>
+                                    (
+                                        !showOnlyAdminsInDashboard ?
+                                            <DefaultClubDashboardView /> :
+                                            // <AdminClubDashBoardView/> //! TO DO
+                                            <></>
+                                    )
                                 }
                             </main >
                         </ClubDashboardUpdateContext.Provider>

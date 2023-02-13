@@ -29,7 +29,6 @@ export type ClubAdminContextType = {
 }
 
 export type InfoContextType = {
-    clubProviderInfo: ClubProvider | null
     subscribersInfo: Subscriber[]
     setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void
     plansInfo: Plan[]
