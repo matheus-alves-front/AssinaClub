@@ -1,20 +1,29 @@
+import { SetStateAction, useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ProductRegisterContext } from "../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext"
 import { RegisterProduct } from "../Registers/Products/utils/RegisterProduct"
 
-export function ProductForm({
-    clubProviderInfo,
-    setShowAddPlanModal,
-    setUpdateProducts,
-    showAddPlanModal
-}: any) {
+export function ProductForm() {
+
+    const {
+        clubProviderInfo,
+    } = useContext(InfoContext)
+
+    const {
+        setUpdateProducts
+    } = useContext(ClubDashboardUpdateContext)
+
+    const {
+        showAddPlanModal,
+        setShowAddPlanModal,
+    } = useContext(ProductRegisterContext)
+
     return (
         <Form
             onSubmit={(e) => {
-                RegisterProduct(e, clubProviderInfo?.id)
+                RegisterProduct(e, clubProviderInfo?.id, setUpdateProducts)
                 setShowAddPlanModal(true)
-                setTimeout(() => { //! Corrigir essa gambiarra
-                    setUpdateProducts(true)
-                }, 500)
             }}
         >
             <Row>

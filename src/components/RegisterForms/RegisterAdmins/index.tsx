@@ -3,14 +3,21 @@ import { Row, Col, Button, Form } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import axios from 'axios'
 
-export function RegisterFormAdmin({clubProvider}: any) {
+type RegisterFormAdminType = {
+    parcialClubProvider: {
+        id: string,
+        name: string
+    }
+}
+
+export function RegisterFormAdmin({parcialClubProvider}: RegisterFormAdminType) {
     
     const router = useRouter()
 
     const [isChecked, setIsChecked] = useState(false)
 
-    const clubProviderId = clubProvider.id
-    const clubProviderName = clubProvider.name
+    const clubProviderId = parcialClubProvider.id
+    const clubProviderName = parcialClubProvider.name
 
     async function RegisterAdminSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()

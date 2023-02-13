@@ -1,15 +1,22 @@
+import { useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
+import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { RegisterPlan } from "./utils/RegisterPlan"
 
-export function PlansRegister({ clubProviderInfo, setUpdatePlans }: any) { //! Corrigir tipagem
+export function PlansRegister() {
+
+    const {
+        clubProviderInfo
+    } = useContext(InfoContext)
+
+    const {
+        setUpdatePlans
+    } = useContext(ClubDashboardUpdateContext)
 
     return (
         <>
             <Form onSubmit={(e) => {
-                RegisterPlan(e, clubProviderInfo?.id)
-                setTimeout(() => { //! Corrigir essa gambiarra
-                    setUpdatePlans(true)
-                }, 500)
+                RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
             }}
             >
                 <Form.Group className="mb-2">

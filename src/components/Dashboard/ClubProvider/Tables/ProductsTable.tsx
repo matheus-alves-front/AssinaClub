@@ -1,10 +1,17 @@
+import { useContext } from 'react';
 import Table from 'react-bootstrap/Table';
+import { InfoContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
 import { PRODUCTS_PROPERTIES } from './utils/myClubProperties';
 
-export function ProductsTable({ plansInfo, productsInfo }: any) {
+export function ProductsTable() {
 
-    function displayPlansNames(plansIds: any[]) { //! Corrigir tipagem
-        const plansNames: any = [] //! Corrigir tipagem
+    const {
+        plansInfo,
+        productsInfo
+    } = useContext(InfoContext)
+
+    function displayPlansNames(plansIds: string[]) {
+        const plansNames: string[] = []
 
         if(!plansIds) return ""
 
@@ -26,14 +33,15 @@ export function ProductsTable({ plansInfo, productsInfo }: any) {
                 <tbody>
                     {productsInfo ?
                         (<>
-                            {productsInfo.map((product: any, index: number) => ( //! Corrigir tipagem
+                            {productsInfo.map((product, index) => (
                                 <tr key={index}>
                                     <td>{++index}</td>
                                     <td>{product.name}</td>
                                     <td>{product.description}</td>
                                     <td>{"R$ " + product.value.toFixed(2)}</td>
                                     <td>{product.sku}</td>
-                                    <td>{product.additionalOptions[0] ? product.additionalOptions.map(product => product.title).join(", ") : "Nenhuma"}</td>
+                                    {/* <td>{product.additionalOptions?.[0] ? product.additionalOptions.map(product => product.title).join(", ") : "Nenhuma"}</td> */}
+                                    <td>{"Nenhuma"}</td>
                                     <td>{product.plansId[0] ? displayPlansNames(product.plansId) : "Nenhum"}</td>
                                 </tr>
                             ))}

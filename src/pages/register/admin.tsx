@@ -1,15 +1,18 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import styles from "../../styles/pages/register.module.scss"
-import Link from "next/link";
-import { GetSessionParams, useSession } from "next-auth/react";
-import { GetClubProviderData } from "../login/club_provider";
+import { GetSessionParams } from "next-auth/react";
 import { RegisterFormAdmin } from "../../components/RegisterForms/RegisterAdmins";
 import { GetServerSideProps } from "next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import { Subscriber } from "@prisma/client";
+import { ClubProvider } from "../../@types/ClubProviderTypes";
 
-export default function RegisterAdmin({userData}: any) {
+type RegisterAdminType = {
+    userData: ClubProvider
+}
+
+export default function RegisterAdmin({userData}: RegisterAdminType) {
     const { id, clubName } = userData 
 
     return (
@@ -27,7 +30,7 @@ export default function RegisterAdmin({userData}: any) {
                         </div>
                     </Col>
                     <Col>
-                        <RegisterFormAdmin clubProvider={{id, name: clubName}}/>
+                        <RegisterFormAdmin parcialClubProvider={{id, name: clubName}}/>
                     </Col>
                 </Row>
             </Card>

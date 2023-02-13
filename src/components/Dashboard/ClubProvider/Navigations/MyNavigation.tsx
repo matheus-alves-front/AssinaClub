@@ -1,34 +1,31 @@
 import { Button } from 'react-bootstrap';
 import { FiAlignJustify, FiTrash2 } from "react-icons/fi";
 import { DivisionLine } from '../../../Divisions/DivisionLine';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FilterOptions } from '../FilterOptions/FilterOptions';
 import Nav from 'react-bootstrap/Nav';
+import { ClubNavigationContext, DeletingPlansContext, InfoContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { myNavDefaultActiveKey } from '../../../../utils/ClubDashboard/navDefaultKeys';
 
-//! Corrigir tipagem
-export function MyNavigation({
-    myNavDefaultActiveKey,
-    myNavScreenSelected,
-    setMyNavScreenSelected,
-    plansInfo,
-    setPlansInfo,
-    productsInfo,
-    setProductsInfo,
-    subscribersInfo,
-    setSubscribersInfo,
-    setDeletingPlans,
-    deletingPlans,
-    setPlansThatCanBeDeleted
-}: any) {
+export function MyNavigation() {
+
+    const {
+        plansInfo,
+    } = useContext(InfoContext)
+
+    const {
+        deletingPlans,
+        setDeletingPlans,
+        deletePlans
+    } = useContext(DeletingPlansContext)
+
+    const {
+        myNavScreenSelected,
+        setMyNavScreenSelected
+    } = useContext(ClubNavigationContext)
 
     const [whatToFilter, setWhatToFilter] = useState("Assinantes")
     const [showFilterOptions, setShowFilterOptions] = useState(false)
-
-    function deletePlans(plansInfo: any[]) {
-        const filteredPlans = [...plansInfo].filter(plan => plan.subscriberIds.length === 0)
-        setPlansThatCanBeDeleted(filteredPlans)
-        setDeletingPlans(true)
-    }
 
     useEffect(() => {
         if (myNavScreenSelected === "subscribers") return setWhatToFilter('Assinantes')
@@ -42,7 +39,7 @@ export function MyNavigation({
                 variant="pills"
                 defaultActiveKey={myNavDefaultActiveKey}
                 onSelect={(eventKey) => {
-                    setMyNavScreenSelected(eventKey)
+                    setMyNavScreenSelected(String(eventKey))
                     setShowFilterOptions(false)
                 }}
                 className="d-flex flex-column"
@@ -83,15 +80,9 @@ export function MyNavigation({
             >
                 Filtrar {whatToFilter} <FiAlignJustify style={{ marginLeft: "4px" }} />
             </Button>
-            {showFilterOptions && !deletingPlans && <FilterOptions
-                whatToFilter={whatToFilter}
-                plansInfo={plansInfo}
-                setPlansInfo={setPlansInfo}
-                productsInfo={productsInfo}
-                setProductsInfo={setProductsInfo}
-                subscribersInfo={subscribersInfo}
-                setSubscribersInfo={setSubscribersInfo}
-            />}
+
+            {showFilterOptions && !deletingPlans && <FilterOptions whatToFilter={whatToFilter} />}
+
             {
                 (myNavScreenSelected === "plans") && (
                     <>

@@ -1,5 +1,5 @@
 export type ClubProvider = {
-    id: string | string[]
+    id: string 
     clubName: string
     hostName: string
     cpf: string
