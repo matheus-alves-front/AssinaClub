@@ -5,7 +5,7 @@ import { Plan } from '../../@types/PlansTypes';
 import { Subscriber } from '../../@types/SubscriberTypes';
 
 async function getPlansInfo(clubProviderId: string) {
-    const plansUrl = `http://localhost:3000/api/club_providers/id/${clubProviderId}/plans`
+    const plansUrl = `${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans`
     const response = await axios.get(plansUrl)
     return response.data.data
 }
