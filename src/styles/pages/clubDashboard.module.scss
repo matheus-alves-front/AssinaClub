@@ -1,0 +1,37 @@
+.easeCome {
+    animation: ease-come 0.4s ease-out;
+
+    @keyframes ease-come {
+        from {
+            opacity: 0;
+        } to {
+            opacity: 1;
+        }
+    }
+}
+
+.growScale {
+    animation: grow-scale 0.2s ease-out;
+
+    @keyframes grow-scale {
+        from {
+            scale: 0;
+        } to {
+            scale: 1;
+        }
+    }
+}
+
+.filterOptions, .filterOptionsBlack {
+    transition: 0.2s all;
+}
+
+.filterOptions:hover {
+    background-color: #212529;
+    color: #FFFFFF;   
+}
+
+.filterOptionsBlack:hover {
+    background-color: #FFFFFF;   
+    color: #212529;
+}

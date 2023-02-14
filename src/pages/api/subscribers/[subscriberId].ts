@@ -1,13 +1,14 @@
-import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+import bcrypt from 'bcrypt'
 
 import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
 
 import { getSubscriber } from '../../../prisma/subscribers'
 
-const prisma = new PrismaClient()
+import { prisma } from '../../../prisma/PrismaClient'
 
-export default async function updateUser(
+export default async function updateSubscriber(
     req: NextApiRequest,
     res: NextApiResponse<SubscriberType>
 ) {
@@ -15,10 +16,10 @@ export default async function updateUser(
     const subscriberId = String(req.query.subscriberId)
 
     if (method === "GET") {
-        const user = await getSubscriber(subscriberId)
+        const subscriber = await getSubscriber(subscriberId)
 
         return res.status(200).json({
-            data: user
+            data: subscriber
         })
 
     } else if (method === "PUT") {
@@ -27,28 +28,44 @@ export default async function updateUser(
             cpf,
             birthDate,
             email,
-            password,
-            signatures
+            password
         }: Subscriber = req.body
 
-        const user = await prisma.subscriber.update({
+        const subscriberExists = await getSubscriber(subscriberId)
+
+        if (!subscriberExists) return res.status(404).json({
+            message: 'Subscriber does not exist'
+        })
+
+        let hashedPassword
+
+        if (password) {
+            hashedPassword = bcrypt.hashSync(password, 10)
+        }
+
+        const subscriber = await prisma.subscriber.update({
             where: { id: subscriberId },
             data: {
                 name,
                 cpf,
                 birthDate,
                 email,
-                password,
-                signatures
+                password: hashedPassword ? hashedPassword : password
             }
         })
 
         return res.status(201).json({
-            data: user,
+            data: subscriber,
             message: "update success"
         })
 
     } else if (method === "DELETE") {
+
+        const subscriberExists = await getSubscriber(subscriberId)
+
+        if (!subscriberExists) return res.status(404).json({
+            message: 'Subscriber does not exist'
+        })
 
         await prisma.subscriber.delete({
             where: { id: subscriberId }
