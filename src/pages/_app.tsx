@@ -11,9 +11,14 @@ import { Spinner } from 'react-bootstrap'
 
 import { Header } from '../components/Header'
 import { LoaderSpinner } from '../components/Loader'
+import { ClubProvider } from '../@types/ClubProviderTypes'
+import { ClubDashboardGlobalContext } from '../contexts/ClubDashboard/ClubDashboardGlobalContext'
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+
   const [isLoad, setIsLoad] = useState(true)
+  const [clubProviderInfo, setClubProviderInfo] = useState<ClubProvider | null>(null)
+  const [showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard] = useState<boolean>(false)
 
   Router.events.on("routeChangeStart", (url) => {
     setIsLoad(false)
@@ -25,6 +30,10 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
 
   return (
     <SessionProvider session={session}>
+      <ClubDashboardGlobalContext.Provider value={{
+        clubProviderInfo, setClubProviderInfo,
+        showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard
+      }}>
         <Header />
         {isLoad ?
           <Component {...pageProps} />
@@ -32,6 +41,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
           <LoaderSpinner />
         }
         <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
+      </ClubDashboardGlobalContext.Provider>
     </SessionProvider>
   )
 }

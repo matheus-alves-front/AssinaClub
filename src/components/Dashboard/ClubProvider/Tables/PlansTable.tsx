@@ -3,7 +3,8 @@ import { Button } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { Oval } from 'react-loader-spinner';
 import { Plan } from '../../../../@types/PlansTypes';
-import { InfoContext, DeletingPlansContext, ClubDashboardUpdateContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { DeletingPlansContext, ClubDashboardUpdateContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { ClubDashboardGlobalContext } from '../../../../contexts/ClubDashboard/ClubDashboardGlobalContext';
 import { deletePlanAndDontUpdate, deletePlanAndUpdate } from './utils/deletePlan';
 import { PLANS_PROPERTIES } from './utils/myClubProperties';
 
@@ -17,7 +18,7 @@ export function PlansTable({
 
     const {
         clubProviderInfo
-    } = useContext(InfoContext)
+    } = useContext(ClubDashboardGlobalContext)
     
     const {
         deletingPlans,

@@ -25,10 +25,6 @@ export type DashboardType = {
 
 export default function Dashboard({subscriberData, signatures, AssignatureDetails}: DashboardType) {
   const [eventKey, setEventKey] = useState('my-signatures')
-
-  useEffect(() => {
-    console.log(eventKey)
-  }, [eventKey])
   
   return (
       <Container fluid={'xl'}>

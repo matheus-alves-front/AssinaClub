@@ -1,14 +1,15 @@
-import { SetStateAction, useContext } from "react"
+import { useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
-import { ClubDashboardUpdateContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ClubDashboardUpdateContext} from "../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ProductRegisterContext } from "../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext"
+import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { RegisterProduct } from "../Registers/Products/utils/RegisterProduct"
 
 export function ProductForm() {
 
     const {
         clubProviderInfo,
-    } = useContext(InfoContext)
+    } = useContext(ClubDashboardGlobalContext)
 
     const {
         setUpdateProducts
