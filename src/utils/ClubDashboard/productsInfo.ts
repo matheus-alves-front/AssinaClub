@@ -4,7 +4,7 @@ import { ClubProvider } from '../../@types/ClubProviderTypes';
 import { Product } from '../../@types/ProductTypes';
 
 async function getProductsInfo(clubProviderId: string) {
-    const productsUrl = `http://localhost:3000/api/club_providers/id/${clubProviderId}/products`
+    const productsUrl = `${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/products`
     const response = await axios.get(productsUrl)
     return response.data.data
 }
