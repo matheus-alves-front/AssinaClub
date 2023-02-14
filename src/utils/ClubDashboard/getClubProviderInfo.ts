@@ -18,7 +18,10 @@ export async function getClubProviderInfo(
 
     try {
         const response = await axios.get(`http://localhost:3000/api/club_providers/${clubProviderUrlParam}`)
+        
         const clubProvider = response.data.data
+        clubProvider.clubName = clubProvider.clubName.replaceAll("-", " ")
+
         setClubProviderInfo(clubProvider)
         getSubscribersInfo(clubProvider.id, setSubscribersInfo)
     } catch (err) {

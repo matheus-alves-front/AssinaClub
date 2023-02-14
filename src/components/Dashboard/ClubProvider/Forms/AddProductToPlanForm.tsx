@@ -2,6 +2,7 @@ import { useContext } from "react"
 import { Button, CloseButton, Col, Container, Form, Row } from "react-bootstrap"
 import { ClubDashboardUpdateContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ProductRegisterContext } from "../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext"
+import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { DivisionLine, DivisionLineWithoutMargin } from "../../../Divisions/DivisionLine"
 import { addProductToPlan } from "../Registers/Products/utils/addProductToPlan"
 import { DropDownSelector } from "./DropDownSelector"
@@ -17,10 +18,13 @@ export function AddProductToPlanForm() {
     } = useContext(ProductRegisterContext)
 
     const {
-        clubProviderInfo,
         plansInfo,
         productsInfo
     } = useContext(InfoContext)
+
+    const {
+        clubProviderInfo,
+    } = useContext(ClubDashboardGlobalContext)
 
     const {
         setUpdateProducts

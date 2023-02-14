@@ -33,8 +33,12 @@ type AccountType = {
   typeOfUser: string
 }
 
+interface AdminToken extends Admin {
+  clubName: string
+}
+
 interface NewSession extends DefaultSession, UserTypes {
-  userData: Subscriber | ClubProvider | Admin | null
+  userData: Subscriber | ClubProvider | AdminToken | null
 }
 
 const secret = process.env.SECRET
@@ -97,29 +101,34 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token, user }) {
-      const {typeOfUser, userId} = token.account as AccountType
+      const { typeOfUser, userId } = token.account as AccountType
 
       let userData
-      
+
       if (typeOfUser === 'subscriber') {
         userData = await getSubscriber(String(userId))
-        
-      } else if ((typeOfUser === 'clubProvider')) { 
+
+      } else if ((typeOfUser === 'clubProvider')) {
         userData = await getClubProvider(String(userId))
-        
-      } else if ((typeOfUser === 'admin')) { 
+
+      } else if ((typeOfUser === 'admin')) {
         const adminId = userId.split('-')[0]
         const clubProviderId = userId.split('-')[1]
-        userData = await getAdmin(String(adminId))      
-        if(userData) {
-          userData.clubProviderId = clubProviderId
+        userData = await getAdmin(String(adminId)) as AdminToken | null
+        const response = await getClubProvider(String(clubProviderId))
+        if (response) {
+          const { clubName } = response
+          if (userData) {
+            userData.clubProviderId = clubProviderId
+            userData.clubName = clubName
+          }
         }
-      }    
-      
+      }
+
       const newSession = {
         ...session, userData, typeOfUser
       } as NewSession
-      
+
       return newSession
     }
   },

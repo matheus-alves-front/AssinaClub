@@ -1,13 +1,14 @@
 import { useContext } from "react"
 import { Button, Col, Form, Row } from "react-bootstrap"
-import { ClubDashboardUpdateContext, InfoContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ClubDashboardUpdateContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
+import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { RegisterPlan } from "./utils/RegisterPlan"
 
 export function PlansRegister() {
 
     const {
         clubProviderInfo
-    } = useContext(InfoContext)
+    } = useContext(ClubDashboardGlobalContext)
 
     const {
         setUpdatePlans
