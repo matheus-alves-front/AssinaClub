@@ -17,7 +17,7 @@ export async function getClubProviderInfo(
     const clubProviderUrlParam = typeOfUser === "admin" ? admin.clubProviderId : clubProvider.id
 
     try {
-        const response = await axios.get(`http://localhost:3000/api/club_providers/${clubProviderUrlParam}`)
+        const response = await axios.get(`${process.env.BASE_URL}/api/club_providers/${clubProviderUrlParam}`)
         
         const clubProvider = response.data.data
         clubProvider.clubName = clubProvider.clubName.replaceAll("-", " ")
