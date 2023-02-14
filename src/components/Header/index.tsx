@@ -34,7 +34,6 @@ export function Header() {
 
     if (session.data) {
       const data = session.data.userData
-
       setUserData(data)
       setTypeOfUser(session.data.typeOfUser)
       setGeneralUser(data as GeneralUser)

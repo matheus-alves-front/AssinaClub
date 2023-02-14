@@ -32,6 +32,7 @@ import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoCont
 import { clubRegNavDefaultActiveKey, myNavDefaultActiveKey } from "../../../../utils/ClubDashboard/navDefaultKeys"
 import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { DefaultClubDashboardView } from "../../../../components/Dashboard/ClubProvider/Views/DefaultClubDashboardView"
+import { AdminClubDashBoardView } from "../../../../components/Dashboard/ClubProvider/Views/AdminClubDashBoardView"
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
@@ -128,7 +129,6 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
                         <ClubDashboardUpdateContext.Provider value={{
                             setUpdateProducts, setUpdatePlans
                         }}>
-
                             <main>
                                 {canDisplayModal && <AdminLoginModal />}
 
@@ -136,8 +136,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
                                     (
                                         !showOnlyAdminsInDashboard ?
                                             <DefaultClubDashboardView /> :
-                                            // <AdminClubDashBoardView/> //! TO DO
-                                            <></>
+                                            <AdminClubDashBoardView />
                                     )
                                 }
                             </main >
@@ -149,14 +148,23 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     )
 }
 
+interface AdminToken extends Admin {
+    clubName: string
+  }
+
 export interface GetClubProviderData extends GetSessionParams {
-    userData?: ClubProvider
+    userData?: ClubProvider | AdminToken
     typeOfUser: string
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const session = await getServerSession(context.req, context.res, authOptions) as GetClubProviderData
+
+    const userData = session?.userData
+    const typeOfUser = session?.typeOfUser
+
+    const { host } = context.req.headers
 
     if (!session) {
         return {
@@ -167,11 +175,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
     }
 
-    const userData = session?.userData
-    const typeOfUser = session?.typeOfUser
+    if (typeOfUser === "subscriber") {
+        return {
+            redirect: {
+                destination: '/login/subscriber',
+                permanent: false
+            }
+        }
+    }
 
-    const { host } = context.req.headers
-    const clubProviderName = String(context?.params?.clubProvider)
+    const clubProviderName = typeOfUser === "clubProvider" ? String(context?.params?.clubProvider) : String(userData?.clubName)
+
+    console.log("\n\n\n\n\n");
+    
+    console.log(clubProviderName)
+
+    console.log("\n\n\n\n\n");
 
     const clubProvider = await getClubProviderByName(clubProviderName)
 
@@ -186,4 +205,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             typeOfUser
         }
     }
+
 }
