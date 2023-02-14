@@ -6,7 +6,7 @@ export async function getSubscribersInfo(
     clubProviderId: string | string[],
     setSubscribersInfo: (value: SetStateAction<Subscriber[]>) => void
 ) { 
-    const response = await axios.get(`http://localhost:3000/api/subscribers?clubProviderId=${clubProviderId}`)
+    const response = await axios.get(`${process.env.BASE_URL}/api/subscribers?clubProviderId=${clubProviderId}`)
     const subscribers = response.data.data
     setSubscribersInfo(subscribers)
 }
