@@ -1,15 +1,22 @@
+import { useContext } from 'react';
 import Nav from 'react-bootstrap/Nav';
+import { ClubNavigationContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { clubRegNavDefaultActiveKey } from '../../../../utils/ClubDashboard/navDefaultKeys';
 
-//! Corrigir tipagem
-export function ClubRegisterNavigation({clubRegNavDefaultActiveKey, clubRegNavScreenSelected, setClubRegNavScreenSelected}: any) { 
-    
+export function ClubRegisterNavigation() {
+
+    const {
+        clubRegNavScreenSelected,
+        setClubRegNavScreenSelected
+    } = useContext(ClubNavigationContext)
+
     return (
         <>
             <Nav
                 variant="pills"
                 defaultActiveKey={clubRegNavDefaultActiveKey}
                 onSelect={(eventKey) => {
-                    setClubRegNavScreenSelected(eventKey)
+                    setClubRegNavScreenSelected(String(eventKey))
                 }}
                 className="d-flex flex-column"
             >

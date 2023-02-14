@@ -12,8 +12,7 @@ import { Spinner } from 'react-bootstrap'
 import { Header } from '../components/Header'
 import { LoaderSpinner } from '../components/Loader'
 
-
-export default function App({ Component, pageProps: {session, ...pageProps} }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [isLoad, setIsLoad] = useState(true)
 
   Router.events.on("routeChangeStart", (url) => {
@@ -23,16 +22,16 @@ export default function App({ Component, pageProps: {session, ...pageProps} }: A
   Router.events.on("routeChangeComplete", (url) => {
     setIsLoad(true)
   })
-  
+
   return (
     <SessionProvider session={session}>
-      <Header />
-      {isLoad ? 
-        <Component {...pageProps} />
-        : 
-        <LoaderSpinner />
-      }
-      <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
+        <Header />
+        {isLoad ?
+          <Component {...pageProps} />
+          :
+          <LoaderSpinner />
+        }
+        <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
     </SessionProvider>
   )
 }
