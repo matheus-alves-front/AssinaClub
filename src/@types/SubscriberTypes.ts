@@ -5,10 +5,17 @@ export type Subscriber = {
   birthDate: string
   email: string
   password: string
-  signatures: string[]
+  signatures?: string[]
+  clubProviderIds?: string[]
+  planIds: string | string[]
+
+  // For Signatures
+  isPaid?: boolean
+  unsubscribe?: boolean
+  clubAssinatureId?: string
 }
 
 export type SubscriberType = {
   data?: Subscriber[] | Subscriber | null
-  message?: string
+  message?: string | string[]
 }
