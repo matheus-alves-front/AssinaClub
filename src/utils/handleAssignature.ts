@@ -12,7 +12,7 @@ export async function handleAssignature(
   }
 
   try {
-    const response = await fetch(`${process.env.BASE_URL}/api/subscribers/${userId}/signatures`, {
+    const response = await fetch(`/api/subscribers/${userId}/signatures`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
