@@ -1,4 +1,5 @@
 export type Admin = {
+  id?: string;
   name: string
   birthDate: string
   email: string
