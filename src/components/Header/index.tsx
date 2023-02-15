@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import { Router } from "next/router";
 import { Button, Container, Navbar, Offcanvas } from "react-bootstrap";
-
 import { IoMenu } from "react-icons/io5"
 import { GetSessionParams, signOut, useSession } from "next-auth/react";
 import { Subscriber } from "../../@types/SubscriberTypes";
@@ -20,28 +18,21 @@ interface GetData extends GetSessionParams {
   }
 }
 
-interface GeneralUser extends Subscriber, Admin { }
-
 export function Header() {
   const session = useSession() as GetData
 
-  let [userData, setUserData] = useState<Subscriber | Admin | ClubProvider | undefined>(undefined)
+  let [userData, setUserData] = useState<any>(undefined)
   let [typeOfUser, setTypeOfUser] = useState<string | undefined>(undefined)
-  let [generalUser, setGeneralUser] = useState<GeneralUser | undefined>(undefined)
-  let [clubProvider, setClubProvider] = useState<ClubProvider | undefined>(undefined)
 
   useEffect(() => {
-
     if (session.data) {
       const data = session.data.userData
       setUserData(data)
-      setTypeOfUser(session.data.typeOfUser)
-      setGeneralUser(data as GeneralUser)
-      setClubProvider(data as ClubProvider)
+      setTypeOfUser(session.data.typeOfUser)      
     }
   }, [session])
 
-  const { clubProviderInfo, setShowOnlyAdminsInDashboard } = useContext(ClubDashboardGlobalContext)
+  const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
   const [isOffcanvas, setIsOffcanvas] = useState(false)
 
@@ -60,13 +51,13 @@ export function Header() {
           </Navbar.Toggle>
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
             <Offcanvas.Header className="d-flex flex-column align-items-start">
-              {clubProviderInfo && (typeOfUser !== 'subscriber' && (
+              {userData && (typeOfUser !== 'subscriber' && (
                 <Offcanvas.Title className="mb-3 fw-normal">
-                  {clubProviderInfo.clubName}
+                  {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
                 </Offcanvas.Title>
               ))}
               <Offcanvas.Title className={typeOfUser === "subscriber" ? "fw-normal" : "fw-lighter"}>
-                Olá, {userData ? generalUser?.name : 'Faça Login'}
+                Olá, {userData ? userData?.name : 'Faça Login'}
               </Offcanvas.Title>
             </Offcanvas.Header>
 
@@ -91,31 +82,19 @@ export function Header() {
                     {
                       typeOfUser === "admin" &&
                       ADMIN_HEADER_OPTIONS.map(({ text, path }, index) => {
-                        if (path) {
-                          return (
-                            <Link
-                              key={index}
-                              href={path}
-                              className={`${styles.headerOption}`}
-                            >
-                              {text}
-                            </Link>
-                          )
-                        } else {
-                          return (
-                            // this options will not reload the page
-                            <a
-                              key={index}
-                              className={`${styles.headerOption}`}
-                              onClick={() => {
-                                setShowOnlyAdminsInDashboard(true)
-                                setIsOffcanvas(!isOffcanvas)
-                              }}
-                            >
-                              {text}
-                            </a>
-                          )
-                        }
+
+                        if(text === "Home" ) path += `${clubProviderInfo?.id}/dashboard`
+                        if(text === "Administradores" ) path += `${clubProviderInfo?.id}/dashboard/admins`
+
+                        return (
+                          <Link
+                            key={index}
+                            href={path}
+                            className={`${styles.headerOption}`}
+                          >
+                            {text}
+                          </Link>
+                        )
                       })
                     }
                     <Button

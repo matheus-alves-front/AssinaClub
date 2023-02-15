@@ -10,7 +10,12 @@ export const SUBSCRIBER_HEADER_OPTIONS = [
 
 export const ADMIN_HEADER_OPTIONS = [
     {
-        text: "Administradores"
+        text: "Home",
+        path: "/club_providers/" //* Must add id in code
+    },
+    {
+        text: "Administradores",
+        path: "/club_providers/" //* Must add id in code
     }, {
         text: "Finanças",
         path: "#"
