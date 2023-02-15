@@ -9,7 +9,7 @@ export async function deletePlanAndUpdate(
     setUpdatePlans: (value: SetStateAction<boolean>) => void 
 ) {
 
-    const deletePlanUrl = `${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans/${planId}`
+    const deletePlanUrl = `/api/club_providers/id/${clubProviderId}/plans/${planId}`
 
     try {
         await axios.delete(deletePlanUrl)
@@ -29,7 +29,7 @@ export async function deletePlanAndDontUpdate(
     clubProviderId: string,
 ) {
 
-    const deletePlanUrl = `${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans/${planId}`
+    const deletePlanUrl = `/api/club_providers/id/${clubProviderId}/plans/${planId}`
 
     try {
         await axios.delete(deletePlanUrl)

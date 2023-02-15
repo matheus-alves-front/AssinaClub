@@ -49,7 +49,7 @@ export default function RegisterFormPlans() {
     }
 
     try {
-      const postPlans = await axios.post(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans`, data)
+      const postPlans = await axios.post(`/api/club_providers/id/${clubProviderId}/plans`, data)
       const plan = postPlans.data.data
       
       setRegisterStepsContext({
@@ -85,7 +85,7 @@ export default function RegisterFormPlans() {
     }
 
     try {
-      await axios.put(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
+      await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
     }
     catch(err) {
       console.log(err)
@@ -108,7 +108,7 @@ export default function RegisterFormPlans() {
     }
 
     try {
-      await axios.put(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
+      await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
     }
     catch(err) {
       console.log(err)

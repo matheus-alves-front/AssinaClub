@@ -125,8 +125,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const userData = session?.userData
     const typeOfUser = session?.typeOfUser
 
-    const { host } = context.req.headers
-
     if (!session) {
         return {
             redirect: {
@@ -149,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const clubProvider = await getClubProviderByName(clubProviderName)
 
-    const fetchClubProviderAdmins = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/admins/`)
+    const fetchClubProviderAdmins = await fetch(`${process.env.BASE_URL}/api/club_providers/id/${clubProvider?.id}/admins/`)
 
     const clubProviderAdmins = await fetchClubProviderAdmins.json()
 

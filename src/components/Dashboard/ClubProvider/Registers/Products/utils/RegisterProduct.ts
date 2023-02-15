@@ -24,7 +24,7 @@ export async function RegisterProduct(
     }
 
     try {
-        const response = await axios.post(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/products`, data)
+        const response = await axios.post(`/api/club_providers/id/${clubProviderId}/products`, data)
         if (response.status === 201) {
             setUpdateProducts(true)
         }
