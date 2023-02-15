@@ -36,7 +36,7 @@ export function AdminOption({ admin }: ClubProviderAdminType) {
         }
 
         try {
-            const loginPost = await axios.post('/api/login', data)
+            const loginPost = await axios.post(`${process.env.BASE_URL}/api/login`, data)
 
             const { token } = loginPost.data.data
 
