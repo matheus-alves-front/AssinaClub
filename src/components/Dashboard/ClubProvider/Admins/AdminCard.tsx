@@ -14,7 +14,7 @@ export function AdminCard({ admin, editAdminMode, adminsToShow }: AdminCardType)
 
     return (
         <>
-            <Container className={`p-4 d-flex align-items-center w-100 ${styles.tran2} ${editAdminMode && adminsToShow.length !== 1 ? styles.selectedAdmin : ""}`}>
+            <Container className={`p-4 d-flex align-items-center w-100 ${styles.tran2} ${(editAdminMode && adminsToShow.length !== 1) ? styles.selectedAdmin : ""}`}>
                 <div className="w-75 d-flex flex-column gap-3">
                     <p className="m-0"> <strong>Nome:</strong> {admin.name}</p>
                     <p className="m-0"><strong>Ocupação:</strong> {admin.occupation}</p>

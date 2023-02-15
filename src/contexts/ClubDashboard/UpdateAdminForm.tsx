@@ -7,19 +7,25 @@ export function UpdateAdminForm() {
 
     const {
         adminsToShow, setAdminsToShow,
-        setEditAdminMode, currentAdmin
+        setEditAdminMode, editMyProfileMode,
+        setEditMyProfileMode,
+        currentAdmin, setCurrentAdmin
     } = useContext(AdminDashboardContext)
 
     async function submitUpdateAdmin(event: FormEvent<HTMLFormElement>) {
-        const status = await updateAdmin(event, currentAdmin.clubProviderId, adminsToShow[0], setAdminsToShow)
-        if (status === 200) {
-            setEditAdminMode(false)
+        if (editMyProfileMode) {
+            const status = await updateAdmin(event, currentAdmin.clubProviderId, currentAdmin, setAdminsToShow, currentAdmin, setCurrentAdmin, editMyProfileMode)
+            if (status === 200) setEditMyProfileMode(false)
+            return
         }
+
+        const status = await updateAdmin(event, currentAdmin.clubProviderId, adminsToShow[0], setAdminsToShow, currentAdmin, setCurrentAdmin, editMyProfileMode)
+        if (status === 200) setEditAdminMode(false)
     }
 
     return (
         <Form
-            className={`mx-auto my-5 ${adminsToShow.length !== 1 ? "visually-hidden" : ""}`}
+            className={`mx-auto my-5`}
             style={{
                 width: "50%",
                 minWidth: "600px",

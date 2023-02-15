@@ -13,9 +13,14 @@ export type AdminDashboardContextType = {
     changingadminsCardUpperText: boolean,
     setChangingadminsCardUpperText: (value: SetStateAction<boolean>) => void,
     currentAdmin: Admin,
+    setCurrentAdmin: (value: SetStateAction<Admin>) => void,
     clubProviderAdmins: {
         data: Admin[]
     }
+    editMyProfileMode: boolean,
+    setEditMyProfileMode: (value: SetStateAction<boolean>) => void,
+    myProfileCardUpperText: string, 
+    changingmyProfileCardUpperText: boolean,
 }
 
 export const AdminDashboardContext = createContext({} as AdminDashboardContextType)

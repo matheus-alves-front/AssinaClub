@@ -1,3 +1,5 @@
 export const defaultAdminsCardUpperText = "Administradores do Clube"
 
-export const fillFormAdminsCardUpperText = "Preencha o formulário"
+export const fillFormCardUpperText = "Preencha o formulário"
+
+export const defaultMyProfileCardUpperText = "Perfil de administrador"

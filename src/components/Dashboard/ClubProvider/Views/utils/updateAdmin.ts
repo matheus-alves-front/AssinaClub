@@ -6,7 +6,10 @@ export async function updateAdmin(
     event: FormEvent<HTMLFormElement>,
     clubProviderId: string,
     adminToUpdate: Admin,
-    setAdminsToShow: (value: SetStateAction<Admin[]>) => void
+    setAdminsToShow: (value: SetStateAction<Admin[]>) => void,
+    currentAdmin: Admin,
+    setCurrentAdmin: (value: SetStateAction<Admin>) => void,
+    editMyProfileMode: boolean
 ) {
     event.preventDefault()
 
@@ -24,11 +27,23 @@ export async function updateAdmin(
     if (emailAdmin.value) data.email = emailAdmin.value
 
     try {
-        const response = await axios.put(`/api/club_providers/id/${clubProviderId}/admins/${adminToUpdate.id}`, data)        
+        const response = await axios.put(`/api/club_providers/id/${clubProviderId}/admins/${adminToUpdate.id}`, data)
 
-        if(response.status === 200) {
-            const updatedAdmins = await axios.get(`/api/club_providers/id/${clubProviderId}/admins`)            
-            setAdminsToShow(updatedAdmins.data.data);            
+        if (response.status === 200) {
+
+            if (editMyProfileMode) {
+                const currentAdminCopy = { ...currentAdmin } as any //! Corrigir tipagem
+
+                for (let [key, value] of Object.entries(data)) {
+                    if (value) currentAdminCopy[key] = value
+                }
+
+                setCurrentAdmin(currentAdminCopy)
+                return response.status
+            }
+
+            const updatedAdmins = await axios.get(`/api/club_providers/id/${clubProviderId}/admins`)
+            setAdminsToShow(updatedAdmins.data.data);
             return response.status
         }
 

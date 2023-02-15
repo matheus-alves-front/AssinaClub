@@ -29,7 +29,7 @@ export function AdminsList({
             className={`p-0 bg-white w-50 min-vw-75 rounded-3 border border-2 shadow ${styles.tran4}`}
             style={{
                 minWidth: "600px",
-                maxWidth: "750px",
+                maxWidth: "800px",
                 height: adminsToShow.length === 1 ? "30vh" : "75vh",
                 overflowY: "auto",
                 margin: adminsToShow.length === 1 ? "30px auto" : ""
