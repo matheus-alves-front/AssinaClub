@@ -53,7 +53,7 @@ export function RegisterFormSubscriber() {
 
     
     try {
-      await axios.post(`${process.env.BASE_URL}/api/subscribers`, data)
+      await axios.post(`/api/subscribers`, data)
       
       router.push('/login/subscriber')
     }
@@ -208,7 +208,7 @@ export function RegisterFormClubProvider() {
     }
 
     try {
-      const postClubProvider = await axios.post(`${process.env.BASE_URL}/api/club_providers`, data)
+      const postClubProvider = await axios.post(`/api/club_providers`, data)
       const clubProviderData = postClubProvider.data.data
     
       setRegisterStepsContext({
