@@ -64,7 +64,7 @@ export function RegisterFormProducts() {
       "value": Number(productValue.value)
     }
 
-    const postProduct = await axios.post(`/api/club_providers/id/${clubProviderId}/products`, data)
+    const postProduct = await axios.post(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/products`, data)
 
     form.reset()
     

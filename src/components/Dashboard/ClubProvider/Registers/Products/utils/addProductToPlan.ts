@@ -19,7 +19,7 @@ export async function addProductToPlan(
     const addProductToPlan = { productId }
 
     try {
-        await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
+        await axios.put(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
         setShowAddPlanModal(false)
         setSelectedPlanInAddPlan(null)
         setSelectedProductInAddPlan(null)
