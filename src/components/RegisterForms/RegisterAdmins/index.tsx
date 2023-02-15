@@ -46,7 +46,7 @@ export function RegisterFormAdmin({parcialClubProvider}: RegisterFormAdminType) 
         }
 
         try {
-            await axios.post(`/api/club_providers/id/${clubProviderId}/admins`, data)
+            await axios.post(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/admins`, data)
 
             router.push(`/club_providers/${clubProviderName}/dashboard`)
         }
