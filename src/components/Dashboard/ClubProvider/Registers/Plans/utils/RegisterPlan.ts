@@ -24,7 +24,7 @@ export async function RegisterPlan(
     }
 
     try {
-        const response = await axios.post(`/api/club_providers/id/${clubProviderId}/plans`, data)
+        const response = await axios.post(`${process.env.BASE_URL}/api/club_providers/id/${clubProviderId}/plans`, data)
 
         if (response.status === 201) {
             setUpdatePlans(true)
