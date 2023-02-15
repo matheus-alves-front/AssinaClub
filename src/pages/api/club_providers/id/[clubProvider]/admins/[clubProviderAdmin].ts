@@ -45,7 +45,9 @@ export default async function handleAdminOfClubProviders(
       occupation,
     }: Admin = req.body
 
-    const hashedPassword = bcrypt.hashSync(password, 10)
+    let hashedPassword 
+
+    if(password) hashedPassword = bcrypt.hashSync(password, 10)
 
     const admin = await prisma.admin.update({
       where: {
@@ -60,7 +62,7 @@ export default async function handleAdminOfClubProviders(
       }
     })
 
-    return res.status(201).json({
+    return res.status(200).json({
       data: admin,
     })
 

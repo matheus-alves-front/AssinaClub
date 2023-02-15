@@ -16,23 +16,10 @@ import { handleProductsInfo } from "../../../../utils/ClubDashboard/productsInfo
 import { getClubProviderInfo } from "../../../../utils/ClubDashboard/getClubProviderInfo";
 
 import { AdminLoginModal } from "../../../../components/Dashboard/ClubProvider/Admins/AdminLoginModal"
-import { SubscribersTable } from "../../../../components/Dashboard/ClubProvider/Tables/SubscribersTable"
-import { PlansTable } from "../../../../components/Dashboard/ClubProvider/Tables/PlansTable"
-import { ProductsTable } from "../../../../components/Dashboard/ClubProvider/Tables/ProductsTable"
-import { DivisionLine } from "../../../../components/Divisions/DivisionLine"
-import { ProductsRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Products/ProductsRegister"
-import { MyNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/MyNavigation";
-import { ClubRegisterNavigation } from "../../../../components/Dashboard/ClubProvider/Navigations/ClubRegisterNavigation";
-import { PlansRegister } from "../../../../components/Dashboard/ClubProvider/Registers/Plans/PlansRegister";
-import { DivisionColumn } from "../../../../components/Divisions/DivisionColumn";
-
-import { Col, Container, Row } from "react-bootstrap";
-import styles from "../../../../styles/pages/clubDashboard.module.scss"
 import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoContext, ClubDashboardUpdateContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { clubRegNavDefaultActiveKey, myNavDefaultActiveKey } from "../../../../utils/ClubDashboard/navDefaultKeys"
 import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { DefaultClubDashboardView } from "../../../../components/Dashboard/ClubProvider/Views/DefaultClubDashboardView"
-import { AdminClubDashBoardView } from "../../../../components/Dashboard/ClubProvider/Views/AdminClubDashBoardView"
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
@@ -129,17 +116,15 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
                         <ClubDashboardUpdateContext.Provider value={{
                             setUpdateProducts, setUpdatePlans
                         }}>
-                            <main>
+                            <main className={!showOnlyAdminsInDashboard ? "my-5" : ""}>
                                 {canDisplayModal && <AdminLoginModal />}
 
                                 {(!canDisplayModal || adminIsDefined) &&
                                     (
-                                        !showOnlyAdminsInDashboard ?
-                                            <DefaultClubDashboardView /> :
-                                            <AdminClubDashBoardView />
+                                        <DefaultClubDashboardView />
                                     )
                                 }
-                            </main >
+                            </main>
                         </ClubDashboardUpdateContext.Provider>
                     </InfoContext.Provider>
                 </ClubAdminContext.Provider>
@@ -148,9 +133,9 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     )
 }
 
-interface AdminToken extends Admin {
+export interface AdminToken extends Admin {
     clubName: string
-  }
+}
 
 export interface GetClubProviderData extends GetSessionParams {
     userData?: ClubProvider | AdminToken
@@ -186,12 +171,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const clubProviderName = typeOfUser === "clubProvider" ? String(context?.params?.clubProvider) : String(userData?.clubName)
 
-    console.log("\n\n\n\n\n");
-    
-    console.log(clubProviderName)
-
-    console.log("\n\n\n\n\n");
-
     const clubProvider = await getClubProviderByName(clubProviderName)
 
     const fetchClubProviderAdmins = await fetch(`http://${host}/api/club_providers/id/${clubProvider?.id}/admins/`)
@@ -205,5 +184,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             typeOfUser
         }
     }
-
 }

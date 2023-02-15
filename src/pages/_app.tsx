@@ -40,7 +40,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
           :
           <LoaderSpinner />
         }
-        <footer className='p-5 bg-dark mt-5 text-white'>footer</footer>
+        <footer className='p-5 bg-dark mt-4 text-white'>footer</footer>
       </ClubDashboardGlobalContext.Provider>
     </SessionProvider>
   )
