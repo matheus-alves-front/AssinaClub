@@ -43,7 +43,7 @@ export function ChangeAccount({subscriberData}: DashboardType) {
     }
     
     try {
-      await axios.put(`${process.env.BASE_URL}/api/subscribers/${subscriberData?.id}`, data)
+      await axios.put(`/api/subscribers/${subscriberData?.id}`, data)
       
       router.reload()
     }
