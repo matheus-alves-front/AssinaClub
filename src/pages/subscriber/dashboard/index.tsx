@@ -12,9 +12,13 @@ import { ChangeAccount } from "../../../components/Dashboard/Subscriber/ChangeAc
 
 import { Col, Container, Nav, Row, Tab } from "react-bootstrap"
 import { useEffect, useState } from "react"
+import { DivisionColumn } from "../../../components/Divisions/DivisionColumn"
+import axios from "axios"
+import { Product } from "../../../@types/ProductTypes"
 
 export interface ClubWithPlan extends Plan {
   club?: ClubProvider
+  productsOfPlan: Product[]
 }
 
 export type DashboardType = {
@@ -25,9 +29,11 @@ export type DashboardType = {
 
 export default function Dashboard({subscriberData, signatures, AssignatureDetails}: DashboardType) {
   const [eventKey, setEventKey] = useState('my-signatures')
+
+  // console.log(AssignatureDetails?.[0].productsOfPlan)
   
   return (
-      <Container fluid={'xl'}>
+      <Container fluid={'lg'}>
         <Tab.Container 
             id="my-account-dashboard" 
             defaultActiveKey="my-signatures"
@@ -37,16 +43,17 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
         >
           <Row className="justify-content-around">
             <Col 
-              xl={3}
+              xxl={2}
               lg={3}
-              sm={12} 
-              className="border-end"
+              sm={12}
             >
-              <Nav variant="pills" className="flex-column">
+              <Nav variant="pills" 
+                className="flex-column mt-4 mb-3"
+              >
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="my-account"
-                    className={eventKey === "my-account" ? 'text-white' : ''}
+                    className={eventKey === "my-account" ? 'text-white bg-dark' : ''}
                   >
                     Minha Conta
                   </Nav.Link>
@@ -54,7 +61,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="my-signatures"
-                    className={eventKey === "my-signatures" ? 'text-white' : ''}
+                    className={eventKey === "my-signatures" ? 'text-white  bg-dark' : ''}
                   >
                     Minhas Assinaturas
                   </Nav.Link>
@@ -62,7 +69,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="wish-list"
-                    className={eventKey === "wish-list" ? 'text-white' : ''}
+                    className={eventKey === "wish-list" ? 'text-white  bg-dark' : ''}
                   >
                     Lista de Desejos
                   </Nav.Link>
@@ -70,7 +77,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="my-address"
-                    className={eventKey === "my-address" ? 'text-white' : ''}
+                    className={eventKey === "my-address" ? 'text-white  bg-dark' : ''}
                   >
                     Meus Endereços
                   </Nav.Link>
@@ -78,7 +85,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="my-credit-cards"
-                    className={eventKey === "my-credit-cards" ? 'text-white' : ''}
+                    className={eventKey === "my-credit-cards" ? 'text-white  bg-dark' : ''}
                   >
                     Meus Cartões
                   </Nav.Link>
@@ -86,26 +93,33 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
                 <Nav.Item>
                   <Nav.Link 
                     eventKey="change-account"
-                    className={eventKey === "change-account" ? 'text-white' : ''}
+                    className={eventKey === "change-account" ? 'text-white  bg-dark' : ''}
                   >
                     Alterar Conta
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
+            <Col md="auto">
+              <DivisionColumn />
+            </Col>
             <Col 
               sm={12} 
-              lg={9}
-              xl={9}
+              lg={8}
+              xxl={9}
             >
               <Tab.Content>
                 <Tab.Pane eventKey="my-account">
                   <h1>Minha Conta</h1>
                   <Row>
-                    <Col>
+                    <Col xxl={6} lg={12} md={6} xs={12}
+                      className="mb-3"
+                    >
                       <MyInformationsCard subscriberData={subscriberData} />
                     </Col>
-                    <Col>
+                    <Col xxl={6} lg={12} md={6} xs={12}
+                      className="mb-3"
+                    >
                       <MySignaturesCard signatures={signatures} />
                     </Col>
                   </Row> 
@@ -179,11 +193,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  const AssignatureDetails = assinantOfPlans.map(plan => {
-    const club = assinantOfClubs.find(club => club.id === plan.clubProviderId);
-    
-    return { ...plan, club };
-  });
+  const AssignatureDetails = await Promise.all(
+    assinantOfPlans.map(async (plan) => {
+      const club = assinantOfClubs.find(club => club.id === plan.clubProviderId);
+  
+      const productsOfPlan = await axios.get(`${process.env.BASE_URL}/api/club_providers/id/${plan.clubProviderId}/products?=plansId=${plan.id}`)
+  
+      return { ...plan, club, productsOfPlan: productsOfPlan.data.data };
+    })
+  ) 
 
   return {
     props: {

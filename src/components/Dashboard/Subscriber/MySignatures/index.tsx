@@ -75,22 +75,23 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
     ''
     }
     {AssignatureDetails?.map((plan, index) => (
-      <Col md={6} className="mb-3" key={index}>
+      <Col xxl={6} lg={12} md={6} xs={12} className="mb-3" key={index}>
         <Card>
-          <Card.Header>
-            <strong>{plan.club?.clubName}</strong>
+          <Card.Header className="bg-transparent border-0">
+            <h5 className="mt-2">{plan.club?.clubName}</h5>
+            <small>Assinante desde: xx/xx/xxxx</small>
           </Card.Header>
           <Card.Body>
             <h6>{plan.title}</h6>
             <p>{plan.description}</p>
-            <p><strong>Produtos inclusos:</strong></p>
+            <p><strong>Produtos à receber:</strong></p>
             <p>...</p>
             <p><strong>Próxima Entrega:</strong></p>
             <p>...</p>
           </Card.Body>
           <Card.Body className="d-flex justify-content-between">
             <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
-              <Button variant="primary">
+              <Button variant="dark">
                 Ir para Área dos Assinantes
               </Button>
             </Link>
@@ -107,8 +108,11 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
             <Modal.Title>Confirmar Cancelamento</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Ao efetuar o cancelamento, você não irá mais receber seus produtos, assim como
-            não será efetuado o extorno do seu ultimo pagamento.
+            <p>
+              Ao efetuar o cancelamento, você não irá mais receber seus produtos, assim como
+              não será efetuado o extorno do seu ultimo pagamento.
+            </p>
+            <p>O cancelamento do Clube demora um pequeno tempo para sair de suas assinaturas.</p>
           </Modal.Body>
           <Modal.Footer>
             <Button 

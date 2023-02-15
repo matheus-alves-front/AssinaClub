@@ -1,15 +1,18 @@
 import { useContext, useEffect, useState } from "react";
-import Link from "next/link";
-import { Button, Container, Navbar, Offcanvas } from "react-bootstrap";
-import { IoMenu } from "react-icons/io5"
 import { GetSessionParams, signOut, useSession } from "next-auth/react";
-import { Subscriber } from "../../@types/SubscriberTypes";
+import Link from "next/link";
+
 import { ClubDashboardGlobalContext } from "../../contexts/ClubDashboard/ClubDashboardGlobalContext";
+import { Subscriber } from "../../@types/SubscriberTypes";
 import { Admin } from "../../@types/AdminsClubProviderTypes";
 import { ClubProvider } from "../../@types/ClubProviderTypes";
-import { DivisionLineWithoutMargin } from "../Divisions/DivisionLine";
+
 import { ADMIN_HEADER_OPTIONS, SUBSCRIBER_HEADER_OPTIONS } from "./utils/headerOptions";
-import styles from "../../styles/components/header.module.scss"
+
+import { Button, Container, Dropdown, DropdownButton, Navbar, Offcanvas } from "react-bootstrap";
+import { DivisionLineWithoutMargin } from "../Divisions/DivisionLine";
+import { IoMenu } from "react-icons/io5"
+import styles from "./header.module.scss"
 
 interface GetData extends GetSessionParams {
   data: {
@@ -41,14 +44,37 @@ export function Header() {
   return (
     <>
       <Navbar className="shadow-sm mb-4">
-        <Container className="position-relative py-2">
-          <Navbar.Brand className="d-block" href="/">AssinaClub</Navbar.Brand>
-          <Navbar.Toggle
-            className="d-block position-absolute top-50 start-100 translate-middle border-0"
-            onClick={() => setIsOffcanvas(!isOffcanvas)}
+        <Container className="position-relative py-2" fluid={'lg'}>
+          <Navbar.Brand className="d-block me-4" href="/">
+              AssinaClub
+          </Navbar.Brand>
+          <Link 
+            href={'/club_providers/clubs_board'}
+            className="me-auto"
           >
-            <IoMenu fontSize={50} />
-          </Navbar.Toggle>
+              Explorar Clubes
+          </Link>
+
+          {!userData ? 
+            <DropdownButton 
+              id="login-header-dropdown" 
+              title="Fazer Login"
+              variant="outline-dark"
+              drop="start"
+            >
+              <Dropdown.Item href="/login/subscriber">Sou Assinante</Dropdown.Item>
+              <Dropdown.Item href="/login/club_provider">Sou Clube</Dropdown.Item>
+            </DropdownButton>
+           : 
+            <Navbar.Toggle
+              className="d-block border-0 p-0"
+              onClick={() => setIsOffcanvas(!isOffcanvas)}
+            >
+              <IoMenu fontSize={50} />
+            </Navbar.Toggle>
+          }
+
+
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
             <Offcanvas.Header className="d-flex flex-column align-items-start">
               {userData && (typeOfUser !== 'subscriber' && (
