@@ -127,7 +127,7 @@ export function ChangeAccount({subscriberData}: DashboardType) {
             </Row>
             <Button 
               className="float-end mt-2 px-4" 
-              variant={'primary'}
+              variant={'dark'}
               type="submit"
             >
               Salvar
