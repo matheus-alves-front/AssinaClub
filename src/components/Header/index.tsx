@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { GetSessionParams, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { ClubDashboardGlobalContext } from "../../contexts/ClubDashboard/ClubDashboardGlobalContext";
@@ -23,10 +24,11 @@ interface GetData extends GetSessionParams {
 
 export function Header() {
   const session = useSession() as GetData
+  const router = useRouter()
 
   let [userData, setUserData] = useState<any>(undefined)
   let [typeOfUser, setTypeOfUser] = useState<string | undefined>(undefined)
-
+  
   useEffect(() => {
     if (session.data) {
       const data = session.data.userData
@@ -34,33 +36,43 @@ export function Header() {
       setTypeOfUser(session.data.typeOfUser)      
     }
   }, [session])
-
+  
   const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
   const [isOffcanvas, setIsOffcanvas] = useState(false)
-
   const handleCloseOffcanvas = () => setIsOffcanvas(false)
+  
+  useEffect(() => {
+    router.events.on('routeChangeComplete', handleCloseOffcanvas);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleCloseOffcanvas);
+    };
+  })
 
   return (
     <>
       <Navbar className="shadow-sm mb-4">
         <Container className="position-relative py-2" fluid={'lg'}>
-          <Navbar.Brand className="d-block me-4" href="/">
-              AssinaClub
-          </Navbar.Brand>
           <Link 
             href={'/club_providers/clubs_board'}
-            className="me-auto"
+            className="fw-bold"
           >
-              Explorar Clubes
+              Clubes
           </Link>
+
+          <Navbar.Brand className="d-block m-auto" href="/">
+              AssinaClub
+          </Navbar.Brand>
 
           {!userData ? 
             <DropdownButton 
               id="login-header-dropdown" 
-              title="Fazer Login"
+              title="Login"
               variant="outline-dark"
               drop="start"
+              size="sm"
+              className="ms-1"
             >
               <Dropdown.Item href="/login/subscriber">Sou Assinante</Dropdown.Item>
               <Dropdown.Item href="/login/club_provider">Sou Clube</Dropdown.Item>
@@ -76,7 +88,7 @@ export function Header() {
 
 
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
-            <Offcanvas.Header className="d-flex flex-column align-items-start">
+            <Offcanvas.Header closeButton className="text-start">
               {userData && (typeOfUser !== 'subscriber' && (
                 <Offcanvas.Title className="mb-3 fw-normal">
                   {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}

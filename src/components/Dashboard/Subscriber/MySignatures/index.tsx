@@ -1,11 +1,18 @@
-import { Button, Card, CardGroup, Col, Modal, Row } from "react-bootstrap";
-import { ClubWithPlan, DashboardType } from "../../../../pages/subscriber/dashboard";
-import Link from "next/link";
-import { handleAssignature } from "../../../../utils/handleAssignature";
 import { useState } from "react";
-import { ProductsTableAssignature } from "./ProductsTableAssignature";
+import Link from "next/link";
 
-export function MySignaturesCard({signatures}: DashboardType) {
+import type { ClubWithPlan } from "../../../../pages/subscriber/dashboard";
+import { handleAssignature } from "../../../../utils/handleAssignature";
+
+import { ProductsTableAssignature } from "./ProductsTableAssignature";
+import { Button, Card, Col, Modal, Row } from "react-bootstrap";
+
+type MySignaturesProps = {
+  AssignatureDetails?: ClubWithPlan[]
+  userId?: string
+}
+
+export function MySignaturesCard({AssignatureDetails}: MySignaturesProps) {
   return (
     <Card>
       <Card.Header className="bg-transparent pt-3">
@@ -13,7 +20,7 @@ export function MySignaturesCard({signatures}: DashboardType) {
       </Card.Header>
       <Card.Body>
         <Row>
-        {!signatures?.length ?
+        {!AssignatureDetails?.length ?
           <>
             <p>Você ainda não é assinante de nenhum clube</p>
             <Link href={'/club_providers/clubs_board'}>
@@ -25,12 +32,13 @@ export function MySignaturesCard({signatures}: DashboardType) {
         : 
         ''
         }
-        {signatures?.map((club, index) => (
+        {AssignatureDetails?.map((plan, index) => (
           <Col md={6} className="mb-3" key={index}>
-            <h5>{club.clubName}</h5>
-            <h6 className="mb-0">descrição:</h6>
-            <p>{club.description}</p>
-            <Link className="text-info" href={`/club_providers/${club.clubName}/clubArea`}>
+            <h5>{plan.club?.clubName}</h5>
+            <h6 className="mb-0">plano:</h6>
+            <p>{plan.title}</p>
+            <p><strong>Proxima entrega em:</strong> xx/xx/xxxx</p>
+            <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
               Área do Clube
             </Link>
           </Col>  
@@ -39,11 +47,6 @@ export function MySignaturesCard({signatures}: DashboardType) {
       </Card.Body>
     </Card>
   )
-}
-
-type MySignaturesProps = {
-  AssignatureDetails?: ClubWithPlan[]
-  userId: string
 }
 
 export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
@@ -80,9 +83,17 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
     {AssignatureDetails?.map((plan, index) => (
       <Col xxl={6} lg={12} md={6} xs={12} className="mb-3" key={index}>
         <Card>
-          <Card.Header className="bg-transparent border-0">
+          <Card.Header className="bg-transparent border-0 position-relative">
             <h5 className="mt-2">{plan.club?.clubName}</h5>
             <small>Assinante desde: xx/xx/xxxx</small>
+            <Button  
+              size="sm"
+              variant="outline-danger"
+              onClick={() => setIsCancelModal(true)}
+              className="position-absolute end-0 top-0 m-3"
+            >
+              Cancelar
+            </Button>
           </Card.Header>
           <Card.Body>
             <h6>{plan.title}</h6>
@@ -97,12 +108,6 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
                 Ir para Área dos Assinantes
               </Button>
             </Link>
-            <Button  
-              variant="outline-danger"
-              onClick={() => setIsCancelModal(true)}
-            >
-              Cancelar assinatura
-            </Button>
           </Card.Body>
         </Card>
         <Modal show={isCancelModal} onHide={() => setIsCancelModal(false)}>
@@ -123,7 +128,7 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
                 String(plan.club?.id),
                 plan.id,
                 true,
-                userId
+                String(userId)
               )}
             >
               Cancelar

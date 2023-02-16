@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 import { GetServerSideProps } from "next"
 import { GetSessionParams, getSession } from "next-auth/react"
-import axios from "axios"
 import { prisma } from "../../../prisma/PrismaClient"
+import axios from "axios"
 
 import { Subscriber } from "../../../@types/SubscriberTypes"
 import { ClubProvider } from "../../../@types/ClubProviderTypes"
@@ -76,7 +76,7 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
               {/* Duplicated for responsive */}
               <Accordion className={styles.dashboardMenuToggleMobile}>
                 <Accordion.Item className="border-0 border-bottom p-0 " eventKey="responsive-menu-dashboard">
-                  <Accordion.Header className='mb-0 p-0'>{sectionName}</Accordion.Header>
+                  <Accordion.Header className='mb-0 p-0'><h5 className="p-0 m-0"><strong>{sectionName}</strong></h5></Accordion.Header>
                   <Accordion.Body className='mt-2 p-0'>
                     <Nav variant="pills" 
                       className="flex-column"
@@ -195,18 +195,14 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
               xxl={9}
             >
               <Tab.Content>
-                <h1>{sectionName}</h1>
+                <h1 className={styles.sectionName}>{sectionName}</h1>
                 <Tab.Pane eventKey="my-account">
                   <Row>
-                    <Col xxl={6} lg={12} md={6} xs={12}
-                      className="mb-3"
-                    >
+                    <Col xxl={6} lg={12} md={6} xs={12} className="mb-3">
                       <MyInformationsCard subscriberData={subscriberData} />
                     </Col>
-                    <Col xxl={6} lg={12} md={6} xs={12}
-                      className="mb-3"
-                    >
-                      <MySignaturesCard signatures={signatures} />
+                    <Col xxl={6} lg={12} md={6} xs={12} className="mb-3">
+                      <MySignaturesCard AssignatureDetails={AssignatureDetails} />
                     </Col>
                   </Row> 
                 </Tab.Pane>

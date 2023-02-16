@@ -66,8 +66,6 @@ export default function Login(session: any) {
               Fazer Login
             </Button>
           </Form>
-          
-          <Button onClick={() => signIn('github')} variant={'danger'}>Github</Button>
           <Link href={'/register/subscriber'}>
             <Button variant="warning" className="my-2 text-white w-100">Quero Ser Assinante</Button>
           </Link>
