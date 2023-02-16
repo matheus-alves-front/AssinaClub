@@ -7,7 +7,7 @@ import type { AppProps } from 'next/app'
 import { useState } from 'react'
 import { Router } from 'next/router'
 
-import { Spinner } from 'react-bootstrap'
+import { SSRProvider } from '@react-aria/ssr';
 
 import { Header } from '../components/Header'
 import { LoaderSpinner } from '../components/Loader'
@@ -29,19 +29,21 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
   })
 
   return (
-    <SessionProvider session={session}>
-      <ClubDashboardGlobalContext.Provider value={{
-        clubProviderInfo, setClubProviderInfo,
-        showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard
-      }}>
-        <Header />
-        {isLoad ?
-          <Component {...pageProps} />
-          :
-          <LoaderSpinner />
-        }
-        <footer className='p-5 bg-dark mt-4 text-white'>footer</footer>
-      </ClubDashboardGlobalContext.Provider>
-    </SessionProvider>
+    <SSRProvider>
+      <SessionProvider session={session}>
+        <ClubDashboardGlobalContext.Provider value={{
+          clubProviderInfo, setClubProviderInfo,
+          showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard
+        }}>
+          <Header />
+          {isLoad ?
+            <Component {...pageProps} />
+            :
+            <LoaderSpinner />
+          }
+          <footer className='p-5 bg-dark mt-4 text-white'>footer</footer>
+        </ClubDashboardGlobalContext.Provider>
+      </SessionProvider>
+    </SSRProvider>
   )
 }

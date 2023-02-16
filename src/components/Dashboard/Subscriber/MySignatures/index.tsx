@@ -1,13 +1,16 @@
-import { Button, Card, Col, Modal, Row } from "react-bootstrap";
+import { Button, Card, CardGroup, Col, Modal, Row } from "react-bootstrap";
 import { ClubWithPlan, DashboardType } from "../../../../pages/subscriber/dashboard";
 import Link from "next/link";
 import { handleAssignature } from "../../../../utils/handleAssignature";
 import { useState } from "react";
+import { ProductsTableAssignature } from "./ProductsTableAssignature";
 
 export function MySignaturesCard({signatures}: DashboardType) {
   return (
     <Card>
-      <Card.Header><strong>Minhas Assinaturas:</strong></Card.Header>
+      <Card.Header className="bg-transparent pt-3">
+        <h6><strong>Minhas Assinaturas:</strong></h6>
+      </Card.Header>
       <Card.Body>
         <Row>
         {!signatures?.length ?
@@ -84,8 +87,7 @@ export function MySignatures({AssignatureDetails, userId}: MySignaturesProps) {
           <Card.Body>
             <h6>{plan.title}</h6>
             <p>{plan.description}</p>
-            <p><strong>Produtos à receber:</strong></p>
-            <p>...</p>
+            <ProductsTableAssignature clubName={String(plan.club?.clubName)} productsInfo={plan.productsOfPlan} />
             <p><strong>Próxima Entrega:</strong></p>
             <p>...</p>
           </Card.Body>

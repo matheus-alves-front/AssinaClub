@@ -4,7 +4,9 @@ import { DashboardType } from "../../../../pages/subscriber/dashboard"
 export function MyInformationsCard({subscriberData}: DashboardType) {
   return (
     <Card>
-      <Card.Header><strong>Suas informações:</strong></Card.Header>
+      <Card.Header className="bg-transparent pt-3">
+        <h6><strong>Suas informações:</strong></h6>
+      </Card.Header>
       <Card.Body>
         <Form 
           name="editFormSubscriber" 
