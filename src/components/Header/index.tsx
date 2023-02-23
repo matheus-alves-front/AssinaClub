@@ -1,15 +1,19 @@
 import { useContext, useEffect, useState } from "react";
-import Link from "next/link";
-import { Button, Container, Navbar, Offcanvas } from "react-bootstrap";
-import { IoMenu } from "react-icons/io5"
 import { GetSessionParams, signOut, useSession } from "next-auth/react";
-import { Subscriber } from "../../@types/SubscriberTypes";
+import { useRouter } from "next/router";
+import Link from "next/link";
+
 import { ClubDashboardGlobalContext } from "../../contexts/ClubDashboard/ClubDashboardGlobalContext";
+import { Subscriber } from "../../@types/SubscriberTypes";
 import { Admin } from "../../@types/AdminsClubProviderTypes";
 import { ClubProvider } from "../../@types/ClubProviderTypes";
-import { DivisionLineWithoutMargin } from "../Divisions/DivisionLine";
+
 import { ADMIN_HEADER_OPTIONS, SUBSCRIBER_HEADER_OPTIONS } from "./utils/headerOptions";
-import styles from "../../styles/components/header.module.scss"
+
+import { Button, Container, Dropdown, DropdownButton, Navbar, Offcanvas } from "react-bootstrap";
+import { DivisionLineWithoutMargin } from "../Divisions/DivisionLine";
+import { IoMenu } from "react-icons/io5"
+import styles from "./header.module.scss"
 
 interface GetData extends GetSessionParams {
   data: {
@@ -20,10 +24,11 @@ interface GetData extends GetSessionParams {
 
 export function Header() {
   const session = useSession() as GetData
+  const router = useRouter()
 
   let [userData, setUserData] = useState<any>(undefined)
   let [typeOfUser, setTypeOfUser] = useState<string | undefined>(undefined)
-
+  
   useEffect(() => {
     if (session.data) {
       const data = session.data.userData
@@ -31,26 +36,59 @@ export function Header() {
       setTypeOfUser(session.data.typeOfUser)      
     }
   }, [session])
-
+  
   const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
   const [isOffcanvas, setIsOffcanvas] = useState(false)
-
   const handleCloseOffcanvas = () => setIsOffcanvas(false)
+  
+  useEffect(() => {
+    router.events.on('routeChangeComplete', handleCloseOffcanvas);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleCloseOffcanvas);
+    };
+  })
 
   return (
     <>
       <Navbar className="shadow-sm mb-4">
-        <Container className="position-relative py-2">
-          <Navbar.Brand className="d-block" href="/">AssinaClub</Navbar.Brand>
-          <Navbar.Toggle
-            className="d-block position-absolute top-50 start-100 translate-middle border-0"
-            onClick={() => setIsOffcanvas(!isOffcanvas)}
+        <Container className="position-relative py-2" fluid={'lg'}>
+          <Link 
+            href={'/club_providers/clubs_board'}
+            className="fw-bold"
           >
-            <IoMenu fontSize={50} />
-          </Navbar.Toggle>
+              Clubes
+          </Link>
+
+          <Navbar.Brand className="d-block m-auto" href="/">
+              AssinaClub
+          </Navbar.Brand>
+
+          {!userData ? 
+            <DropdownButton 
+              id="login-header-dropdown" 
+              title="Login"
+              variant="outline-dark"
+              drop="start"
+              size="sm"
+              className="ms-1"
+            >
+              <Dropdown.Item href="/login/subscriber">Sou Assinante</Dropdown.Item>
+              <Dropdown.Item href="/login/club_provider">Sou Clube</Dropdown.Item>
+            </DropdownButton>
+           : 
+            <Navbar.Toggle
+              className="d-block border-0 p-0"
+              onClick={() => setIsOffcanvas(!isOffcanvas)}
+            >
+              <IoMenu fontSize={50} />
+            </Navbar.Toggle>
+          }
+
+
           <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
-            <Offcanvas.Header className="d-flex flex-column align-items-start">
+            <Offcanvas.Header closeButton className="text-start">
               {userData && (typeOfUser !== 'subscriber' && (
                 <Offcanvas.Title className="mb-3 fw-normal">
                   {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}

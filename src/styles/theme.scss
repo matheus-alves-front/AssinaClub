@@ -9,5 +9,32 @@
 //   "dark":       $dark
 // );
 
+.accordion-button:not(.collapsed) {
+  color: var(--bs-white) !important;
+  background-color: var(--bs-dark) !important;
+}
+
+.accordion-button::after {
+  border: 1px solid currentcolor;
+  border-radius: 5px;
+  width: 30px !important;
+  height: 30px !important;
+  background-position: center center;
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: var(--bs-accordion-btn-icon) !important;
+  background-color: currentcolor;
+}
+
+.offcanvas {
+  max-width: 90% !important;
+}
+
+.dropdown-item:active {
+  color: var(--bs-white) !important;
+  background-color: var(--bs-secondary-text) !important;
+}
+
 /* import bootstrap to set changes */
 @import "~bootstrap/scss/bootstrap";
