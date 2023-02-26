@@ -1,8 +1,18 @@
 /* ===== Scrollbar CSS ===== */
-  /* Firefox */
+  html, body {
+    box-sizing: border-box;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Golos Text', sans-serif;
+  }
+
   * {
     scrollbar-width: auto;
     scrollbar-color: #0084ff #ffffff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   /* Chrome, Edge, and Safari */
@@ -19,10 +29,21 @@
     border-radius: 10px;
     border: 3px double #ffffff;
   }
-
+  
   a {
-    text-decoration: none !important;
-    color: inherit !important;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+    color: inherit;
+  }
+
+  input:focus-visible {
+    box-shadow: none !important;
+    outline: none;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   button:focus {
@@ -31,5 +52,5 @@
   }
 
   h1, h2, h3 {
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 1rem !important;
   }

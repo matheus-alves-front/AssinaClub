@@ -1,40 +1,25 @@
-// $theme-colors: (
-//   "primary":    $primary,
-//   "secondary":  $secondary,
-//   "success":    $success,
-//   "info":       $info,
-//   "warning":    $warning,
-//   "danger":     $danger,
-//   "light":      $light,
-//   "dark":       $dark
-// );
+// Pallete: https://coolors.co/palette/191528-3c162f-5c162e-7c162e-110e1b
+// Colors
+$color-black: #000000;
+$color-white: #FFFFFF;
+$color-gray: #495057;
+$color-gray-dark: #343a40;
+$color-gray-light: #6c757d;
 
-.accordion-button:not(.collapsed) {
-  color: var(--bs-white) !important;
-  background-color: var(--bs-dark) !important;
-}
+$color-primary: #110e1b;
+$color-secondary: #5C162E;
+$color-tertiary: #191528;
 
-.accordion-button::after {
-  border: 1px solid currentcolor;
-  border-radius: 5px;
-  width: 30px !important;
-  height: 30px !important;
-  background-position: center center;
-}
+$color-danger: #7C162E;
+$color-dark: #191528;
+$color-link: #00406c;
 
-.accordion-button:not(.collapsed)::after {
-  background-image: var(--bs-accordion-btn-icon) !important;
-  background-color: currentcolor;
-}
+// Breakpoints
+$desktop-large: 1440px;
+$desktop: 1024px;
+$mobile: 768px;
+$mobile-small: 475px;
 
-.offcanvas {
-  max-width: 90% !important;
-}
-
-.dropdown-item:active {
-  color: var(--bs-white) !important;
-  background-color: var(--bs-secondary-text) !important;
-}
-
-/* import bootstrap to set changes */
-@import "~bootstrap/scss/bootstrap";
+@import '/src/styles/utils/buttons.scss';
+@import '/src/styles/utils/inputs.scss';
+@import '/src/styles/utils/animations.scss';
