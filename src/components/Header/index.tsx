@@ -40,8 +40,7 @@ export function Header() {
   
   const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
-  const [isOffcanvas, setIsOffcanvas] = useState(false)
-  const handleCloseOffcanvas = () => setIsOffcanvas(false)
+  const handleCloseOffcanvas = () => setIsMenuSidebar(false)
   
   useEffect(() => {
     router.events.on('routeChangeComplete', handleCloseOffcanvas);
@@ -101,16 +100,16 @@ export function Header() {
 
 
           {isMenuSidebar ? 
-            <aside className={styles.headerMenu}>
+            <aside className={styles.sidebarMenu}>
               <header>
                 {userData && (typeOfUser !== 'subscriber' && (
-                  <h4 className="mb-3 fw-normal">
+                  <h5 className={styles.adminName}>
                     {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
-                  </h4>
+                  </h5>
                 ))}
-                <h5 className={styles.adminName}>
+                <h4>
                   Olá, {userData ? userData?.name : 'Faça Login'}
-                </h5>
+                </h4>
                 <button 
                   className={styles.closeMenu}
                   onClick={() => setIsMenuSidebar(!isMenuSidebar)}

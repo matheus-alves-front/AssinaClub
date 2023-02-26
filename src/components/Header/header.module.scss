@@ -86,7 +86,7 @@
             color: $color-secondary;
         }
 
-        .headerMenu {
+        .sidebarMenu {
             height: 100%;
             width: 350px;
             border-radius: 5px;
@@ -98,6 +98,7 @@
             bottom: 0;
             display: flex;
             flex-direction: column;
+            animation: sidebarMenuAnimation .5s ease;
             
             header {
                 position: relative;
@@ -105,7 +106,6 @@
                 padding: 20px;
 
                 .adminName {
-                    margin-top: 10px;
                     color: $color-gray;
                 }
     

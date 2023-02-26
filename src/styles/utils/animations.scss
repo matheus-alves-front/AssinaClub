@@ -6,3 +6,12 @@
     opacity: 1;
   }
 }
+
+@keyframes sidebarMenuAnimation {
+  from {
+    left: -355px;
+  }
+  to {
+    left: 0;
+  }
+}
