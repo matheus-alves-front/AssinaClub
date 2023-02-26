@@ -4,9 +4,11 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  
+  margin: 2rem 0;
+
   .dashboardNavigation {
     width: 29%;
+    max-width: 250px;
     display: flex;
     flex-direction: column;
     padding: 1rem 2rem;
@@ -44,9 +46,11 @@
 @media (max-width: $mobile) {
   .container {
     flex-direction: column;
+    margin: 1rem 0;
 
     .dashboardNavigation {
       width: 100%;
+      max-width: 100%;
       padding: .5rem;
 
       .sectionNameMobile {
