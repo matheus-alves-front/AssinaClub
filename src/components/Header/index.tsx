@@ -1,18 +1,19 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { GetSessionParams, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { ClubDashboardGlobalContext } from "../../contexts/ClubDashboard/ClubDashboardGlobalContext";
+
 import { Subscriber } from "../../@types/SubscriberTypes";
 import { Admin } from "../../@types/AdminsClubProviderTypes";
 import { ClubProvider } from "../../@types/ClubProviderTypes";
 
 import { ADMIN_HEADER_OPTIONS, SUBSCRIBER_HEADER_OPTIONS } from "./utils/headerOptions";
 
-import { Button, Container, Dropdown, DropdownButton, Navbar, Offcanvas } from "react-bootstrap";
 import { DivisionLineWithoutMargin } from "../Divisions/DivisionLine";
-import { IoMenu } from "react-icons/io5"
+import { IoMenu, IoClose } from "react-icons/io5"
+
 import styles from "./header.module.scss"
 
 interface GetData extends GetSessionParams {
@@ -28,7 +29,7 @@ export function Header() {
 
   let [userData, setUserData] = useState<any>(undefined)
   let [typeOfUser, setTypeOfUser] = useState<string | undefined>(undefined)
-  
+
   useEffect(() => {
     if (session.data) {
       const data = session.data.userData
@@ -50,10 +51,17 @@ export function Header() {
     };
   })
 
+  const loginDropdownRef = useRef(null)
+  const [isLoginDropdown, setIsLoginDropdown] = useState(false)
+  const [isMenuSidebar, setIsMenuSidebar] = useState(true)
+
   return (
     <>
-      <Navbar className="shadow-sm mb-4">
-        <Container className="position-relative py-2" fluid={'lg'}>
+      <header className={`${styles.header} ${isMenuSidebar ? 'active' : ''}`}>
+        <Link href="/" className={styles.logo}>
+            AssinaClub
+        </Link>
+        <nav className="position-relative py-2">
           <Link 
             href={'/club_providers/clubs_board'}
             className="fw-bold"
@@ -61,97 +69,115 @@ export function Header() {
               Clubes
           </Link>
 
-          <Navbar.Brand className="d-block m-auto" href="/">
-              AssinaClub
-          </Navbar.Brand>
-
           {!userData ? 
-            <DropdownButton 
+            <div 
               id="login-header-dropdown" 
               title="Login"
-              variant="outline-dark"
-              drop="start"
-              size="sm"
-              className="ms-1"
+              className={styles.loginSection}
             >
-              <Dropdown.Item href="/login/subscriber">Sou Assinante</Dropdown.Item>
-              <Dropdown.Item href="/login/club_provider">Sou Clube</Dropdown.Item>
-            </DropdownButton>
+              <button
+                onClick={() => setIsLoginDropdown(!isLoginDropdown)}
+              >Login</button>
+              {isLoginDropdown ?
+                <div 
+                  className={styles.dropdown}
+                  ref={loginDropdownRef}
+                >
+                  <Link href="/login/subscriber">Sou Assinante</Link>
+                  <Link href="/login/club_provider">Sou Clube</Link>
+                </div>
+               :
+               ''
+               }
+            </div>
            : 
-            <Navbar.Toggle
-              className="d-block border-0 p-0"
-              onClick={() => setIsOffcanvas(!isOffcanvas)}
+            <button
+              className={styles.menuToggle}
+              onClick={() => setIsMenuSidebar(!isMenuSidebar)}
             >
               <IoMenu fontSize={50} />
-            </Navbar.Toggle>
+            </button>
           }
 
 
-          <Offcanvas show={isOffcanvas} onHide={handleCloseOffcanvas}>
-            <Offcanvas.Header closeButton className="text-start">
-              {userData && (typeOfUser !== 'subscriber' && (
-                <Offcanvas.Title className="mb-3 fw-normal">
-                  {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
-                </Offcanvas.Title>
-              ))}
-              <Offcanvas.Title className={typeOfUser === "subscriber" ? "fw-normal" : "fw-lighter"}>
-                Olá, {userData ? userData?.name : 'Faça Login'}
-              </Offcanvas.Title>
-            </Offcanvas.Header>
+          {isMenuSidebar ? 
+            <aside className={styles.headerMenu}>
+              <header>
+                {userData && (typeOfUser !== 'subscriber' && (
+                  <h4 className="mb-3 fw-normal">
+                    {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
+                  </h4>
+                ))}
+                <h5 className={styles.adminName}>
+                  Olá, {userData ? userData?.name : 'Faça Login'}
+                </h5>
+                <button 
+                  className={styles.closeMenu}
+                  onClick={() => setIsMenuSidebar(!isMenuSidebar)}
+                >
+                  <IoClose />
+                </button>
+              </header>
 
-            <DivisionLineWithoutMargin />
+              <DivisionLineWithoutMargin />
 
-            <Offcanvas.Body className="d-flex flex-column gap-2">
-              {session.data ?
-                (
-                  <>
-                    {
-                      typeOfUser === "subscriber" &&
-                      SUBSCRIBER_HEADER_OPTIONS.map(({ text, path }, index) => (
-                        <Link
-                          key={index}
-                          href={path}
-                          className={`${styles.headerOption}`}
-                        >
-                          {text}
-                        </Link>)
-                      )
-                    }
-                    {
-                      typeOfUser === "admin" &&
-                      ADMIN_HEADER_OPTIONS.map(({ text, path }, index) => {
-
-                        if(text === "Home" ) path += `${clubProviderInfo?.id}/dashboard`
-                        if(text === "Administradores" ) path += `${clubProviderInfo?.id}/dashboard/admins`
-
-                        return (
+              <section className={styles.menuContent}>
+                {session.data ?
+                  (
+                    <>
+                      {
+                        typeOfUser === "subscriber" &&
+                        SUBSCRIBER_HEADER_OPTIONS.map(({ text, path }, index) => (
                           <Link
                             key={index}
                             href={path}
-                            className={`${styles.headerOption}`}
+                            className={styles.headerOption}
                           >
                             {text}
-                          </Link>
+                          </Link>)
                         )
-                      })
-                    }
-                    <Button
-                      className="mt-auto"
-                      variant="outline-danger"
-                      onClick={() => signOut()}
-                    >Sair da Conta</Button>
+                      }
+                      {
+                        typeOfUser === "admin" &&
+                        ADMIN_HEADER_OPTIONS.map(({ text, path }, index) => {
+
+                          if(text === "Home" ) path += `${clubProviderInfo?.id}/dashboard`
+                          if(text === "Administradores" ) path += `${clubProviderInfo?.id}/dashboard/admins`
+
+                          return (
+                            <Link
+                              key={index}
+                              href={path}
+                              className={styles.headerOption}
+                            >
+                              {text}
+                            </Link>
+                          )
+                        })
+                      }
+                      <button
+                        className={styles.signOut}
+                        onClick={() => signOut()}
+                      >Sair da Conta</button>
+                    </>
+                  )
+                  :
+                  <>
+                    <Link 
+                      className={styles.headerOption}
+                      href={'/login/subscriber'}
+                    >Fazer Login</Link>
+                    <Link 
+                      className={styles.headerOptionSignInClubProvider}
+                      href={'/login/club_provider'}
+                    >Sou Administrador de um Clube</Link>
                   </>
-                )
-                :
-                <>
-                  <Link href={'/login/subscriber'}>Fazer Login</Link>
-                  <Link className="mt-auto text-warning" href={'/login/club_provider'}>Sou Administrador de um Clube</Link>
-                </>
-              }
-            </Offcanvas.Body>
-          </Offcanvas>
-        </Container>
-      </Navbar>
+                }
+              </section>
+            </aside>
+          : ''}
+        </nav>
+      </header>
     </>
   )
 }

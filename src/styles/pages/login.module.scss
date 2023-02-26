@@ -1,14 +1,53 @@
+
+@import '/src/styles/theme.scss';
+
 .container {
-  height: 80vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  margin: 50px 0;
 
-  .form {
-    width: 50%;
+  .formContainer {
+    width: 500px;
+    max-width:90%;
     border-radius: 15px;
+    box-shadow: 0px 0px 7px -1px rgba(0,0,0,0.75);
+    padding: 40px 30px;
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      margin: 10px 0;
+
+      fieldset {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+        gap: 5px;
+
+        input {
+          margin-top: 10px;
+          @include input-field-primary();
+        }
+
+        small {
+          color: $color-gray;
+        }
+
+        button {
+          @include button-primary(10px 20px);
+          margin-top: 12px;
+        }
+      }
+    }
+    a {
+      button {
+        @include button-secondary(10px 20px);
+      }
+    } 
   }
 
   @media (max-width: 768px) {
