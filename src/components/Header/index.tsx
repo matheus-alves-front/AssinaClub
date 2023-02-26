@@ -52,7 +52,7 @@ export function Header() {
 
   const loginDropdownRef = useRef(null)
   const [isLoginDropdown, setIsLoginDropdown] = useState(false)
-  const [isMenuSidebar, setIsMenuSidebar] = useState(true)
+  const [isMenuSidebar, setIsMenuSidebar] = useState(false)
 
   return (
     <>

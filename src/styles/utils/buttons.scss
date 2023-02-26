@@ -14,6 +14,22 @@
   }
 }
 
+@mixin button-primary-outline($padding) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-primary;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  transition: .3s ease-out;
+  
+  &:hover {
+    color: $color-white;
+    background-color: $color-primary;
+  }
+}
+
 @mixin button-secondary($padding) {
   width: 100%;
   background-color: $color-secondary;
@@ -75,5 +91,47 @@
   &:hover {
     color: $color-white;
     background-color: $color-danger;
+  }
+}
+
+@mixin button-navigation-dashboard-subscriber($padding, $paddingHover) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-primary;
+  font-weight: bold;
+  padding: $padding;
+  border: 0;
+  border-left: 2px solid $color-secondary;
+  transition: .1s ease-out;
+  text-align: start;
+
+  &:hover {
+    color: $color-secondary;
+    background-color: transparent;
+    padding-left: $padding * 1.5;
+    border-width: 10px;
+  }
+
+  @media (max-width: $mobile) {
+    color: $color-secondary;
+    border-left: 0;
+    border-bottom: 2px solid $color-secondary;
+  }
+}
+
+@mixin button-navigation-dashboard-subscriber-active($padding) {
+  width: 100%;
+  padding: $padding;
+  padding-left: $padding * 1.5;
+  text-align: start;
+  background-color: transparent;
+  color: $color-secondary;
+  font-weight: bold;
+  border: 0;
+  border-left: 10px solid $color-secondary;
+  transition: .1s ease-out;
+  
+  @media (max-width: $mobile) {
+    display: none;
   }
 }
