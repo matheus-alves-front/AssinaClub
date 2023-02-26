@@ -31,19 +31,19 @@
   }
   
   a {
-    text-decoration: none !important;
+    text-decoration: none;
     cursor: pointer;
     display: block;
     color: inherit;
   }
 
-  button {
-    cursor: pointer;
-  }
-
   input:focus-visible {
     box-shadow: none !important;
     outline: none;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   button:focus {

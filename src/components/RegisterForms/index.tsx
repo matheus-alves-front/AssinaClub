@@ -1,4 +1,9 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios'
+
+import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
+
 import {
   Row,
   Col, 
@@ -6,9 +11,8 @@ import {
   Form,
   FloatingLabel
 } from 'react-bootstrap';
-import axios from 'axios'
-import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
-import { useRouter } from 'next/router';
+import { IoAdd } from 'react-icons/io5'
+import styles from './registerForm.module.scss'
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
@@ -63,80 +67,66 @@ export function RegisterFormSubscriber() {
   }
 
   return (
-    <Form 
+    <form 
       name="regiterFormSubscriber" 
       onSubmit={(e) => RegisterSubscriberSubmit(e)}
-      className="p-4 py-4"
+      className={styles.formSubscriber}
     >
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Nome</Form.Label>
-            <Form.Control 
-              name="firstNameSubscriber" 
-              type="text" 
-              placeholder="Nome"
-              maxLength={14}
-              minLength={2} 
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Sobrenome</Form.Label>
-            <Form.Control 
-              name="lastNameSubscriber" 
-              type="text" 
-              placeholder="Sobrenome" 
-              maxLength={14}
-              minLength={2} 
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Label>CPF</Form.Label>
-            <Form.Control 
-              name="cpfSubscriber" 
-              type="text" 
-              placeholder="CPF"
-              maxLength={11}
-              minLength={11}  
-            />
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Label>Data Nascimento</Form.Label>
-            <Form.Control name="birthDateSubscriber" type="date" placeholder="Data de Nascimento" />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control name="emailSubscriber" type="email" placeholder="Email" />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Senha</Form.Label>
-            <Form.Control name="passwordSubscriber" type="password" placeholder="Senha" />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check
+      <label className={styles.inputFile}>
+        <input type="file" />
+        <div className={styles.addPicture}>
+          <IoAdd />
+          Adicionar Foto
+        </div>
+      </label>
+      <input 
+        name="firstNameSubscriber" 
+        type="text" 
+        placeholder="Nome"
+        maxLength={14}
+        minLength={2} 
+      />
+      <input 
+        name="lastNameSubscriber" 
+        type="text" 
+        placeholder="Sobrenome" 
+        maxLength={14}
+        minLength={2} 
+      />
+      <input 
+        name="cpfSubscriber" 
+        type="text" 
+        placeholder="CPF"
+        maxLength={11}
+        minLength={11}  
+      />
+      <input 
+        name="birthDateSubscriber" 
+        type="date" 
+        placeholder="Data de Nascimento" 
+      />
+      <input 
+        name="emailSubscriber" 
+        type="email" 
+        placeholder="Email" 
+      />
+      <input 
+        name="passwordSubscriber" 
+        type="password" 
+        placeholder="Senha" 
+      />
+      <label>
+        <input
           onChange={() => setIsChecked(!isChecked)}
-          type="checkbox" label="Aceito os termos e compromissos" />
-      </Form.Group>
-      <Button variant="primary" type="submit" disabled={isChecked ? false : true}>
+          type="checkbox"  
+        />
+        Aceito os termos e compromissos
+      </label>
+          
+      <button type="submit" disabled={isChecked ? false : true}>
         Registrar
-      </Button>
-    </Form>
+      </button>
+    </form>
   )
 }
 

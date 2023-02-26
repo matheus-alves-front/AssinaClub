@@ -12,6 +12,11 @@
     color: $color-primary;
     background-color: transparent;
   }
+
+  &:disabled {
+    opacity: .9;
+    background-color: $color-primary;
+  }
 }
 
 @mixin button-primary-outline($padding) {
@@ -43,6 +48,11 @@
   &:hover {
     color: $color-secondary;
     background-color: transparent;
+  }
+
+  &:disabled {
+    opacity: .9;
+    background-color: $color-secondary;
   }
 }
 
