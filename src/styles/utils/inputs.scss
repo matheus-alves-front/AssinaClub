@@ -1,0 +1,33 @@
+@mixin input-field-primary() {
+  padding: 5px;
+  font-size: 1rem;
+  border: 0;
+  border-bottom: 2px solid $color-primary;
+  background: transparent;
+
+  &:-internal-autofill-selected {
+    background-color: transparent !important;
+  }
+
+  &::placeholder {
+    color: $color-secondary;
+    font-weight: 500;
+  }
+}
+
+@mixin input-field-register() {
+  padding: 5px;
+  font-size: 1rem;
+  border: 0;
+  border-bottom: 2px solid $color-primary;
+  background: transparent;
+
+  &:-internal-autofill-selected {
+    background-color: transparent !important;
+  }
+
+  &::placeholder {
+    color: $color-primary;
+    font-weight: 500;
+  }
+}

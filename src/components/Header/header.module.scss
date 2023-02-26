@@ -1,11 +1,177 @@
-.headerOption {
-    transition: 0.2s all;
-    padding: 2px 5px;
-    background-color: #FFFFFF;
+@import '/src/styles/theme.scss';
 
-    &:hover {
-        background-color: #DDDDDD;
-        padding: 2px 10px;
-        cursor: pointer;
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0px 3px 10px -4px rgba(0,0,0,0.75);
+    border-radius: 10px;
+    gap: 2rem;
+
+    @media (max-width: $mobile) {
+        gap: 1rem;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+        color: $color-secondary;
+    }
+    
+    nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            color: $color-primary;
+        }
+
+        .loginSection {
+            position: relative;
+
+            button {
+                @include button-secondary-outline(5px 10px);
+            }
+
+            .dropdown {
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                left: -130px;
+                top: 3px;
+                border: 1px solid $color-secondary;
+                border-radius: 5px;
+                background: $color-white;
+                animation: dropdownFade normal .5s;
+                
+                @media (max-width: $mobile-small) {
+                    left: -63px;
+                    top: 35px;
+                }
+
+                &::after {
+                    content: '';
+                    border-left: 0px solid transparent;
+                    border-right: 0px solid transparent;
+                    border-bottom: 1px solid $color-secondary;
+                    border-width: 7px;
+                    width: 0px;
+                    position: absolute;
+                    right: -11px;
+                    top: 6px;
+                    transform: rotate(90deg);
+
+                    @media (max-width: $mobile-small) {
+                        transform: rotate(0deg);
+                        right: 18px;
+                        top: -7px;
+                    }
+                }
+                
+                > a {
+                    padding: 5px 10px;
+                    transition: .3s ease;
+                    font-size: .9rem;
+                    color: $color-secondary;
+                    
+                    &:hover {
+                        color: $color-white;
+                        background-color: $color-secondary;
+                    }
+                }
+            }
+        }
+
+        .menuToggle {
+            border: 0;
+            background: transparent;
+
+            color: $color-secondary;
+        }
+
+        .sidebarMenu {
+            height: 100%;
+            width: 350px;
+            border-radius: 5px;
+            max-width: 80%;
+            background-color: $color-white;
+            box-shadow: 6px 5px 10px -6px rgba(0,0,0,0.75);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            animation: sidebarMenuAnimation .5s ease;
+            
+            header {
+                position: relative;
+                border-bottom: 1px solid $color-gray-light;
+                padding: 20px;
+
+                .adminName {
+                    color: $color-gray;
+                }
+    
+                .closeMenu {
+                    background-color: transparent;
+                    height: unset;
+                    border: 0;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    padding: 10px;
+                    font-size: 2rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: .3s ease;
+
+                    &:hover {
+                        color: $color-secondary;
+                        transform: rotate(360deg);
+                    }
+                }
+            }
+
+            .menuContent {
+                height: 100%;
+                padding: 10px 15px;
+                display: flex;
+                flex-direction: column;
+
+                .signOut {
+                    margin-top: auto;
+                    @include button-danger-outline(10px)
+                }
+                
+                .headerOption {
+                    transition: 0.2s all;
+                    padding: 2px 5px;
+                    background-color: #FFFFFF;
+                
+                    &:hover {
+                        background-color: #DDDDDD;
+                        padding: 2px 10px;
+                        cursor: pointer;
+                    }
+                }
+    
+                .headerOptionSignInClubProvider {
+                    margin-top: auto;
+                    padding: 2px 5px;
+                    color: $color-secondary;
+                    transition: 0.2s all;
+    
+                    &:hover {
+                        padding: 2px 10px;
+                        cursor: pointer;
+                    }
+                }
+            }
+            
+        }
     }
 }

@@ -1,5 +1,32 @@
+@import '/src/styles/theme.scss';
+
 .registerInformation {
+  width: 35%;
+  max-width: 550px;
+  max-height: 100%;
+  padding: 2rem 1.5rem .5rem;
   background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12);
+  color: $color-white;
+  display: flex;
+  flex-direction: column;
+
+  span {
+    margin-top: auto;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    width: 100%;
+    max-width: 100%;
+    padding: 2rem 1rem;
+
+    span {
+      margin-top: 1.5rem;
+    }
+  }
 }
 
 .container {
@@ -9,8 +36,26 @@
 }
 
 .containerSubscriber {
-  height: 80vh;
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  height: calc(100vh - 71px);
+
+  
+  .containerForm {
+    width: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    height: auto;
+
+    .containerForm {
+      width: 100%;
+    }
+  }
 }
