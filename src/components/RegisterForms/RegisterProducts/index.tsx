@@ -7,6 +7,8 @@ import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext";
 
 import { BsFillTrashFill } from "react-icons/bs";
 
+import styles from '../registerForm.module.scss'
+
 
 export function RegisterFormProducts() {
   const [isProductRegistered, setIsProductRegistered] = useState(false)
@@ -98,64 +100,42 @@ export function RegisterFormProducts() {
 
   return (
     <>
-      <Form className="p-2" onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
-        <Row className="my-1">
-          <Col className="my-1" md={12}>
-            <Form.Group>
-              <Form.Label>Nome do Produto</Form.Label>
-              <Form.Control type="text" name="productName" />
-            </Form.Group>
-          </Col>
-          <Col className="my-1" md={12}>
-            <Form.Group>
-              <Form.Label>Descrição</Form.Label>
-              <Form.Control as="textarea" name="productDescription" />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="my-1">
-          <Col className="my-1" md={6}>
-            <Form.Group>
-              <Form.Label>Sku:</Form.Label>
-              <Form.Control type="text" name="productSku" />
-              <Form.Text className="text-muted">
-                sku é o identificador único do produto
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col className="my-1" md={6}>
-            <Form.Group>
-              <Form.Label>Valor:</Form.Label>
-              <Form.Control type="number" min="0.00" max="10000.00" name="productValue" />
-              <Form.Text className="text-muted">
-                O valor é uma média para controle de gastos em seu dashboard
-              </Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="my-1">
-          <Col md={5}>
-            <Button type="submit" className="w-100 p-2 mt-4">Registrar Produto</Button>
-          </Col>
-          <Col md={7}>
-            <Button 
-              variant="warning" 
-              className="w-100 p-2 mt-4"
-              onClick={() => handleModal()}
-            >Editar Produtos Cadastrados</Button>
-          </Col>
-          <Col xs={12}>
-            <Button 
-              variant="success" 
-              className="w-100 p-2 mt-4"
-              onClick={() => goToNextStepRegister()}
-              disabled={registerStepsContext.products.length < 3 ? true : false}
-            >
-              Criar Planos
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <form className={styles.formClubProvider} onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
+        <input 
+          type="text" 
+          name="productName" 
+          placeholder="Nome do Produto"
+        />
+        <fieldset>
+          <label>
+            SKU: identificador único do produto
+          </label>
+          <input type="text" name="productSku" placeholder="nome-do-produto ou 1,2,3,4..." />
+        </fieldset>
+        <textarea name="productDescription" placeholder="Descrição" rows={3} />
+        <label>Valor: O valor é uma média para controle de gastos em seu dashboard</label>
+        <input 
+          type="number" 
+          min="0.00" 
+          max="10000.00" 
+          name="productValue" 
+          placeholder="R$" 
+        />
+        <button type="submit" className="w-100 p-2 mt-4">Registrar Produto</button>
+      </form>
+      <section className={styles.nextStepSection}>
+        <button  
+          className="w-100 p-2 mt-4"
+          onClick={() => handleModal()}
+        >Editar Produtos Cadastrados</button>
+        <button 
+          className={styles.nextStepButton}
+          onClick={() => goToNextStepRegister()}
+          disabled={registerStepsContext.products.length < 3 ? true : false}
+        >
+          Criar Planos
+        </button>
+      </section>
       <Toast className="fixed-bottom m-2" show={isProductRegistered} >
         <Toast.Header>
           <strong className="me-auto">Produto Adicionado</strong>

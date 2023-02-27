@@ -29,18 +29,72 @@
   }
 }
 
-.container {
+.containerClubProvider {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  min-height: calc(100vh - 71px);
+
+  .registerInformation {
+    background-image: none;
+    background-color: $color-primary;
+  }
+  
+  .containerForm {
+    width: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    padding: 1rem;
+    
+    .stepsContainer {
+      width: 100%;
+      margin-bottom: 2rem;
+      
+      .clubRegisterSteps {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0;
+
+        max-width: 600px;
+        margin: auto;
+    
+        .registerStep, .lastStep {
+          @include step-progress()
+        }
+
+        .registerStepDone, .lastStepDone {
+          @include step-progress-completed()
+        }
+
+        .lastStep {
+          width: 50px;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    height: auto;
+
+    .containerForm {
+      width: 100%;
+
+      .stepsContainer {
+        margin: 1rem 0 3rem;
+      }
+    }
+  }
 }
 
 .containerSubscriber {
   width: 100%;
   display: flex;
   align-items: stretch;
-  height: calc(100vh - 71px);
-
+  min-height: calc(100vh - 71px);
   
   .containerForm {
     width: 65%;

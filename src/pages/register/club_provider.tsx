@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Badge, Col, Container, ProgressBar, Row } from "react-bootstrap";
-import styles from "../../styles/pages/register.module.scss"
 
 import { RegisterStepsContextTypes } from "../../@types/ContextTypes";
 import { RegisterStepsContext } from "../../contexts/RegisterStepsContext";
@@ -8,6 +6,9 @@ import { RegisterStepsContext } from "../../contexts/RegisterStepsContext";
 import { RegisterFormClubProvider } from "../../components/RegisterForms";
 import { RegisterFormProducts } from "../../components/RegisterForms/RegisterProducts";
 import RegisterFormPlans from "../../components/RegisterForms/RegisterPlans";
+
+import { IoCheckmarkDoneSharp } from 'react-icons/io5'
+import styles from "../../styles/pages/register.module.scss"
 
 export default function RegisterClubProvider() {
   const [registerStepsContext, setRegisterStepsContext] = useState<RegisterStepsContextTypes>({
@@ -19,57 +20,52 @@ export default function RegisterClubProvider() {
 
   return (
     <RegisterStepsContext.Provider value={{registerStepsContext, setRegisterStepsContext}}>
-      <Container className={styles.container}>
-        <Row className="w-100 my-5">
-          <Col className="text-center">
-            <Badge bg="success" pill className="p-2 px-3 mb-3">1</Badge>
-            <ProgressBar animated striped variant="success" now={registerStepsContext?.steps > 1 ? 100 : 0} key={1} />
-          </Col>
-          <Col className="text-center">
-            <Badge bg="warning" pill className="p-2 px-3 mb-3">2</Badge>
-            <ProgressBar animated striped variant="warning" now={registerStepsContext?.steps > 2 ? 100 : 0} key={2} />
-          </Col>
-          <Col className="text-center">
-            <Badge bg="info" pill className="p-2 px-3 mb-3">3</Badge>
-            <ProgressBar animated striped variant="info" now={registerStepsContext?.steps > 3 ? 100 : 0} key={3} />
-          </Col>
-        </Row>
-        <Row className="border rounded rounded-2 w-100">
-          <Col md={4} className="p-0">
-            <div 
-              className={`${styles.registerInformation} h-100 w-100 rounded p-3 d-flex flex-column text-start`}
-            >
-              <h3 className="text-white my-3">
-                Passo <Badge bg="dark">{registerStepsContext.steps}</Badge>
-              </h3>
-              {registerStepsContext?.steps === 1 && 
-                <p className="text-white">Insira os dados iniciais para criar seu Clube de Assinaturas</p>
-              }
-              {registerStepsContext?.steps === 2 && 
-                <p className="text-white">Adicione no mínimo 3 Produtos que seu clube irá fornecer em seus planos</p>
-              }
-              {registerStepsContext?.steps >= 3 && 
-                <p className="text-white">Crie seus planos e em seguida adicione no minimo 2 produtos aos seus planos</p>
-              }
+      <section className={styles.containerClubProvider}>
+        <div className={styles.registerInformation}>
+          <h3>
+            Passo <span>{registerStepsContext.steps}</span>
+          </h3>
+          {registerStepsContext?.steps === 1 && 
+            <p>Insira os dados iniciais para criar seu Clube de Assinaturas</p>
+          }
+          {registerStepsContext?.steps === 2 && 
+            <p>Adicione no mínimo 3 Produtos que seu clube irá fornecer em seus planos</p>
+          }
+          {registerStepsContext?.steps >= 3 && 
+            <p>Crie seus planos e em seguida adicione no minimo 2 produtos aos seus planos</p>
+          }
+        </div>
+        <div className={styles.containerForm}>
+          <div className={styles.stepsContainer}>
+            <div className={styles.clubRegisterSteps}>
+              <div className={registerStepsContext?.steps > 1 ? styles.registerStepDone : styles.registerStep}>
+                <span>{registerStepsContext?.steps > 1 ? <IoCheckmarkDoneSharp /> : 1}  </span>
+                <progress value={registerStepsContext?.steps > 1 ? 100 : 0} key={1} />
+              </div>
+              <div className={registerStepsContext?.steps > 2 ? styles.registerStepDone : styles.registerStep }>
+                <span>{registerStepsContext?.steps > 2 ? <IoCheckmarkDoneSharp /> : 2}</span>
+                <progress value={registerStepsContext?.steps > 2 ? 100 : 0} key={2} />
+              </div>
+              <div className={registerStepsContext?.steps > 3 ? styles.registerStepDone : styles.registerStep }>
+                <span>{registerStepsContext?.steps > 3 ? <IoCheckmarkDoneSharp /> : 3}</span>
+                <progress value={registerStepsContext?.steps > 3 ? 100 : 0} key={3} />
+              </div>
+              <div className={registerStepsContext?.steps > 4 ? styles.lastStepDone : styles.lastStep }>
+                <span><IoCheckmarkDoneSharp /></span>
+              </div>
             </div>
-          </Col>
+          </div>
           {registerStepsContext?.steps === 1 && (
-          <Col>
             <RegisterFormClubProvider />
-          </Col>
           )}
           {registerStepsContext?.steps === 2 && (
-          <Col>
             <RegisterFormProducts />
-          </Col>
           )}
           {registerStepsContext?.steps >= 3 && (
-          <Col>
             <RegisterFormPlans />
-          </Col>
           )}
-        </Row>
-      </Container>
+        </div>
+      </section>
     </RegisterStepsContext.Provider>
   )
 }

@@ -37,6 +37,11 @@
     color: inherit;
   }
 
+  fieldset {
+    border: 0;
+    width: auto;
+  }
+
   input:focus-visible {
     box-shadow: none !important;
     outline: none;
