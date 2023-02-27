@@ -1,0 +1,32 @@
+@import '/src/styles/theme.scss';
+
+.optionsWrapper {
+    width: 100%;
+
+    > button {
+        border-bottom: 0;
+    }
+
+    > button:first-child {
+        border-radius: 10px 10px 0 0;
+
+    }
+
+    > button:last-child {
+        border-radius: 0 0 10px 10px;
+        border-bottom: 1px solid #DDDDDD;
+    }
+}
+
+.filterOption {
+    @include flex-center;
+    @include button-primary(0);
+    justify-content: space-between;
+    transition: 0.2s all;
+    padding: 15px 20px;
+    color: $color-primary;
+    background-color: #FBFBFB;
+    border: 1px solid #DDDDDD;
+    border-radius: 0;
+    width: 100%;    
+}
