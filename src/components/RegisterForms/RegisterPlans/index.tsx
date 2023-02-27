@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useEffect, useLayoutEffect, useState } from "react"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import Link from "next/link"
 import axios from "axios"
 
@@ -6,9 +6,11 @@ import { Product } from "../../../@types/ProductTypes"
 import { Plan } from "../../../@types/PlansTypes"
 import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext"
 
-import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
 import { BsFillArrowRightSquareFill, BsFillTrashFill } from "react-icons/bs"
+
 import styles from './registerPlans.module.scss'
+import { motion } from "framer-motion"
+import { ModalContent } from "../../UI-Components/ModalContent"
 
 export default function RegisterFormPlans() {
   const { 
@@ -19,7 +21,9 @@ export default function RegisterFormPlans() {
 
   const [isAddProduct, setIsAddProduct] = useState(false)
   const [modalPlanIndex, setModalPlanIndex] = useState(0)
-  
+
+  const [isPlansWithProducts, setIsPlansWithProducts] = useState(false)
+
   function handleModal(index: number) {
     setIsAddProduct(!isAddProduct)
     setModalPlanIndex(index)
@@ -56,13 +60,13 @@ export default function RegisterFormPlans() {
       
       setRegisterStepsContext({
         ...registerStepsContext,
+        steps: 3,
         plans: [...registerStepsContext.plans, plan]
       })
     }
     catch(err) {
       console.log(err)
     }
-
   }
 
   async function RemovePlans(clubProviderId: string | string[] | undefined, planId: string | string[] | undefined, index: number) {
@@ -96,11 +100,14 @@ export default function RegisterFormPlans() {
     const plansUpdated = [...registerStepsContext.plans]
     plansUpdated[index]?.productId.push(productId)
 
+    let isPlansWithoutProducts = plansUpdated.some((item) => item.productId.length === 0)
+
     setRegisterStepsContext({
       ...registerStepsContext,
-      steps: 4,
+      steps: isPlansWithoutProducts ? 3 : 4,
       plans: plansUpdated
     })
+    setIsPlansWithProducts(isPlansWithoutProducts)
   }
 
   async function RemoveProductToPlan(planId: string | string[], productId: string | string[], index: number) {
@@ -120,10 +127,14 @@ export default function RegisterFormPlans() {
     const indexProducts = plansUpdated[index]?.productId.indexOf(productId)
     plansUpdated[index]?.productId.splice(indexProducts, 1)
 
+    let isPlansWithoutProducts = plansUpdated.some((item) => item.productId.length === 0)
+
     setRegisterStepsContext({
       ...registerStepsContext,
+      steps: isPlansWithoutProducts ? 3 : 4,
       plans: plansUpdated
     })
+    setIsPlansWithProducts(isPlansWithoutProducts)
   }
   
   return(
@@ -165,43 +176,51 @@ export default function RegisterFormPlans() {
                 </button>
               </footer>
               {modalPlanIndex == index ?
-                <Modal show={isAddProduct} onHide={() => handleModal(index)} key={index}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Editar Produtos ao Plano {plan.title} </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
+                <motion.section 
+                  className={styles.modal}
+                  animate={isAddProduct ? "open" : "closed"}
+                  variants={{
+                    open: { opacity: 1, x: 0 },
+                    closed: { opacity: 0, x: "-100%" },
+                  }}
+                >
+                  <ModalContent title={`Editar Produtos ao Plano ${plan.title}`}>
                     {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
                     {registerStepsContext.products.map((product: Product, indexProduct: number) => {
                       return (
-                        <Card className="my-1 p-2 position-relative" key={indexProduct}>
-                          <Card.Title>{product.name}</Card.Title>
-                          <Card.Subtitle>
+                        <div className={styles.productsAvailableToPlans} key={indexProduct}>
+                          <h5>{product.name}</h5>
+                          <details>
+                            <summary>Descrição</summary>
                             {product.description}
-                          </Card.Subtitle>
+                          </details>
                           <span>Valor: R${product.value}</span>
-
-                          
-                          
                           {!plan.productId.includes(String(product.id)) ? 
-                            <BsFillArrowRightSquareFill
-                              fontSize={40} 
-                              cursor={'pointer'}
-                              onClick={() => AddProductToPlan(plan.id, product.id, index)}
-                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
-                            />
-                          :
-                            <BsFillTrashFill
-                              fontSize={40} 
-                              cursor={'pointer'}
-                              onClick={() => RemoveProductToPlan(plan.id, product.id, index)}
-                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
+                            <button onClick={() => AddProductToPlan(plan.id, product.id, index)}>
+                              <BsFillArrowRightSquareFill
+                                fontSize={25} 
+                                cursor={'pointer'}
                               />
+                            </button>
+                          :
+                            <button onClick={() => RemoveProductToPlan(plan.id, product.id, index)}>
+                              <BsFillTrashFill
+                                fontSize={25} 
+                                cursor={'pointer'}
+                              />
+                            </button>
                           }
-                        </Card>
+                        </div>
                       )
                     })}
-                  </Modal.Body>
-                </Modal>
+                    <button 
+                      className={styles.closeModal} 
+                      onClick={() => setIsAddProduct(false)}
+                    >
+                      Fechar
+                    </button>
+                  </ModalContent>
+                </motion.section >
               : ''}
             </div>
         ))}
@@ -253,7 +272,7 @@ export default function RegisterFormPlans() {
         </form>
         <button
           className="w-100 text-white"
-          disabled={registerStepsContext?.plans[0] && registerStepsContext?.plans[0].productId.length < 2 ? true : false}
+          disabled={isPlansWithProducts ? true : false}
         >
           <Link href={'/login/club_provider'}>
             Ir para Seu ambiente

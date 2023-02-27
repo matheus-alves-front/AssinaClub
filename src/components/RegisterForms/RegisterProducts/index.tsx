@@ -170,7 +170,7 @@ export function RegisterFormProducts() {
                 <button
                   onClick={() => DeleteProduct(product.id, index)}
                 >
-                  <BsFillTrashFill />
+                  <BsFillTrashFill fontSize={25} />
                 </button>
               </div>
             ))}

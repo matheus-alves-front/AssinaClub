@@ -78,14 +78,14 @@
         margin: auto;
     
         .registerStep, .lastStep {
-          @include step-progress()
+          @include step-progress();
         }
 
         .registerStepDone, .lastStepDone {
-          @include step-progress-completed()
+          @include step-progress-completed();
         }
 
-        .lastStep {
+        .lastStep, .lastStepDone {
           width: 50px;
         }
       }

@@ -179,7 +179,7 @@
 
 .modal {
   section {
-    .productEdit {
+    .productEdit, .productsAvailableToPlans {
       position: relative;
       display: flex;
       flex-direction: column;
@@ -193,11 +193,12 @@
         top: .7rem;
         
         @include button-danger(.5rem);
+        
         width: auto;
         display: flex;
         align-items: center;
         justify-content: center;
       }
-    }
+    } 
   }
 }
