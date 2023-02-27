@@ -1,0 +1,38 @@
+@import '/src/styles/theme.scss';
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navContainer {
+    @include flex-column();
+    width: 20%;
+    min-width: 240px;
+    padding: 30px;
+}
+
+.subNavContainer {
+    @include flex-column();
+    width: 100%;
+    gap: 10px;
+}
+
+.filterButton {
+    @include button-primary-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
+}
+
+.deleteButton, .cancelButton {
+    @include button-danger-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
+}

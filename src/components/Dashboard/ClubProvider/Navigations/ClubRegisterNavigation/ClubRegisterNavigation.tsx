@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Nav from 'react-bootstrap/Nav';
-import { ClubNavigationContext } from '../../../../contexts/ClubDashboard/ClubDashboardContext';
-import { clubRegNavDefaultActiveKey } from '../../../../utils/ClubDashboard/navDefaultKeys';
+import { ClubNavigationContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { clubRegNavDefaultActiveKey } from '../../../../../utils/ClubDashboard/navDefaultKeys';
 
 export function ClubRegisterNavigation() {
 

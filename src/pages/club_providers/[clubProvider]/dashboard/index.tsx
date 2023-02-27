@@ -97,8 +97,7 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     return (
         <DeletingPlansContext.Provider value={{
-            deletePlans,
-            deletingPlans, setDeletingPlans,
+            deletePlans, deletingPlans, setDeletingPlans,
             plansThatCanBeDeleted, setPlansThatCanBeDeleted
         }}>
             <ClubNavigationContext.Provider value={{
