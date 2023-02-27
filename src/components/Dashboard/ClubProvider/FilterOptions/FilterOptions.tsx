@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { PLANS_PROPERTIES, PRODUCTS_PROPERTIES, SUBS_PROPERTIES } from "../Tables/utils/myClubProperties";
+import { PLANS_PROPERTIES, PRODUCTS_PROPERTIES, SUBS_PROPERTIES } from "../Lists/utils/myClubProperties";
 import { sortListByOption } from "./utils/sortListByOption";
 import { InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
 import UpDownFilterArrows from "./utils/UpDownFilterArrows/UpDownFilterArrows";
@@ -22,6 +22,7 @@ export function FilterOptions({ whatToFilter }: FilterOptionsType) {
 
     const [filterOptions, setFIlterOptions] = useState<string[] | []>([])
     const [optionSelected, setOptionSelected] = useState<string | null>(null)
+    const [showInput, setShowInput] = useState(false)
 
     useEffect(() => {
         switch (whatToFilter) {
@@ -41,34 +42,49 @@ export function FilterOptions({ whatToFilter }: FilterOptionsType) {
 
     return (
         <section className={styles.optionsWrapper}>
-            {filterOptions.map((option, index) => (
-                <button
-                    key={index}
-                    className={styles.filterOption}
-                    onClick={(event) => {
-                        setOptionSelected(option)
-                        sortListByOption(
-                            event,
-                            option,
-                            plansInfo,
-                            setPlansInfo,
-                            productsInfo,
-                            setProductsInfo,
-                            subscribersInfo,
-                            setSubscribersInfo,
-                            "ascendant"
-                        )
-                    }}
-                >
-                    {option}
+            {filterOptions.map((option, index) => {
+                return (
+                    <>
+                        <button
+                            key={index}
+                            className={styles.filterOption}
+                            onClick={(event) => {
 
-                    <UpDownFilterArrows
-                        optionSelected={optionSelected}
-                        setOptionSelected={setOptionSelected}
-                        option={option}
-                    />
-                </button>
-            ))}
+                                if (['Nome', 'SKU', 'CPF', 'Email'].includes(option)) {
+                                    setOptionSelected(option)
+                                    return setShowInput(true)
+                                }
+
+                                sortListByOption(
+                                    event,
+                                    option,
+                                    plansInfo,
+                                    setPlansInfo,
+                                    productsInfo,
+                                    setProductsInfo,
+                                    subscribersInfo,
+                                    setSubscribersInfo,
+                                    "ascendant"
+                                )
+                            }}
+                        >
+                            {option}
+                            {
+                                ['Nome', 'SKU', 'CPF', 'Email'].includes(option) ?
+                                    <></> :
+                                    <UpDownFilterArrows option={option} />
+                            }
+                        </button>
+                        {
+                            optionSelected === option && showInput &&
+                            <input
+                                className={styles.filterInput}
+                                placeholder={`Filtre pelo ${option}...`}
+                            />
+                        }
+                    </>
+                )
+            })}
         </section>
     );
 }

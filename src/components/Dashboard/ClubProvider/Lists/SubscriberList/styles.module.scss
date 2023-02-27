@@ -1,0 +1,29 @@
+@import '/src/styles/theme.scss';
+
+.cardsWrapper {
+    width: 100%;
+}
+
+.subscriberCard {
+    @include flex-between;
+    transition: 0.2s all;
+    padding: 10px 20px;
+    border-bottom: 1px solid $color-gray-ultra-light-2;
+    overflow: hidden;
+
+    &:hover {
+        background-color: $color-gray-ultra-light;
+        cursor: pointer;
+    }
+}
+
+.subscriberCard:first-child {
+    border-top: 1px solid $color-gray-ultra-light-2;
+}
+
+.subscriberImage {
+    @include flex-center;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}

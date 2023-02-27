@@ -1,5 +1,4 @@
 export const PLANS_PROPERTIES = [
-    'Título',
     'nº de Assinantes',
     'Preço',
     'Frequência'
@@ -12,8 +11,7 @@ export const PRODUCTS_PROPERTIES = [
 ]
 
 export const SUBS_PROPERTIES = [
-    'nº',
-    'Assinantes',
+    'Nome',
     'Email',
     'CPF'
 ]

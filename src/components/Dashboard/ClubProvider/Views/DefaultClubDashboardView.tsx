@@ -1,16 +1,15 @@
-import { Col, Container, Row } from "react-bootstrap";
 import { DivisionColumn } from "../../../Divisions/DivisionColumn";
 import { DivisionLine } from "../../../Divisions/DivisionLine";
 import { ClubRegisterNavigation } from "../Navigations/ClubRegisterNavigation/ClubRegisterNavigation";
 import { MyNavigation } from "../Navigations/MyNavigation/MyNavigation";
 import { PlansRegister } from "../Registers/Plans/PlansRegister";
 import { ProductsRegister } from "../Registers/Products/ProductsRegister";
-import { PlansTable } from "../Tables/PlansTable";
-import { ProductsTable } from "../Tables/ProductsTable";
-import { SubscribersTable } from "../Tables/SubscribersTable";
-import styles from "../../../../styles/pages/clubDashboard.module.scss"
+import { PlansTable } from "../Lists/PlansTable";
+import { ProductsTable } from "../Lists/ProductsTable";
+import { SubscribersTable } from "../Lists/SubscriberList/SubscribersTable";
 import { useContext } from "react";
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
+import styles from "./styles.module.scss"
 
 export function DefaultClubDashboardView() {
 
@@ -22,26 +21,28 @@ export function DefaultClubDashboardView() {
 
     return (
         <>
-            <MyNavigation />
-            <DivisionColumn />
-            {
-                myNavScreenSelected === "subscribers" &&
-                <SubscribersTable />
-            }
-            {
-                myNavScreenSelected === "plans" &&
-                (
-                    !deletingPlans ? (
-                        <PlansTable
-                            plansInfo={plansInfo}
-                        />
-                    ) : (
-                        <PlansTable
-                            plansInfo={plansThatCanBeDeleted}
-                        />
+            <section className={styles.upperSection}>
+                <MyNavigation />
+                <DivisionColumn />
+                {
+                    myNavScreenSelected === "subscribers" &&
+                    <SubscribersTable />
+                }
+                {
+                    myNavScreenSelected === "plans" &&
+                    (
+                        !deletingPlans ? (
+                            <PlansTable
+                                plansInfo={plansInfo}
+                            />
+                        ) : (
+                            <PlansTable
+                                plansInfo={plansThatCanBeDeleted}
+                            />
+                        )
                     )
-                )
-            }
+                }
+            </section>
             {
                 myNavScreenSelected === "products" &&
                 <ProductsTable />

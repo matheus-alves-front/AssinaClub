@@ -5,14 +5,10 @@ import { sortListByOption } from "../sortListByOption"
 import styles from "./styles.module.scss"
 
 type UpDownFilterArrowsType = {
-    optionSelected: string | null,
-    setOptionSelected: (value: SetStateAction<string | null>) => void,
     option: string
 }
 
 export default function UpDownFilterArrows({
-    optionSelected,
-    setOptionSelected,
     option
 }: UpDownFilterArrowsType) {
 
@@ -31,7 +27,6 @@ export default function UpDownFilterArrows({
             <div
                 className={styles.filterOptions}
                 onClick={(event) => {
-                    setOptionSelected(option)
                     sortListByOption(
                         event,
                         option,
@@ -50,7 +45,6 @@ export default function UpDownFilterArrows({
             <div
                 className={styles.filterOptions}
                 onClick={(event) => {
-                    setOptionSelected(option)
                     sortListByOption(
                         event,
                         option,
