@@ -22,7 +22,42 @@ export function FilterOptions({ whatToFilter }: FilterOptionsType) {
 
     const [filterOptions, setFIlterOptions] = useState<string[] | []>([])
     const [optionSelected, setOptionSelected] = useState<string | null>(null)
+    const [inputValue, setInputValue] = useState<string>("")
     const [showInput, setShowInput] = useState(false)
+    const [originalSubscribersInfo] = useState(subscribersInfo)
+    const [originalPlansInfo] = useState(plansInfo)
+
+    function filterByUniqueParam(whatToFilter: string | null, optionSelected: string | null) {
+
+        switch (whatToFilter) {
+            case "Assinantes":
+                const filteredSubscribers = originalSubscribersInfo.filter(option => {
+                    if (!inputValue) return true
+                    if (optionSelected === "Nome") return option.name.includes(inputValue)
+                    if (optionSelected === "Email") return option.email.includes(inputValue)
+                    if (optionSelected === "CPF") return option.cpf.includes(inputValue)
+                })
+                setSubscribersInfo(filteredSubscribers)
+                break;
+
+            case "Planos":
+                // const filteredPlans = originalPlansInfo.filter(option => {                                        
+                //     if(!inputValue) return true
+                //     if(optionSelected === "Nome") return option.name.includes(inputValue)
+                //     if(optionSelected === "Email") return option.email.includes(inputValue)
+                //     if(optionSelected === "CPF") return option.cpf.includes(inputValue)
+                // })
+                // setSubscribersInfo(filteredSubscribers)
+                break;
+
+                break;
+            case "Produtos":
+
+                break;
+            default:
+                break;
+        }
+    }
 
     useEffect(() => {
         switch (whatToFilter) {
@@ -40,32 +75,26 @@ export function FilterOptions({ whatToFilter }: FilterOptionsType) {
         }
     }, [])
 
+    useEffect(() => {
+        filterByUniqueParam(whatToFilter, optionSelected)
+    }, [inputValue])
+
     return (
         <section className={styles.optionsWrapper}>
             {filterOptions.map((option, index) => {
                 return (
-                    <>
+                    <div key={index}>
                         <button
-                            key={index}
+
                             className={styles.filterOption}
                             onClick={(event) => {
-
-                                if (['Nome', 'SKU', 'CPF', 'Email'].includes(option)) {
-                                    setOptionSelected(option)
-                                    return setShowInput(true)
+                                if (optionSelected === option) {
+                                    setOptionSelected(null)
+                                    return setShowInput(false)
                                 }
-
-                                sortListByOption(
-                                    event,
-                                    option,
-                                    plansInfo,
-                                    setPlansInfo,
-                                    productsInfo,
-                                    setProductsInfo,
-                                    subscribersInfo,
-                                    setSubscribersInfo,
-                                    "ascendant"
-                                )
+                                setInputValue("")
+                                setOptionSelected(option)
+                                return setShowInput(true)
                             }}
                         >
                             {option}
@@ -80,9 +109,11 @@ export function FilterOptions({ whatToFilter }: FilterOptionsType) {
                             <input
                                 className={styles.filterInput}
                                 placeholder={`Filtre pelo ${option}...`}
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.currentTarget.value)}
                             />
                         }
-                    </>
+                    </div>
                 )
             })}
         </section>

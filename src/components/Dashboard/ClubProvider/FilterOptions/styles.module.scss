@@ -2,18 +2,18 @@
 
 .optionsWrapper {
     width: 100%;
-    margin-top: 10px;
+    margin: 10px 0;
 
     > button {
         border-bottom: 0;
     }
 
-    > button:first-child {
+    > div:first-child > button {
         border-radius: 10px 10px 0 0;
 
     }
 
-    > button:last-child {
+    > div:last-child > button{
         border-radius: 0 0 10px 10px;
         border-bottom: 1px solid #DDDDDD;
     }
@@ -39,10 +39,15 @@
     margin: 0 0 10px 0;
     padding: 10px 0 5px 5px;
     color: $color-gray-light;
+    animation: easeCome 0.4s ease-out;
 
     &::placeholder {
         color: $color-gray-light;
         font-size: 15px;
         font-style: italic;
     }
+}
+
+.filterInput:last-child {
+    border-top: none;
 }

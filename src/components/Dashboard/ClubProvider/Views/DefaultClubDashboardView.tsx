@@ -23,7 +23,9 @@ export function DefaultClubDashboardView() {
         <>
             <section className={styles.upperSection}>
                 <MyNavigation />
+
                 <DivisionColumn />
+                
                 {
                     myNavScreenSelected === "subscribers" &&
                     <SubscribersTable />

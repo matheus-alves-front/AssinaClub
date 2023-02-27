@@ -15,3 +15,11 @@
     left: 0;
   }
 }
+
+@keyframes easeCome {
+  from {
+      opacity: 0;
+  } to {
+      opacity: 1;
+  }
+}

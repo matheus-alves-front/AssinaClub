@@ -45,8 +45,9 @@ export function MyNavigation() {
             <div
                 className={styles.subNavContainer}
             >
-                {firstNavOptions.map(opt => (
+                {firstNavOptions.map((opt, index) => (
                     <DarkNavButton
+                        key={index}
                         handleNavButton={handleNavButton}
                         handleNavParam={opt.handleNavParam}
                     >
