@@ -18,6 +18,15 @@ export default function RegisterClubProvider() {
     plans: []
   })
 
+  function stepBack() {
+    if (registerStepsContext.steps > 2) {
+      setRegisterStepsContext({
+        ...registerStepsContext,
+        steps: registerStepsContext.steps - 1 
+      })
+    }
+  }
+
   return (
     <RegisterStepsContext.Provider value={{registerStepsContext, setRegisterStepsContext}}>
       <section className={styles.containerClubProvider}>
@@ -34,6 +43,12 @@ export default function RegisterClubProvider() {
           {registerStepsContext?.steps >= 3 && 
             <p>Crie seus planos e em seguida adicione no minimo 2 produtos aos seus planos</p>
           }
+          <button
+            className={styles.stepBack}
+            onClick={() => stepBack()}
+          >
+            Voltar
+          </button>
         </div>
         <div className={styles.containerForm}>
           <div className={styles.stepsContainer}>

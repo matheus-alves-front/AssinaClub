@@ -1,0 +1,19 @@
+@import '/src/styles/theme.scss';
+
+.modalContent {
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  border-radius: 10px;
+  background-color: $color-white;
+  
+  header {
+    padding: .8rem 1rem;
+    border-bottom: 1px solid $color-gray-light;
+  }
+
+  .modalChildren {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+}

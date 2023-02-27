@@ -8,6 +8,8 @@ import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext";
 import { BsFillTrashFill } from "react-icons/bs";
 
 import styles from '../registerForm.module.scss'
+import { motion } from "framer-motion";
+import { ModalContent } from "../../UI-Components/ModalContent";
 
 
 export function RegisterFormProducts() {
@@ -147,29 +149,39 @@ export function RegisterFormProducts() {
           <p>descrição: {productRegistered?.description}</p>
         </Toast.Body>
       </Toast>
-      <Modal show={isEditModal} onHide={handleModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar Produtos: </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
-          {registerStepsContext.products.map((product: Product, index: number) => (
-            <Card className="my-1 p-2 position-relative" key={index}>
-              <Card.Title>{product.name}</Card.Title>
-              <Card.Subtitle>
-                {product.description}
-              </Card.Subtitle>
-              <span>Valor: R${product.value}</span>
-              <Button
-                onClick={() => DeleteProduct(product.id, index)}
-                variant="danger position-absolute top-50 end-0 me-2 translate-middle-y"
-              >
-                <BsFillTrashFill />
-              </Button>
-            </Card>
-          ))}
-        </Modal.Body>
-      </Modal>
+      <motion.section 
+        className={styles.modal}
+        animate={isEditModal ? "open" : "closed"}
+        variants={{
+          open: { opacity: 1, x: 0 },
+          closed: { opacity: 0, x: "-100%" },
+        }}
+      >
+        <ModalContent title="Editar Produtos:">
+            {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
+            {registerStepsContext.products.map((product: Product, index: number) => (
+              <div className={styles.productEdit} key={index}>
+                <h5>{product.name}</h5>
+                <details>
+                  <summary>Descrição:</summary>
+                  <p>{product.description}</p>
+                </details>
+                <span>Valor: R${product.value}</span>
+                <button
+                  onClick={() => DeleteProduct(product.id, index)}
+                >
+                  <BsFillTrashFill />
+                </button>
+              </div>
+            ))}
+            <button 
+              onClick={() => setIsEditModal(false)}
+              className={styles.closeModal}
+            >
+              Fechar
+            </button>
+        </ModalContent>
+      </motion.section>
     </>
   )
 }

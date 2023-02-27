@@ -176,3 +176,28 @@
     flex-direction: column;
   }
 }
+
+.modal {
+  section {
+    .productEdit {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid $color-gray-light;
+
+      button {
+        position: absolute;
+        right: 0;
+        top: .7rem;
+        
+        @include button-danger(.5rem);
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
