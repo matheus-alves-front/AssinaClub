@@ -1,6 +1,5 @@
 import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
-import { Button, Card, Col, Form, Modal, Row, Toast } from "react-bootstrap";
 
 import { Product } from "../../../@types/ProductTypes";
 import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext";
@@ -10,6 +9,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import styles from '../registerForm.module.scss'
 import { motion } from "framer-motion";
 import { ModalContent } from "../../UI-Components/ModalContent";
+import { Toast } from "../../UI-Components/Toast";
 
 
 export function RegisterFormProducts() {
@@ -138,17 +138,21 @@ export function RegisterFormProducts() {
           Criar Planos
         </button>
       </section>
-      <Toast className="fixed-bottom m-2" show={isProductRegistered} >
-        <Toast.Header>
-          <strong className="me-auto">Produto Adicionado</strong>
-          <small>sku: {productRegistered?.sku}</small>
-        </Toast.Header>
-        <Toast.Body>
-          <p>nome: {productRegistered?.name}</p>
-          <p>valor: {productRegistered?.value}</p>
-          <p>descrição: {productRegistered?.description}</p>
-        </Toast.Body>
-      </Toast>
+      <motion.section 
+        className={styles.toast}
+        animate={isProductRegistered ? "open" : "closed"}
+        variants={{
+          open: {opacity: 1, y: 0},
+          closed: {opacity: 0, y: "100%"},
+        }}
+      >
+        <Toast title="Produto Adicionado">
+            <small><strong>Sku:</strong> {productRegistered?.sku}</small>
+            <p><strong>nome:</strong> {productRegistered?.name}</p>
+            <p><strong>valor:</strong> {productRegistered?.value}</p>
+            <p><strong>descrição:</strong> {productRegistered?.description}</p>
+        </Toast>
+      </motion.section>
       <motion.section 
         className={styles.modal}
         animate={isEditModal ? "open" : "closed"}

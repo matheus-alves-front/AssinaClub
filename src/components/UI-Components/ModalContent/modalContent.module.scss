@@ -16,5 +16,7 @@
     flex-direction: column;
     padding: 1rem;
     gap: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 }
