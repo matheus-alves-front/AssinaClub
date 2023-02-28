@@ -1,0 +1,66 @@
+@mixin step-progress() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 25%;
+
+  span {
+    width: 50px;
+    height: 40px;
+    color: $color-primary;
+    background-color: $color-white;
+    border: 1px solid $color-primary;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  progress {
+    border: 0;
+    height: 5px;
+    background-color: $color-gray;
+    width: 70%;
+    transition: .3s ease-in-out;
+
+    &::-webkit-progress-value {
+      background-color: $color-primary;
+    }
+  }
+}
+
+@mixin step-progress-completed() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 25%;
+
+  span {
+    width: 50px;
+    height: 40px;
+    background-color: $color-primary;
+    color: $color-white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  progress {
+    border: 0;
+    height: 5px;
+    background-color: $color-gray;
+    width: 70%;
+    transition: .3s ease-in-out;
+
+    &::-webkit-progress-value {
+      background-color: $color-primary;
+    }
+  }
+}
