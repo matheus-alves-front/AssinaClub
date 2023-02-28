@@ -10,7 +10,7 @@ import { SubscribersList } from "../Lists/SubscriberList/SubscribersList";
 import { useContext } from "react";
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
 import styles from "./styles.module.scss"
-import { AddProductToPlanForm } from "../Forms/AddProductToPlanForm";
+import { AddProductToPlanForm } from "../Forms/AddProductToPlanForm/AddProductToPlanForm";
 
 export function DefaultClubDashboardView() {
 
