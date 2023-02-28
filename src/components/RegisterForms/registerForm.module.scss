@@ -24,52 +24,6 @@
       gap: 10px;
       margin-top: 2rem;
     }
-
-    &.inputFile {
-      border: 2px dashed $color-gray-light;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: .2s ease;
-
-      .addPicture {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 100%;
-        height: 100%;
-        background-color: $color-white;
-        color: $color-gray-light;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-
-        transition: .2s ease;
-
-        svg {
-          font-size: 1.5rem;
-        }
-      }
-      
-      input {
-        padding: 1rem;
-        width: 100%
-      }
-
-      &:hover {
-        .addPicture {
-          background-color: $color-gray-light;
-          color: $color-white
-        }
-      }
-    }
   }
 
   button {

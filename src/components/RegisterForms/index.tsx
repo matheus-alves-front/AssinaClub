@@ -6,6 +6,7 @@ import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
 
 import { IoAdd } from 'react-icons/io5'
 import styles from './registerForm.module.scss'
+import { InputFile } from '../UI-Components/InputFile';
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
@@ -63,13 +64,9 @@ export function RegisterFormSubscriber() {
       onSubmit={(e) => RegisterSubscriberSubmit(e)}
       className={styles.formSubscriber}
     >
-      <label className={styles.inputFile}>
+      <InputFile>
         <input type="file" />
-        <div className={styles.addPicture}>
-          <IoAdd />
-          Adicionar Foto
-        </div>
-      </label>
+      </InputFile>
       <input 
         name="firstNameSubscriber" 
         type="text" 
@@ -210,6 +207,9 @@ export function RegisterFormClubProvider() {
         className={styles.formClubProvider}
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
       >
+        <InputFile>
+          <input type="file" />
+        </InputFile>
         <input name="clubProviderName" type="text" placeholder="Nome do seu Clube" /> 
         <input name="clubProviderHostName" type="text" placeholder="Nome do proprietário do Clube" />
         <textarea 
