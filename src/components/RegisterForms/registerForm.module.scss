@@ -73,7 +73,7 @@
   }
 
   button {
-    @include button-primary(10px);
+    @include button-secondary(10px);
   }
 
   @media (max-width: $mobile) {
