@@ -6,11 +6,12 @@ import { Product } from "../../../@types/ProductTypes"
 import { Plan } from "../../../@types/PlansTypes"
 import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext"
 
-import { BsFillArrowRightSquareFill, BsFillTrashFill } from "react-icons/bs"
+import { BsFillTrashFill } from "react-icons/bs"
 
 import styles from './registerPlans.module.scss'
 import { motion } from "framer-motion"
 import { ModalContent } from "../../UI-Components/ModalContent"
+import { IoAdd } from "react-icons/io5"
 
 export default function RegisterFormPlans() {
   const { 
@@ -197,8 +198,9 @@ export default function RegisterFormPlans() {
                           <span>Valor: R${product.value}</span>
                           {!plan.productId.includes(String(product.id)) ? 
                             <button onClick={() => AddProductToPlan(plan.id, product.id, index)}>
-                              <BsFillArrowRightSquareFill
+                              <IoAdd
                                 fontSize={25} 
+                                fontWeight={700}
                                 cursor={'pointer'}
                               />
                             </button>
