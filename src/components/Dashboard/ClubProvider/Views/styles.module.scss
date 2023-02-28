@@ -1,6 +1,11 @@
 @import '/src/styles/theme.scss';
 
-.upperSection {
+.wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.upperSection, .lowerSection {
     display: flex;
     gap: 20px;
     padding: 40px;

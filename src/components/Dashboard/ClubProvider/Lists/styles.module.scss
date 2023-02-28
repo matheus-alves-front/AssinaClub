@@ -1,0 +1,101 @@
+@import '/src/styles/theme.scss';
+
+@mixin listWrapper() {
+    animation: easeCome 0.4s ease-out;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-right: 2px solid $color-gray-ultra-light;
+    border-left: 2px solid $color-gray-ultra-light;
+    background-image: linear-gradient(180deg, $color-gray-ultra-light-3 0%, #FFFFFF 100%);
+    padding: 20px 0;
+    padding-left: 20px;
+}
+
+@mixin listWrapperBegin() {
+    border-left: none;
+}
+
+@mixin listWrapperEnd() {
+    border-right: none;
+}
+
+@mixin sideButton() {
+    @include flex-center;
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid $color-gray-ultra-light-2;
+    background-color: #FFFFFF;
+    transition: 0.2s all;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-gray-ultra-light;
+    }
+
+    >div {
+        transition: 0.2s all;
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@mixin sideButtonLeft() {
+    left: 2%;
+
+    >div {
+        border-top: 2px solid $color-primary;
+        border-left: 2px solid $color-primary;
+        transform: rotate(-45deg)
+    }
+}
+
+@mixin sideButtonRight() {
+    right: 2%;
+
+    >div {
+        border-top: 2px solid $color-primary;
+        border-right: 2px solid $color-primary;
+        transform: rotate(45deg)
+    }
+}
+
+@mixin cardsWrapper {
+    @include flex-center;
+    transition: 0.2s all;
+    justify-content: flex-start;
+    gap: 40px;
+    width: 100%;
+}
+
+@mixin card {
+    @include flex-column;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+    background-color: #FFFFFF;
+    min-width: 200px;
+    gap: 20px;
+    border: 1px solid $color-gray-ultra-light-2;
+    border-radius: 10px;
+    padding-bottom: 20px;
+    overflow: hidden;
+    transition: 0.2s all;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $color-gray-ultra-light;
+        transform: translate(0, -10px);
+    }
+
+    >img {
+        width: 100%;
+        height: 150px;
+    }
+
+    >p {
+        width: 80%;
+    }
+}

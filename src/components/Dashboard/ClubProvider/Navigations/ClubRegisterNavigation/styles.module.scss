@@ -1,7 +1,8 @@
-@import '/src/styles/theme.scss';
+@import '../styles.module.scss';
 
 .darkButton {
     @include button-primary(13px);
     transition: 0.2s all;
     border-radius: 7px;
+    margin-bottom: 10px;
 }

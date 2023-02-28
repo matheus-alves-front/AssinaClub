@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Col } from "react-bootstrap";
-import { DivisionColumn } from "../../../../Divisions/DivisionColumn";
-import styles from "../../../../../styles/pages/clubDashboard.module.scss"
-import { ProductForm } from "../../Forms/ProductForm";
-import { AddProductToPlanForm } from "../../Forms/AddProductToPlanForm";
+import styles from "./styles.module.scss"
+import { ProductForm } from "../../Forms/ProductForm/ProductForm";
 import { Product } from "../../../../../@types/ProductTypes";
 import { Plan } from "../../../../../@types/PlansTypes";
 import { ProductRegisterContext } from "../../../../../contexts/ClubDashboard/ProductRegisterContext/ProductRegisterContext";
@@ -20,17 +17,8 @@ export function ProductsRegister() {
             selectedPlanInAddPlan, setSelectedPlanInAddPlan,
             selectedProductInAddPlan, setSelectedProductInAddPlan,
         }}>
-
-            <section className="d-flex justify-content-around position-relative">
-                <Col md={showAddPlanModal ? "5" : "auto"} >
-                    <ProductForm/>
-                </Col>
-                <Col md="auto" className={showAddPlanModal ? "" : "visually-hidden"}>
-                    <DivisionColumn />
-                </Col>
-                <Col md={6} className={showAddPlanModal ? `${styles.growScale}` : "visually-hidden"}>
-                    <AddProductToPlanForm />
-                </Col>
+            <section className={styles.registerWrapper}>
+                <ProductForm />
             </section>
         </ProductRegisterContext.Provider>
     )

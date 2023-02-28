@@ -1,0 +1,30 @@
+@import '/src/styles/theme.scss';
+
+.registerWrapper {
+    @include flex-center;
+    width: 100%;
+}
+
+.formWrapper {
+    @include form-wrapper;
+}
+
+.planInput {
+    @include form-input;
+}
+
+.buttonsWrapper {
+    @include buttons-wrapper;
+}
+
+.reverseDarkButton {
+    @include reverse-dark-button;
+}
+
+.darkButton {
+    @include dark-button;
+}
+
+.smallObs {
+    @include small-obs;
+}

@@ -3,7 +3,7 @@ import { InfoContext } from '../../../../../contexts/ClubDashboard/ClubDashboard
 import { getSubscriberPlansFormatted } from '../../../../../utils/getSubscriberPlans';
 import styles from "./styles.module.scss"
 
-export function SubscribersTable() {
+export function SubscribersList() {
 
     const {
         subscribersInfo,

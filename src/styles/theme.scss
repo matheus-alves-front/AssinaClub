@@ -7,6 +7,7 @@ $color-gray-dark: #343a40;
 $color-gray-light: #6c757d;
 $color-gray-ultra-light: #EEEEEE;
 $color-gray-ultra-light-2: #DDDDDD;
+$color-gray-ultra-light-3: #FEFEFE;
 
 $color-primary: #110e1b;
 $color-secondary: #5C162E;
@@ -28,3 +29,4 @@ $mobile-small: 475px;
 @import '/src/styles/utils/step-progress.scss';
 @import '/src/styles/utils/modals.scss';
 @import '/src/styles/utils/flex.scss';
+@import '/src/styles/utils/form.scss';

@@ -1,0 +1,34 @@
+@import '/src/styles/theme.scss';
+@import '../styles.module.scss';
+
+.listWrapper, .listWrapperEnd, .listWrapperBegin {
+    @include listWrapper;
+}
+
+.listWrapperBegin {
+    @include listWrapperBegin;
+}
+
+.listWrapperEnd {
+    @include listWrapperEnd;
+}
+
+.sideButtonLeft, .sideButtonRight {
+    @include sideButton;
+}
+
+.sideButtonLeft{
+    @include sideButtonLeft;
+}
+
+.sideButtonRight {
+    @include sideButtonRight;
+}
+
+.cardsWrapper {
+    @include cardsWrapper;
+}
+
+.planCard {
+    @include card
+}

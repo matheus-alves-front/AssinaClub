@@ -1,0 +1,14 @@
+@import '/src/styles/theme.scss';
+
+.navContainer {
+    @include flex-column();
+    width: 20%;
+    min-width: 190px;
+    max-width: 250px;
+}
+
+.subNavContainer {
+    @include flex-column();
+    width: 100%;
+    gap: 10px;
+}

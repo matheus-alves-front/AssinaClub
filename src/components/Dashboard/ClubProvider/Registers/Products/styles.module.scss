@@ -1,0 +1,6 @@
+@import '/src/styles/theme.scss';
+
+.registerWrapper {
+    @include flex-center;
+    width: 100%;
+}

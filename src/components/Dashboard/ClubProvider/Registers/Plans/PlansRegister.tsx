@@ -1,8 +1,8 @@
-import { useContext } from "react"
-import { Button, Col, Form, Row } from "react-bootstrap"
+import { useContext, useState } from "react"
 import { ClubDashboardUpdateContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { RegisterPlan } from "./utils/RegisterPlan"
+import styles from "./styles.module.scss"
 
 export function PlansRegister() {
 
@@ -14,49 +14,57 @@ export function PlansRegister() {
         setUpdatePlans
     } = useContext(ClubDashboardUpdateContext)
 
+    const [inputName, setInputName] = useState("")
+    const [inputDescription, setInputDescription] = useState("")
+    const [inputPrice, setInputPrice] = useState("")
+    const [inputFrequency, setInputFrequency] = useState("")
+
     return (
-        <>
-            <Form onSubmit={(e) => {
-                RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
-            }}
+        <div className={styles.registerWrapper}>
+            <form
+                className={styles.formWrapper}
+                onSubmit={(e) => {
+                    RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
+                }}
             >
-                <Form.Group className="mb-2">
-                    <Form.Label>Nome do Plano</Form.Label>
-                    <Form.Control name="planTitle" type="text" />
-                </Form.Group>
-                <Form.Group className="mb-2">
-                    <Form.Label>Descrição</Form.Label>
-                    <Form.Control name="planDescription" as="textarea" />
-                </Form.Group>
-                <Row>
-                    <Col>
-                        <Form.Group className="mb-2">
-                            <Form.Label>Preço</Form.Label>
-                            <Form.Control name="planPrice" type="number" />
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group className="mb-2">
-                            <Form.Label>Frequencia</Form.Label>
-                            <Form.Control name="planFrequency" type="number" />
-                            <Form.Text className="text-muted">
-                                De x em x meses
-                            </Form.Text>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row className="my-1 justify-content-end">
-                    <Col md={5}>
-                        <Button
-                            variant="dark"
-                            type="submit"
-                            className="w-100 p-2 mt-4"
-                        >
-                            Registrar Plano
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
-        </>
+                <p>Nome do Plano</p>
+                <input
+                    className={styles.planInput}
+                    value={inputName}
+                    type="text"
+                />
+                <p>Descrição</p>
+                <input
+                    className={styles.planInput}
+                    value={inputDescription}
+                    type="text"
+                />
+                <p>Preço</p>
+                <input
+                    className={styles.planInput}
+                    value={inputPrice}
+                    type="number"
+                />
+                <p>Frequencia</p>
+                <input
+                    className={styles.planInput}
+                    value={inputFrequency}
+                    type="number"
+                />
+                <p className={styles.smallObs}>
+                    De x em x meses
+                </p>
+                <div
+                    className={styles.buttonsWrapper}
+                >
+                    <button
+                        type="submit"
+                        className={styles.darkButton}
+                    >
+                        Registrar Plano
+                    </button>
+                </div>
+            </form>
+        </div>
     )
 }

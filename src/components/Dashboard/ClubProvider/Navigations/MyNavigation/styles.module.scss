@@ -1,16 +1,5 @@
 @import '/src/styles/theme.scss';
-
-.navContainer {
-    @include flex-column();
-    width: 20%;
-    min-width: 240px;
-}
-
-.subNavContainer {
-    @include flex-column();
-    width: 100%;
-    gap: 10px;
-}
+@import '../styles.module.scss';
 
 .filterButton {
     @include button-primary-outline(10px);

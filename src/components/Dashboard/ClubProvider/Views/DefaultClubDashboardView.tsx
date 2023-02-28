@@ -4,12 +4,13 @@ import { ClubRegisterNavigation } from "../Navigations/ClubRegisterNavigation/Cl
 import { MyNavigation } from "../Navigations/MyNavigation/MyNavigation";
 import { PlansRegister } from "../Registers/Plans/PlansRegister";
 import { ProductsRegister } from "../Registers/Products/ProductsRegister";
-import { PlansTable } from "../Lists/PlansTable";
-import { ProductsTable } from "../Lists/ProductsTable";
-import { SubscribersTable } from "../Lists/SubscriberList/SubscribersTable";
+import { PlansList } from "../Lists/PlansList/PlansList";
+import { ProductsList } from "../Lists/ProductsList/ProductsList";
+import { SubscribersList } from "../Lists/SubscriberList/SubscribersList";
 import { useContext } from "react";
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
 import styles from "./styles.module.scss"
+import { AddProductToPlanForm } from "../Forms/AddProductToPlanForm";
 
 export function DefaultClubDashboardView() {
 
@@ -23,43 +24,43 @@ export function DefaultClubDashboardView() {
         <>
             <section className={styles.upperSection}>
                 <MyNavigation />
-
                 <DivisionColumn />
-                
                 {
-                    myNavScreenSelected === "subscribers" &&
-                    <SubscribersTable />
+                    myNavScreenSelected === "subscribers" && (
+                        <div className={styles.wrapper}>
+                            <h1>Meus Assinantes</h1>
+                            <SubscribersList />
+                        </div>
+                    )
                 }
                 {
                     myNavScreenSelected === "plans" &&
-                    (
-                        !deletingPlans ? (
-                            <PlansTable
-                                plansInfo={plansInfo}
-                            />
-                        ) : (
-                            <PlansTable
-                                plansInfo={plansThatCanBeDeleted}
-                            />
-                        )
-                    )
+                    <PlansList
+                        plansInfo={deletingPlans ? plansThatCanBeDeleted : plansInfo}
+                    />
+                }
+                {
+                    myNavScreenSelected === "products" &&
+                    <ProductsList />
                 }
             </section>
-            {
-                myNavScreenSelected === "products" &&
-                <ProductsTable />
-            }
             <DivisionLine />
-            <ClubRegisterNavigation />
-            <DivisionColumn />
-            {
-                clubRegNavScreenSelected === "products" &&
-                <ProductsRegister />
-            }
-            {
-                clubRegNavScreenSelected === "plans" &&
-                <PlansRegister />
-            }
+            <section className={styles.lowerSection}>
+                <ClubRegisterNavigation />
+                <DivisionColumn />
+                {
+                    clubRegNavScreenSelected === "products" &&
+                    <ProductsRegister />
+                }   
+                {
+                    clubRegNavScreenSelected === "plans" &&
+                    <PlansRegister />
+                }
+                {
+                    clubRegNavScreenSelected === "productToPlan" &&
+                    <AddProductToPlanForm />
+                }
+            </section>
         </>
     )
 }
