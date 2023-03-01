@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { ClubDashboardUpdateContext, ClubNavigationContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
-import { Plan } from "@prisma/client"
-import { Product } from "../../../../../@types/ProductTypes"
 import styles from './styles.module.scss'
 import { addProductToPlan } from "./utils/addProductToPlan"
 import { AddProdToPlanContext } from "../../../../../contexts/ClubDashboard/AddProdToPlanContext/AddProdToPlanContext"
@@ -10,7 +8,6 @@ import ProductCard from "../../Lists/Cards/ProductCard/ProductCard"
 import PlanCard from "../../Lists/Cards/PlanCard/PlanCard"
 
 export function AddProductToPlanForm() {
-
 
     const {
         clubProviderInfo,
@@ -22,8 +19,7 @@ export function AddProductToPlanForm() {
 
     const {
         setMyNavScreenSelected,
-        setFocusMode,
-        focusMode
+        setFocusMode
     } = useContext(ClubNavigationContext)
 
     const {
@@ -35,12 +31,9 @@ export function AddProductToPlanForm() {
 
     return (
         <section className={styles.globalSection}>
-            <div
-                className={styles.leftSection}
-            >
-                <form
-                    className={styles.formWrapper}
-                >
+            <div className={styles.leftSection}>
+                <form className={styles.formWrapper}>
+
                     <button
                         className={styles.reverseDarkButton}
                         onClick={(e) => {

@@ -63,9 +63,7 @@ export function PlansRegister() {
                 <p className={styles.smallObs}>
                     De x em x meses
                 </p>
-                <div
-                    className={styles.buttonsWrapper}
-                >
+                <div className={styles.buttonsWrapper}>
                     <button
                         type="submit"
                         className={styles.darkButton}

@@ -58,9 +58,7 @@ export function MyNavigation() {
 
             <DivisionLine />
 
-            <div
-                className={styles.subNavContainer}
-            >
+            <div className={styles.subNavContainer}>
                 <button
                     className={styles.filterButton}
                     disabled={deletingPlans}

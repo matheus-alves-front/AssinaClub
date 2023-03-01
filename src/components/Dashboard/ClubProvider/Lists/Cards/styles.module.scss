@@ -1,0 +1,6 @@
+@import '/src/styles/theme.scss';
+@import '..//styles.module.scss';
+
+.planCard, .prodCard {
+    @include card;
+}

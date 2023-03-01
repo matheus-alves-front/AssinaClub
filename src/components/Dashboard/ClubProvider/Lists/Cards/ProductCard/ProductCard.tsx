@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Product } from '../../../../../../@types/ProductTypes'
 import { InfoContext } from '../../../../../../contexts/ClubDashboard/ClubDashboardContext'
-import styles from './styles.module.scss'
+import styles from '../styles.module.scss'
 
 type ProductCardType = {
     product: Product | null

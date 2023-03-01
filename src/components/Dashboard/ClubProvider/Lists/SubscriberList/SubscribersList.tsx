@@ -24,12 +24,7 @@ export function SubscribersList() {
                             <p>{subscriber.name}</p>
                             <p>{subscriber.email}</p>
                             <p>{subscriber.cpf}</p>
-                            <p>
-                                {
-                                    plansInfo[0] ?
-                                        getSubscriberPlansFormatted(subscriber.planIds as string[], plansInfo) : ""
-                                }
-                            </p>
+                            <p>{plansInfo[0] ? getSubscriberPlansFormatted(subscriber.planIds as string[], plansInfo) : ""}</p>
                         </div>
                     ))}
                 </>)

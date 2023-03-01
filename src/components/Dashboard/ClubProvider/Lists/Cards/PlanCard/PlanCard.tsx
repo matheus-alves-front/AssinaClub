@@ -1,5 +1,5 @@
 import { Plan } from "../../../../../../@types/PlansTypes"
-import styles from "./styles.module.scss"
+import styles from "../styles.module.scss"
 
 type PlanCardType = {
     plan: Plan
@@ -10,9 +10,7 @@ export default function PlanCard({
 }: PlanCardType) {
 
     return (
-        <div
-            className={styles.planCard}
-        >
+        <div className={styles.planCard}>
             <img src='#' alt='' />
             <p>{plan.title}</p>
             <p>Descrição: {plan.description}</p>
