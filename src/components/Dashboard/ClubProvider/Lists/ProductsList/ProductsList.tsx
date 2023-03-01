@@ -20,9 +20,9 @@ export function ProductsList() {
         setSelectedProductInAddPlan
     } = useContext(AddProdToPlanContext)
 
-    const [plansXPosition, setPlansXPosition] = useState(0)
-    const [plansXMove, setPlansXMove] = useState(0)
-    const [maxPlansXMove, setMaxPlansXMove] = useState(0)
+    const [productsXPosition, setProductsXPosition] = useState(0)
+    const [productsXMove, setProductsXMove] = useState(0)
+    const [maxProductsXMove, setMaxProductsXMove] = useState(0)
 
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
@@ -56,20 +56,20 @@ export function ProductsList() {
 
     function handleMove(direction: string) {
 
-        const maxPlansXMoveUpdated = Math.ceil((((productsInfo.length * (cardRefWidth + 40)) - cardsWrapperRefWidth) / 500))
+        const maxProductsXMoveUpdated = Math.ceil((((productsInfo.length * (cardRefWidth + 40)) - cardsWrapperRefWidth) / 500))
 
-        setMaxPlansXMove(maxPlansXMoveUpdated)
+        setMaxProductsXMove(maxProductsXMoveUpdated)
 
         if (direction === 'left') {
-            if (plansXMove > 0) {
-                setPlansXMove(plansXMove - 1)
-                setPlansXPosition(plansXPosition + 500)
+            if (productsXMove > 0) {
+                setProductsXMove(productsXMove - 1)
+                setProductsXPosition(productsXPosition + 500)
             }
         }
         else {
-            if (plansXMove < maxPlansXMoveUpdated) {
-                setPlansXPosition(plansXPosition - 500)
-                setPlansXMove(plansXMove + 1)
+            if (productsXMove < maxProductsXMoveUpdated) {
+                setProductsXPosition(productsXPosition - 500)
+                setProductsXMove(productsXMove + 1)
             }
         }
     }
@@ -77,14 +77,14 @@ export function ProductsList() {
     return (
         <section className={
             (focusMode === 'products' ? styles.listWrapperFocused : (
-                (plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
+                (productsXMove === maxProductsXMove) && (productsXMove !== 0)) ?
                 styles.listWrapperEnd : (
-                    plansXMove === 0 ? styles.listWrapperBegin : styles.listWrapper
+                    productsXMove === 0 ? styles.listWrapperBegin : styles.listWrapper
                 )
             )
         }>
             {
-                (plansXMove !== 0) &&
+                (productsXMove !== 0) &&
                 <button
                     className={styles.sideButtonLeft}
                     onClick={() => {
@@ -95,7 +95,7 @@ export function ProductsList() {
                 </button>
             }
             {
-                (plansXMove !== maxPlansXMove || (plansXMove === 0 && maxPlansXMove === 0)) &&
+                (productsXMove !== maxProductsXMove || (productsXMove === 0 && maxProductsXMove === 0)) &&
                 <button
                     className={styles.sideButtonRight}
                     onClick={() => {
@@ -111,7 +111,7 @@ export function ProductsList() {
                     <div
                         className={styles.cardsWrapper}
                         ref={cardsWrapperRef}
-                        style={{ transform: `translate(${plansXPosition}px, 0)` }}
+                        style={{ transform: `translate(${productsXPosition}px, 0)` }}
                     >
                         {productsInfo.map((product, index) => {
 
