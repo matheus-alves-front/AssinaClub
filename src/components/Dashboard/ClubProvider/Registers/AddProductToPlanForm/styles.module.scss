@@ -3,21 +3,17 @@
 .globalSection {
     @include flex-center;
     align-items: flex-start;
+
+    @media (max-width: $clubdashboard-breakpoint-1) {
+        @include flex-column;
+        width: 100%;
+    }
 }
 
 .leftSection {
     border: 1px solid $color-gray-ultra-light-2;
     border-radius: 10px;
     padding: 20px;
-}
-
-.rightSection {
-    margin-left: 40px;
-
-    > p {
-        text-align: center;
-        margin-bottom: 15px
-    }
 }
 
 .formWrapper {
@@ -27,7 +23,6 @@
     > div {
         @include flex-column;
         transition: 0.2s all;
-        background-color: red;
         height: 20px;
         overflow: hidden;
 
@@ -35,6 +30,38 @@
             overflow: visible;
         }
     }
+
+    @media (max-width: $clubdashboard-breakpoint-1) {
+        flex-direction: row;
+    }
+
+}
+
+.rightSection {
+    @include flex-center;
+
+    > div {
+        margin-left: 40px;
+
+        > p {
+            text-align: center;
+            margin-bottom: 15px
+        }
+    }
+
+    @media (max-width: $clubdashboard-breakpoint-1) {
+        margin-top: 40px;
+        gap: 40px;
+        align-items: flex-start;
+        
+        > div {
+            margin-left: 0;
+        }
+    }      
+    
+    @media (max-width: $clubdashboard-breakpoint-4) {
+        @include flex-column;
+    }   
 }
 
 .darkButton {

@@ -3,7 +3,7 @@ import { DivisionLine } from '../../../../Divisions/DivisionLine';
 import { useContext, useEffect, useState } from 'react';
 import { FilterOptions } from '../../FilterOptions/FilterOptions';
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
-import DarkNavButton from './utils/DarkNavButton/DarkNavButton';
+import DarkNavButton from './DarkNavButton/DarkNavButton';
 import styles from "./styles.module.scss"
 import { firstNavOptions } from './utils/firstNavOptions';
 

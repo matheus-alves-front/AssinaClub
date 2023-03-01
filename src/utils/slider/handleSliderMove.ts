@@ -14,9 +14,10 @@ export default function handleSliderMove(
     setCardsWrapperPosition: (value: SetStateAction<number>) => void,
 ) {
 
-    const step = 500   
+    const cardsGap = 40
+    const step = Math.floor(cardsWrapperRefWidth / cardRefWidth) * (cardRefWidth + cardsGap)
 
-    const maxIterationsUpdated = Math.ceil((((infoList.length * (cardRefWidth + 40)) - cardsWrapperRefWidth) / step))
+    const maxIterationsUpdated = Math.ceil((((infoList.length * (cardRefWidth + cardsGap)) - cardsWrapperRefWidth - cardsGap) / step))
 
     setMaxIterations(maxIterationsUpdated)
 

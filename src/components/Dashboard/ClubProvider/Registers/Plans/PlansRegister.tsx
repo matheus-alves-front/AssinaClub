@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { ClubDashboardUpdateContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { registerPlan } from "./utils/registerPlan"
-import styles from "./styles.module.scss"
+import styles from "../styles.module.scss"
 
 export function PlansRegister() {
 

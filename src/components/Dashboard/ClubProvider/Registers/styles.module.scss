@@ -6,11 +6,14 @@
 }
 
 .formWrapper {
-    @include form-wrapper;
+    @include form-wrapper;    
     
+    @media (max-width: $clubdashboard-breakpoint-3) {
+        min-width: 100%;
+    }
 }
 
-.prodInput {
+.prodInput, .planInput {
     @include form-input;
 }
 

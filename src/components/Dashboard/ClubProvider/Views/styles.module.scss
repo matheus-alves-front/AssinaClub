@@ -9,4 +9,8 @@
     display: flex;
     gap: 20px;
     padding: 40px;
+
+    @media (max-width: $clubdashboard-breakpoint-2) {
+        flex-direction: column;
+    }
 }

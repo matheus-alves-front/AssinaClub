@@ -26,7 +26,7 @@
 
 @mixin cardsWrapper {
     @include flex-center;
-    transition: 0.2s all;
+    transition: 0.4s all;
     justify-content: flex-start;
     gap: 40px;
     width: 100%;

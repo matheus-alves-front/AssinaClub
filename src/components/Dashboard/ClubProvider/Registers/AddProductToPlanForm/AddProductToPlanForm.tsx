@@ -33,7 +33,6 @@ export function AddProductToPlanForm() {
         <section className={styles.globalSection}>
             <div className={styles.leftSection}>
                 <form className={styles.formWrapper}>
-
                     <button
                         className={styles.reverseDarkButton}
                         onClick={(e) => {
@@ -80,22 +79,22 @@ export function AddProductToPlanForm() {
                     </button>
                 </form>
             </div>
-            {
-                selectedProductInAddPlan &&
-
-                <div className={styles.rightSection}>
-                    <p>Produto Selecionado:</p>
-                    <ProductCard product={selectedProductInAddPlan} />
-                </div>
-            }
-            {
-                selectedPlanInAddPlan &&
-
-                <div className={styles.rightSection}>
-                    <p>Plano Selecionado:</p>
-                    <PlanCard plan={selectedPlanInAddPlan} />
-                </div>
-            }
+            <div className={styles.rightSection}>
+                {
+                    selectedProductInAddPlan &&
+                    <div>
+                        <p>Produto Selecionado:</p>
+                        <ProductCard product={selectedProductInAddPlan} />
+                    </div>
+                }
+                {
+                    selectedPlanInAddPlan &&
+                    <div>
+                        <p>Plano Selecionado:</p>
+                        <PlanCard plan={selectedPlanInAddPlan} />
+                    </div>
+                }
+            </div>
         </section>
     )
 }

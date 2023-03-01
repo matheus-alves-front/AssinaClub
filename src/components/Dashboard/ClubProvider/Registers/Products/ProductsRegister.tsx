@@ -1,8 +1,8 @@
-import styles from "./styles.module.scss"
 import { useContext, useState } from "react"
 import { ClubDashboardUpdateContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { registerProduct } from "./utils/registerProduct"
+import styles from "../styles.module.scss"
 
 export function ProductsRegister() {
 

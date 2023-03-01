@@ -1,14 +1,45 @@
 @import '/src/styles/theme.scss';
 
+@mixin darkButton {
+    @include button-primary(13px);
+    transition: 0.2s all;
+    border-radius: 7px;
+}
+
 .navContainer {
     @include flex-column();
     width: 20%;
     min-width: 190px;
     max-width: 250px;
+
+    @media (max-width: $clubdashboard-breakpoint-2) {
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
 .subNavContainer {
     @include flex-column();
     width: 100%;
     gap: 10px;
+
+    @media (max-width: $clubdashboard-breakpoint-2) {
+        flex-direction: row;
+    }
+}
+
+.darkButton {
+    @include darkButton;
+}
+
+.filterButton {
+    @include button-primary-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
+}
+
+.deleteButton, .cancelButton {
+    @include button-danger-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
 }
