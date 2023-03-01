@@ -1,26 +1,34 @@
 import { FormEvent, SetStateAction } from "react";
 import axios from "axios";
 
-export async function RegisterPlan(
+type inputsType = {
+    inputName: string,
+    inputDescription: string,
+    inputPrice: string,
+    inputFrequency: string
+}
+
+export async function registerPlan(
     event: FormEvent<HTMLFormElement>,
     clubProviderId: string | string[] | undefined,
-    setUpdatePlans: (value: SetStateAction<boolean>) => void
+    setUpdatePlans: (value: SetStateAction<boolean>) => void,
+    inputs: inputsType
 ) {
     event.preventDefault()
 
     const form = event.target as HTMLFormElement;
 
-    const { planTitle, planDescription, planPrice, planFrequency } = form
+    const { inputName, inputDescription, inputPrice, inputFrequency } = inputs
 
-    if (!planTitle.value || !planDescription.value || !planPrice.value || !planFrequency.value) {
+    if (!inputName || !inputDescription || !inputPrice || !inputFrequency) {
         return alert("Campos Faltando")
     }
 
     const data = {
-        "title": planTitle.value,
-        "description": planDescription.value,
-        "price": Number(planPrice.value),
-        "deliveryFrequency": Number(planFrequency.value)
+        "title": inputName,
+        "description": inputDescription,
+        "price": Number(inputPrice),
+        "deliveryFrequency": Number(inputFrequency)
     }
 
     try {

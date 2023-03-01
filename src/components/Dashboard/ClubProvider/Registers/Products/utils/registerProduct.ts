@@ -1,26 +1,32 @@
 import { FormEvent, SetStateAction } from "react";
 import axios from "axios";
 
-export async function RegisterProduct(
+type inputsType = {
+    inputName: string,
+    inputDescription: string,
+    inputSKU: string,
+    inputValue: string
+}
+
+export async function registerProduct(
     event: FormEvent<HTMLFormElement>,
     clubProviderId: string | string[] | undefined,
-    setUpdateProducts: (value: SetStateAction<boolean>) => void
+    setUpdateProducts: (value: SetStateAction<boolean>) => void,
+    inputs: inputsType
 ) {
     event.preventDefault()
 
-    const form = event.target as HTMLFormElement;
+    const { inputName, inputDescription, inputSKU, inputValue } = inputs
 
-    const { productName, productDescription, productSku, productValue } = form
-
-    if (!productName.value || !productDescription.value || !productSku.value || !productValue.value) {
+    if (!inputName || !inputDescription || !inputSKU || !inputValue) {
         return alert('Campo Faltando')
     }
 
     const data = {
-        "name": productName.value,
-        "description": productDescription.value,
-        "sku": productSku.value,
-        "value": Number(productValue.value)
+        "name": inputName,
+        "description": inputDescription,
+        "sku": inputSKU,
+        "value": Number(inputValue)
     }
 
     try {
@@ -32,6 +38,4 @@ export async function RegisterProduct(
     } catch (err) {
         console.log(err)
     }
-
-    form.reset()
 }

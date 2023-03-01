@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { ClubDashboardUpdateContext } from "../../../../../contexts/ClubDashboard/ClubDashboardContext"
 import { ClubDashboardGlobalContext } from "../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
-import { RegisterPlan } from "./utils/RegisterPlan"
+import { registerPlan } from "./utils/registerPlan"
 import styles from "./styles.module.scss"
 
 export function PlansRegister() {
@@ -23,8 +23,13 @@ export function PlansRegister() {
         <div className={styles.registerWrapper}>
             <form
                 className={styles.formWrapper}
-                onSubmit={(e) => {
-                    RegisterPlan(e, clubProviderInfo?.id, setUpdatePlans)
+                onSubmit={(event) => {
+                    registerPlan(
+                        event,
+                        clubProviderInfo?.id,
+                        setUpdatePlans,
+                        { inputName, inputDescription, inputPrice, inputFrequency }
+                    )
                 }}
             >
                 <p>Nome do Plano</p>
@@ -32,24 +37,28 @@ export function PlansRegister() {
                     className={styles.planInput}
                     value={inputName}
                     type="text"
+                    onChange={(e) => setInputName(e.currentTarget.value)}
                 />
                 <p>Descrição</p>
                 <input
                     className={styles.planInput}
                     value={inputDescription}
                     type="text"
+                    onChange={(e) => setInputDescription(e.currentTarget.value)}
                 />
                 <p>Preço</p>
                 <input
                     className={styles.planInput}
                     value={inputPrice}
                     type="number"
+                    onChange={(e) => setInputPrice(e.currentTarget.value)}
                 />
                 <p>Frequencia</p>
                 <input
                     className={styles.planInput}
                     value={inputFrequency}
                     type="number"
+                    onChange={(e) => setInputFrequency(e.currentTarget.value)}
                 />
                 <p className={styles.smallObs}>
                     De x em x meses

@@ -4,3 +4,28 @@
     @include flex-center;
     width: 100%;
 }
+
+.formWrapper {
+    @include form-wrapper;
+    
+}
+
+.prodInput {
+    @include form-input;
+}
+
+.buttonsWrapper {
+    @include buttons-wrapper;
+}
+
+.reverseDarkButton {
+    @include reverse-dark-button;
+}
+
+.darkButton {
+    @include dark-button;
+}
+
+.smallObs {
+    @include small-obs;
+}

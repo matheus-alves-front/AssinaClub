@@ -5,6 +5,10 @@
     @include listWrapper;
 }
 
+.listWrapperFocused {
+    @include listWrapperFocused;
+}
+
 .listWrapperBegin {
     @include listWrapperBegin;
 }
@@ -29,6 +33,3 @@
     @include cardsWrapper;
 }
 
-.prodCard {
-    @include card;
-}

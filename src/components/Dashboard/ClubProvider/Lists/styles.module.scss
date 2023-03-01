@@ -7,9 +7,13 @@
     overflow: hidden;
     border-right: 2px solid $color-gray-ultra-light;
     border-left: 2px solid $color-gray-ultra-light;
-    background-image: linear-gradient(180deg, $color-gray-ultra-light-3 0%, #FFFFFF 100%);
     padding: 20px 0;
     padding-left: 20px;
+}
+
+@mixin listWrapperFocused() {
+    @include listWrapper;
+    background-color: $color-dark;
 }
 
 @mixin listWrapperBegin() {
@@ -75,6 +79,7 @@
 @mixin card {
     @include flex-column;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+    height: 100%;
     background-color: #FFFFFF;
     min-width: 200px;
     gap: 20px;

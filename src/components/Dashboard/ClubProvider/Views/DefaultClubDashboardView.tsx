@@ -10,7 +10,7 @@ import { SubscribersList } from "../Lists/SubscriberList/SubscribersList";
 import { useContext } from "react";
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
 import styles from "./styles.module.scss"
-import { AddProductToPlanForm } from "../Forms/AddProductToPlanForm/AddProductToPlanForm";
+import { AddProductToPlanForm } from "../Registers/AddProductToPlanForm/AddProductToPlanForm";
 
 export function DefaultClubDashboardView() {
 
@@ -19,12 +19,21 @@ export function DefaultClubDashboardView() {
     const { deletingPlans, plansThatCanBeDeleted, } = useContext(DeletingPlansContext)
 
     const { plansInfo } = useContext(InfoContext)
+    
+    const {
+        focusMode
+    } = useContext(ClubNavigationContext)
 
     return (
         <>
             <section className={styles.upperSection}>
-                <MyNavigation />
-                <DivisionColumn />
+                {
+                    focusMode === null &&
+                    <>
+                        <MyNavigation />
+                        <DivisionColumn />
+                    </>
+                }
                 {
                     myNavScreenSelected === "subscribers" && (
                         <div className={styles.wrapper}>
@@ -51,7 +60,7 @@ export function DefaultClubDashboardView() {
                 {
                     clubRegNavScreenSelected === "products" &&
                     <ProductsRegister />
-                }   
+                }
                 {
                     clubRegNavScreenSelected === "plans" &&
                     <PlansRegister />

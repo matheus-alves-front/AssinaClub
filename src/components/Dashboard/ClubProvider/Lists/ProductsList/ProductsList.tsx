@@ -1,5 +1,7 @@
 import { RefObject, useContext, useEffect, useRef, useState } from 'react';
-import { InfoContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { AddProdToPlanContext } from '../../../../../contexts/ClubDashboard/AddProdToPlanContext/AddProdToPlanContext';
+import { ClubNavigationContext, InfoContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
+import ProductCard from '../Cards/ProductCard/ProductCard';
 import styles from "./styles.module.scss"
 
 export function ProductsList() {
@@ -8,6 +10,15 @@ export function ProductsList() {
         plansInfo,
         productsInfo
     } = useContext(InfoContext)
+
+    const {
+        focusMode,
+        setFocusMode
+    } = useContext(ClubNavigationContext)
+
+    const {
+        setSelectedProductInAddPlan
+    } = useContext(AddProdToPlanContext)
 
     const [plansXPosition, setPlansXPosition] = useState(0)
     const [plansXMove, setPlansXMove] = useState(0)
@@ -65,10 +76,12 @@ export function ProductsList() {
 
     return (
         <section className={
-            ((plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
+            (focusMode === 'products' ? styles.listWrapperFocused : (
+                (plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
                 styles.listWrapperEnd : (
                     plansXMove === 0 ? styles.listWrapperBegin : styles.listWrapper
                 )
+            )
         }>
             {
                 (plansXMove !== 0) &&
@@ -100,21 +113,24 @@ export function ProductsList() {
                         ref={cardsWrapperRef}
                         style={{ transform: `translate(${plansXPosition}px, 0)` }}
                     >
-                        {productsInfo.map((product, index) => (
-                            <div
-                                key={index}
-                                className={styles.prodCard}
-                                ref={cardRef}
-                            >
-                                <img src='' alt='' />
-                                <p>{product.name}</p>
-                                <p>{product.description}</p>
-                                <p>{"R$ " + product.value.toFixed(2)}</p>
-                                <p>{product.sku}</p>
-                                <p>Nenhuma</p>
-                                <p>Nenhum</p>
-                            </div>
-                        ))}
+                        {productsInfo.map((product, index) => {
+
+                            return (
+                                <div
+                                    onClick={() => {
+                                        if (focusMode === 'products') {
+                                            setSelectedProductInAddPlan(product)
+                                            setFocusMode(null)
+                                        }
+                                    }}
+                                    key={index}
+                                    ref={cardRef}
+                                    className={styles.prodCard}
+                                >
+                                    <ProductCard product={product} />
+                                </div>
+                            )
+                        })}
                     </div>
                 )
             }

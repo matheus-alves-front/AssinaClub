@@ -1,0 +1,46 @@
+@import '/src/styles/theme.scss';
+
+.globalSection {
+    @include flex-center;
+    align-items: start;
+}
+
+.leftSection {
+    border: 1px solid $color-gray-ultra-light-2;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.rightSection {
+    margin-left: 40px;
+
+    > p {
+        text-align: center;
+        margin-bottom: 15px
+    }
+}
+
+.formWrapper {
+    @include flex-column;
+    gap: 20px;
+
+    > div {
+        @include flex-column;
+        transition: 0.2s all;
+        background-color: red;
+        height: 20px;
+        overflow: hidden;
+
+        &:hover {
+            overflow: visible;
+        }
+    }
+}
+
+.darkButton {
+    @include dark-button;
+}
+
+.reverseDarkButton {
+    @include reverse-dark-button;
+}

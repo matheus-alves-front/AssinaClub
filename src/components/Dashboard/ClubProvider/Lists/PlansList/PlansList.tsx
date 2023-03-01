@@ -1,10 +1,11 @@
-import { RefObject, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { FiChevronRight } from 'react-icons/fi';
+import { RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { Oval } from 'react-loader-spinner';
 import { Plan } from '../../../../../@types/PlansTypes';
-import { DeletingPlansContext, ClubDashboardUpdateContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
+import { AddProdToPlanContext } from '../../../../../contexts/ClubDashboard/AddProdToPlanContext/AddProdToPlanContext';
+import { DeletingPlansContext, ClubDashboardUpdateContext, ClubNavigationContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
 import { ClubDashboardGlobalContext } from '../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext';
-import { deletePlanAndDontUpdate, deletePlanAndUpdate } from '../utils/deletePlan';
+import PlanCard from '../Cards/PlanCard/PlanCard';
+import { deletePlanAndUpdate } from '../utils/deletePlan';
 import styles from "./styles.module.scss"
 
 type PlansTableProps = {
@@ -15,25 +16,34 @@ export function PlansList({
     plansInfo
 }: PlansTableProps) {
 
-    const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
-
     const { deletingPlans } = useContext(DeletingPlansContext)
 
     const { setUpdatePlans } = useContext(ClubDashboardUpdateContext)
 
-    const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
+    const {
+        focusMode,
+        setFocusMode
+    } = useContext(ClubNavigationContext)
+
+    const {
+        setSelectedPlanInAddPlan
+    } = useContext(AddProdToPlanContext)
 
     const [plansXPosition, setPlansXPosition] = useState(0)
     const [plansXMove, setPlansXMove] = useState(0)
     const [maxPlansXMove, setMaxPlansXMove] = useState(0)
-
-    const clubProviderId = String(clubProviderInfo?.id)
 
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
 
     const cardsWrapperRef = useRef() as RefObject<HTMLDivElement>;
     const [cardsWrapperRefWidth, setcardsWrapperRefWidth] = useState<number>(0)
+
+    const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
+
+    const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
+
+    const clubProviderId = String(clubProviderInfo?.id)
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(entries => {
@@ -80,11 +90,14 @@ export function PlansList({
     }
 
     return (
+        
         <section className={
-            ((plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
+            (focusMode === 'plans' ? styles.listWrapperFocused : (
+                (plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
                 styles.listWrapperEnd : (
                     plansXMove === 0 ? styles.listWrapperBegin : styles.listWrapper
                 )
+            )
         }>
             {
                 (plansXMove !== 0) &&
@@ -117,16 +130,19 @@ export function PlansList({
                     (<>
                         {plansInfo.map((plan, index) => (
                             <div
+                                onClick={() => {
+                                    if (focusMode === 'plans') {
+                                        setSelectedPlanInAddPlan(plan)
+                                        setFocusMode(null)
+                                    }
+                                }}
                                 className={styles.planCard}
                                 ref={cardRef}
                                 key={index}
                             >
-                                <img src='#' alt='' />
-                                <p>{plan.title}</p>
-                                <p>Descrição: {plan.description}</p>
-                                <p>nº de Assinantes: {plan.subscriberIds.length}</p>
-                                <p>{"R$ " + plan.price.toFixed(2)}</p>
-                                <p>Frequência: {plan.deliveryFrequency}</p>
+                                <PlanCard
+                                    plan={plan}
+                                />
                                 {
                                     deletingPlans &&
                                     <button

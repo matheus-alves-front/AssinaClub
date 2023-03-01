@@ -20,6 +20,7 @@ import { DeletingPlansContext, ClubNavigationContext, ClubAdminContext, InfoCont
 import { clubRegNavDefaultActiveKey, myNavDefaultActiveKey } from "../../../../utils/ClubDashboard/navDefaultKeys"
 import { ClubDashboardGlobalContext } from "../../../../contexts/ClubDashboard/ClubDashboardGlobalContext"
 import { DefaultClubDashboardView } from "../../../../components/Dashboard/ClubProvider/Views/DefaultClubDashboardView"
+import { AddProdToPlanContext } from "../../../../contexts/ClubDashboard/AddProdToPlanContext/AddProdToPlanContext"
 
 type ClubProviderDashboardProps = {
     clubProviderAdmins: {
@@ -52,6 +53,10 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
 
     const [deletingPlans, setDeletingPlans] = useState(false)
     const [plansThatCanBeDeleted, setPlansThatCanBeDeleted] = useState<Plan[]>([])
+
+    const [focusMode, setFocusMode] = useState<string | null>(null)
+    const [selectedPlanInAddPlan, setSelectedPlanInAddPlan] = useState<Plan | null>(null)
+    const [selectedProductInAddPlan, setSelectedProductInAddPlan] = useState<Product | null>(null)
 
     function deletePlans(plansInfo: Plan[]) {
         const filteredPlans = [...plansInfo].filter(plan => plan.subscriberIds.length === 0)
@@ -96,39 +101,45 @@ export default function ClubProvidersDashboard({ clubProviderAdmins, userData, t
     }, [adminIsDefined])
 
     return (
-        <DeletingPlansContext.Provider value={{
-            deletePlans, deletingPlans, setDeletingPlans,
-            plansThatCanBeDeleted, setPlansThatCanBeDeleted
+        <AddProdToPlanContext.Provider value={{
+            selectedPlanInAddPlan, setSelectedPlanInAddPlan,
+            selectedProductInAddPlan, setSelectedProductInAddPlan
         }}>
-            <ClubNavigationContext.Provider value={{
-                myNavScreenSelected, setMyNavScreenSelected,
-                clubRegNavScreenSelected, setClubRegNavScreenSelected
+            <DeletingPlansContext.Provider value={{
+                deletePlans, deletingPlans, setDeletingPlans,
+                plansThatCanBeDeleted, setPlansThatCanBeDeleted
             }}>
-                <ClubAdminContext.Provider value={{
-                    adminIsDefined, setAdminIsDefined, clubProviderAdmins
+                <ClubNavigationContext.Provider value={{
+                    myNavScreenSelected, setMyNavScreenSelected,
+                    clubRegNavScreenSelected, setClubRegNavScreenSelected,
+                    focusMode, setFocusMode
                 }}>
-                    <InfoContext.Provider value={{
-                        subscribersInfo, setSubscribersInfo,
-                        plansInfo, setPlansInfo,
-                        productsInfo, setProductsInfo
+                    <ClubAdminContext.Provider value={{
+                        adminIsDefined, setAdminIsDefined, clubProviderAdmins
                     }}>
-                        <ClubDashboardUpdateContext.Provider value={{
-                            setUpdateProducts, setUpdatePlans
+                        <InfoContext.Provider value={{
+                            subscribersInfo, setSubscribersInfo,
+                            plansInfo, setPlansInfo,
+                            productsInfo, setProductsInfo
                         }}>
-                            <main className={!showOnlyAdminsInDashboard ? "my-5" : ""}>
-                                {canDisplayModal && <AdminLoginModal />}
+                            <ClubDashboardUpdateContext.Provider value={{
+                                setUpdateProducts, setUpdatePlans
+                            }}>
+                                <main className={!showOnlyAdminsInDashboard ? "my-5" : ""}>
+                                    {canDisplayModal && <AdminLoginModal />}
 
-                                {(!canDisplayModal || adminIsDefined) &&
-                                    (
-                                        <DefaultClubDashboardView />
-                                    )
-                                }
-                            </main>
-                        </ClubDashboardUpdateContext.Provider>
-                    </InfoContext.Provider>
-                </ClubAdminContext.Provider>
-            </ClubNavigationContext.Provider>
-        </DeletingPlansContext.Provider>
+                                    {(!canDisplayModal || adminIsDefined) &&
+                                        (
+                                            <DefaultClubDashboardView />
+                                        )
+                                    }
+                                </main>
+                            </ClubDashboardUpdateContext.Provider>
+                        </InfoContext.Provider>
+                    </ClubAdminContext.Provider>
+                </ClubNavigationContext.Provider>
+            </DeletingPlansContext.Provider>
+        </AddProdToPlanContext.Provider>
     )
 }
 

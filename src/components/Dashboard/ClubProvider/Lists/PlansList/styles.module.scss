@@ -5,6 +5,10 @@
     @include listWrapper;
 }
 
+.listWrapperFocused {
+    @include listWrapperFocused;
+}
+
 .listWrapperBegin {
     @include listWrapperBegin;
 }
@@ -27,8 +31,4 @@
 
 .cardsWrapper {
     @include cardsWrapper;
-}
-
-.planCard {
-    @include card
 }

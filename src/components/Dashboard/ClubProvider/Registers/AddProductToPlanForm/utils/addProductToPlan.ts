@@ -9,7 +9,6 @@ export async function addProductToPlan(
     productId: string | string[],
     clubProviderId: string,
     setUpdateProducts: (value: SetStateAction<boolean>) => void,
-    setShowAddPlanModal: (value: SetStateAction<boolean>) => void,
     setSelectedPlanInAddPlan: (value: SetStateAction<Plan | null>) => void,
     setSelectedProductInAddPlan: (value: SetStateAction<Product | null>) => void,
 
@@ -19,8 +18,8 @@ export async function addProductToPlan(
     const addProductToPlan = { productId }
 
     try {
-        await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
-        setShowAddPlanModal(false)
+        const response = await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
+
         setSelectedPlanInAddPlan(null)
         setSelectedProductInAddPlan(null)
         setTimeout(() => {

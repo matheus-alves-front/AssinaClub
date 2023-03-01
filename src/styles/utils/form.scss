@@ -25,7 +25,7 @@
 }
 
 @mixin reverse-dark-button {
-    @include button-primary-outline(10px);
+    @include button-primary-outline(13px);
     max-width: 200px;
 }
 
