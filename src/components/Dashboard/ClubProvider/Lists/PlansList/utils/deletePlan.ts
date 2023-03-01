@@ -1,6 +1,6 @@
 import axios from "axios"
 import { SetStateAction } from "react"
-import { Plan } from "../../../../../@types/PlansTypes"
+import { Plan } from "../../../../../../@types/PlansTypes"
 
 export async function deletePlanAndUpdate(
     planId: string | string[],

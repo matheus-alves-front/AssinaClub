@@ -17,18 +17,6 @@
     @include listWrapperEnd;
 }
 
-.sideButtonLeft, .sideButtonRight {
-    @include sideButton;
-}
-
-.sideButtonLeft{
-    @include sideButtonLeft;
-}
-
-.sideButtonRight {
-    @include sideButtonRight;
-}
-
 .cardsWrapper {
     @include cardsWrapper;
 }

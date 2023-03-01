@@ -24,50 +24,6 @@
     border-right: none;
 }
 
-@mixin sideButton() {
-    @include flex-center;
-    position: absolute;
-    z-index: 2;
-    top: 50%;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 3px solid $color-gray-ultra-light-2;
-    background-color: #FFFFFF;
-    transition: 0.2s all;
-
-    &:hover {
-        cursor: pointer;
-        background-color: $color-gray-ultra-light;
-    }
-
-    >div {
-        transition: 0.2s all;
-        width: 10px;
-        height: 10px;
-    }
-}
-
-@mixin sideButtonLeft() {
-    left: 2%;
-
-    >div {
-        border-top: 2px solid $color-primary;
-        border-left: 2px solid $color-primary;
-        transform: rotate(-45deg)
-    }
-}
-
-@mixin sideButtonRight() {
-    right: 2%;
-
-    >div {
-        border-top: 2px solid $color-primary;
-        border-right: 2px solid $color-primary;
-        transform: rotate(45deg)
-    }
-}
-
 @mixin cardsWrapper {
     @include flex-center;
     transition: 0.2s all;

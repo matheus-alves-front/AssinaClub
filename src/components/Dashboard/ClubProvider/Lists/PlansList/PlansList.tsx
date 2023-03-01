@@ -5,8 +5,10 @@ import { AddProdToPlanContext } from '../../../../../contexts/ClubDashboard/AddP
 import { DeletingPlansContext, ClubDashboardUpdateContext, ClubNavigationContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
 import { ClubDashboardGlobalContext } from '../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext';
 import PlanCard from '../Cards/PlanCard/PlanCard';
-import { deletePlanAndUpdate } from '../utils/deletePlan';
+import { deletePlanAndUpdate } from './utils/deletePlan';
+import observeRefsWidth from '../../../../../utils/slider/observeRefsWidth';
 import styles from "./styles.module.scss"
+import SliderButtons from '../../../../Slider/SliderButtons/SliderButtons';
 
 type PlansTableProps = {
     plansInfo: Plan[]
@@ -29,9 +31,10 @@ export function PlansList({
         setSelectedPlanInAddPlan
     } = useContext(AddProdToPlanContext)
 
-    const [plansXPosition, setPlansXPosition] = useState(0)
-    const [plansXMove, setPlansXMove] = useState(0)
-    const [maxPlansXMove, setMaxPlansXMove] = useState(0)
+    //* Variables used in the slider
+    const [cardsWrapperPosition, setCardsWrapperPosition] = useState(0)
+    const [movesIterations, setMovesIterations] = useState(0)
+    const [maxMovesIterations, setMaxMovesIterations] = useState(0)
 
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
@@ -46,85 +49,35 @@ export function PlansList({
     const clubProviderId = String(clubProviderInfo?.id)
 
     useEffect(() => {
-        const resizeObserver = new ResizeObserver(entries => {
-            setcardRefWidth(entries[0].contentRect.width);
-        });
-
-        if (cardRef.current) resizeObserver.observe(cardRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
+        observeRefsWidth(cardRef, setcardRefWidth)
+        observeRefsWidth(cardsWrapperRef, setcardsWrapperRefWidth)
     }, []);
-
-    useEffect(() => {
-        const resizeObserver = new ResizeObserver(entries => {
-            setcardsWrapperRefWidth(entries[0].contentRect.width);
-        });
-
-        if (cardsWrapperRef.current) resizeObserver.observe(cardsWrapperRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, []);
-
-    function handleMove(direction: string) {
-
-        const maxPlansXMoveUpdated = Math.ceil((((plansInfo.length * (cardRefWidth + 40)) - cardsWrapperRefWidth) / 500))
-
-        setMaxPlansXMove(maxPlansXMoveUpdated)
-
-        if (direction === 'left') {
-            if (plansXMove > 0) {
-                setPlansXMove(plansXMove - 1)
-                setPlansXPosition(plansXPosition + 500)
-            }
-        }
-        else {
-            if (plansXMove < maxPlansXMoveUpdated) {
-                setPlansXPosition(plansXPosition - 500)
-                setPlansXMove(plansXMove + 1)
-            }
-        }
-    }
 
     return (
-        
+
         <section className={
             (focusMode === 'plans' ? styles.listWrapperFocused : (
-                (plansXMove === maxPlansXMove) && (plansXMove !== 0)) ?
+                (movesIterations === maxMovesIterations) && (movesIterations !== 0)) ?
                 styles.listWrapperEnd : (
-                    plansXMove === 0 ? styles.listWrapperBegin : styles.listWrapper
+                    movesIterations === 0 ? styles.listWrapperBegin : styles.listWrapper
                 )
             )
         }>
-            {
-                (plansXMove !== 0) &&
-                <button
-                    className={styles.sideButtonLeft}
-                    onClick={() => {
-                        handleMove('left')
-                    }}
-                >
-                    <div />
-                </button>
-            }
-            {
-                (plansXMove !== maxPlansXMove || (plansXMove === 0 && maxPlansXMove === 0)) &&
-                <button
-                    className={styles.sideButtonRight}
-                    onClick={() => {
-                        handleMove('right')
-                    }}
-                >
-                    <div />
-                </button>
-            }
+            <SliderButtons
+                infoList={plansInfo}
+                cardRefWidth={cardRefWidth}
+                cardsWrapperRefWidth={cardsWrapperRefWidth}
+                cardsWrapperPosition={cardsWrapperPosition}
+                movesIterations={movesIterations}
+                setMovesIterations={setMovesIterations}
+                maxMovesIterations={maxMovesIterations}
+                setMaxMovesIterations={setMaxMovesIterations}
+                setCardsWrapperPosition={setCardsWrapperPosition}
+            />
             <div
                 className={styles.cardsWrapper}
                 ref={cardsWrapperRef}
-                style={{ transform: `translate(${plansXPosition}px, 0)` }}
+                style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
             >
                 {plansInfo &&
                     (<>
