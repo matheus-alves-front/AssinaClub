@@ -6,9 +6,9 @@ import { DeletingPlansContext, ClubDashboardUpdateContext, ClubNavigationContext
 import { ClubDashboardGlobalContext } from '../../../../../contexts/ClubDashboard/ClubDashboardGlobalContext';
 import PlanCard from '../Cards/PlanCard/PlanCard';
 import { deletePlanAndUpdate } from './utils/deletePlan';
-import observeRefsWidth from '../../../../../utils/slider/observeRefsWidth';
+import observeRefsWidth from '../../../../UI-Components/Slider/utils/observeRefsWidth';
 import styles from "./styles.module.scss"
-import SliderButtons from '../../../../Slider/SliderButtons/SliderButtons';
+import Slider from '../../../../UI-Components/Slider';
 
 type PlansTableProps = {
     plansInfo: Plan[]
@@ -22,14 +22,9 @@ export function PlansList({
 
     const { setUpdatePlans } = useContext(ClubDashboardUpdateContext)
 
-    const {
-        focusMode,
-        setFocusMode
-    } = useContext(ClubNavigationContext)
+    const { focusMode, setFocusMode } = useContext(ClubNavigationContext)
 
-    const {
-        setSelectedPlanInAddPlan
-    } = useContext(AddProdToPlanContext)
+    const { setSelectedPlanInAddPlan } = useContext(AddProdToPlanContext)
 
     //* Variables used in the slider
     const [cardsWrapperPosition, setCardsWrapperPosition] = useState(0)
@@ -63,24 +58,21 @@ export function PlansList({
                 )
             )
         }>
-            <SliderButtons
+            <Slider
+                sliderClassName={styles.cardsWrapper}
+                wrapperRef={cardsWrapperRef}
                 infoList={plansInfo}
                 cardRefWidth={cardRefWidth}
                 cardsWrapperRefWidth={cardsWrapperRefWidth}
                 cardsWrapperPosition={cardsWrapperPosition}
                 movesIterations={movesIterations}
-                setMovesIterations={setMovesIterations}
                 maxMovesIterations={maxMovesIterations}
+                setMovesIterations={setMovesIterations}
                 setMaxMovesIterations={setMaxMovesIterations}
                 setCardsWrapperPosition={setCardsWrapperPosition}
-            />
-            <div
-                className={styles.cardsWrapper}
-                ref={cardsWrapperRef}
-                style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
             >
                 {plansInfo &&
-                    (<>
+                    <>
                         {plansInfo.map((plan, index) => (
                             <div
                                 onClick={() => {
@@ -125,9 +117,9 @@ export function PlansList({
                                 }
                             </div>
                         ))}
-                    </>)
+                    </>
                 }
-            </div>
+            </Slider>
         </section>
     )
 }

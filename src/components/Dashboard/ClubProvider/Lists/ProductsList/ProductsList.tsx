@@ -1,8 +1,8 @@
 import { RefObject, useContext, useEffect, useRef, useState } from 'react';
 import { AddProdToPlanContext } from '../../../../../contexts/ClubDashboard/AddProdToPlanContext/AddProdToPlanContext';
 import { ClubNavigationContext, InfoContext } from '../../../../../contexts/ClubDashboard/ClubDashboardContext';
-import observeRefsWidth from '../../../../../utils/slider/observeRefsWidth';
-import SliderButtons from '../../../../Slider/SliderButtons/SliderButtons';
+import observeRefsWidth from '../../../../UI-Components/Slider/utils/observeRefsWidth';
+import Slider from '../../../../UI-Components/Slider';
 import ProductCard from '../Cards/ProductCard/ProductCard';
 import styles from "./styles.module.scss"
 
@@ -47,27 +47,22 @@ export function ProductsList() {
                 )
             )
         }>
-            <SliderButtons
+            <Slider
+                sliderClassName={styles.cardsWrapper}
+                wrapperRef={cardsWrapperRef}
                 infoList={productsInfo}
                 cardRefWidth={cardRefWidth}
                 cardsWrapperRefWidth={cardsWrapperRefWidth}
                 cardsWrapperPosition={cardsWrapperPosition}
                 movesIterations={movesIterations}
-                setMovesIterations={setMovesIterations}
                 maxMovesIterations={maxMovesIterations}
+                setMovesIterations={setMovesIterations}
                 setMaxMovesIterations={setMaxMovesIterations}
                 setCardsWrapperPosition={setCardsWrapperPosition}
-            />
-            {
-                productsInfo &&
-                (
-                    <div
-                        className={styles.cardsWrapper}
-                        ref={cardsWrapperRef}
-                        style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
-                    >
+            >
+                {productsInfo &&
+                    <>
                         {productsInfo.map((product, index) => {
-
                             return (
                                 <div
                                     onClick={() => {
@@ -84,9 +79,9 @@ export function ProductsList() {
                                 </div>
                             )
                         })}
-                    </div>
-                )
-            }
+                    </>
+                }
+            </Slider>
         </section>
     )
 }

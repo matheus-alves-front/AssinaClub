@@ -1,6 +1,6 @@
 import styles from './styles.module.scss'
-import handleSliderMove from '../../../utils/slider/handleSliderMove'
 import { SliderArgumentsType, SliderButtonsType } from './@types'
+import handleSliderMove from '../utils/handleSliderMove'
 
 export default function SliderButtons(props: SliderButtonsType) {
 

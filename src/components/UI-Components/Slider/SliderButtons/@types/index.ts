@@ -1,9 +1,9 @@
 import { SetStateAction } from "react"
-import { Plan } from "../../../../@types/PlansTypes"
-import { Product } from "../../../../@types/ProductTypes"
+import { Plan } from "../../../../../@types/PlansTypes"
+import { Product } from "../../../../../@types/ProductTypes"
 
 export type SliderButtonsType = {
-    infoList: Plan[] | Product[],
+    infoList: any[],
     cardRefWidth: number,
     cardsWrapperRefWidth: number,
     cardsWrapperPosition: number,
