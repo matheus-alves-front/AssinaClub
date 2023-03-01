@@ -47,6 +47,10 @@
     outline: none;
   }
 
+  input[type="checkbox"] {
+    cursor: pointer;
+  }
+
   button {
     cursor: pointer;
   }
