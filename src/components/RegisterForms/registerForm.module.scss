@@ -24,66 +24,14 @@
       gap: 10px;
       margin-top: 2rem;
     }
-
-    &.inputFile {
-      border: 2px dashed $color-gray-light;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: .2s ease;
-
-      .addPicture {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        width: 100%;
-        height: 100%;
-        background-color: $color-white;
-        color: $color-gray-light;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-
-        transition: .2s ease;
-
-        svg {
-          font-size: 1.5rem;
-        }
-      }
-      
-      input {
-        padding: 1rem;
-        width: 100%
-      }
-
-      &:hover {
-        .addPicture {
-          background-color: $color-gray-light;
-          color: $color-white
-        }
-      }
-    }
   }
 
   button {
-    @include button-primary(10px);
+    @include button-secondary(10px);
   }
 
   @media (max-width: $mobile) {
     gap: 1rem 5px;
-    
-    input {
-      &:not([type="file"], [type="checkbox"]) {
-        width: 49%;
-      }
-    }
 
     label {
       width: 100%;
@@ -91,5 +39,120 @@
         margin: 1rem 0;
       }
     }
+  }
+}
+
+.formClubProvider {
+  max-width: 100%;
+  width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 8px;
+
+  
+  input, textarea {
+    
+    &:not([type="file"], [type="checkbox"]) {
+      width: 49%;
+      @include input-field-register();
+    }
+
+    &:first-child {
+      font-size: 1.1rem;
+    }
+  }
+
+  fieldset {
+    width: 49%;
+
+    input {
+      &:not([type="file"], [type="checkbox"]) {
+        width: 100%;
+      }
+    }
+  }
+
+  textarea {
+    min-width: 100%;
+    min-height: 100px;
+  }
+
+  button {
+    @include button-primary(10px);
+    margin-top: 1rem;
+  }
+
+  @media (max-width: $mobile-small) {
+    gap: 2rem 5px;
+    
+    input {
+      &:not([type="file"], [type="checkbox"]) {
+        width: 100%;
+      }
+    }
+
+    fieldset {
+      width: 100%;
+
+      label {
+        display: block;
+        margin-bottom: .2rem;
+      }
+    }
+
+    label {
+      &.inputFile {
+        margin: 1rem 0;
+      }
+    }
+  }
+}
+
+.nextStepSection {
+  display: flex;
+  width: 700px;
+  max-width: 100%;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button {
+    width: 100%;
+    &:not(.nextStepButton) {
+      @include button-primary-outline(10px); 
+    }
+
+    &.nextStepButton {
+      @include button-primary(10px); 
+    }
+  }
+
+  @media (max-width: $mobile-small) {
+    flex-direction: column;
+  }
+}
+
+.modal {
+  section {
+    .productEdit, .productsAvailableToPlans {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid $color-gray-light;
+
+      button {
+        position: absolute;
+        right: 0;
+        top: .7rem;
+        
+        @include button-danger(.5rem);
+        
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    } 
   }
 }

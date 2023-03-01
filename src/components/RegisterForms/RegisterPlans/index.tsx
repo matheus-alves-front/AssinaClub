@@ -1,12 +1,17 @@
-import { Button, Card, Col, Form, Modal, Row } from "react-bootstrap"
-import { FormEvent, useContext, useEffect, useLayoutEffect, useState } from "react"
-import axios from "axios"
-import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext"
-import { Plan } from "../../../@types/PlansTypes"
-import { BsFillArrowRightSquareFill, BsFillTrashFill } from "react-icons/bs"
-import { Product } from "../../../@types/ProductTypes"
-import { getPlans } from "../../../prisma/plans"
+import { FormEvent, useContext, useEffect, useState } from "react"
 import Link from "next/link"
+import axios from "axios"
+
+import { Product } from "../../../@types/ProductTypes"
+import { Plan } from "../../../@types/PlansTypes"
+import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext"
+
+import { BsFillTrashFill } from "react-icons/bs"
+
+import styles from './registerPlans.module.scss'
+import { motion } from "framer-motion"
+import { ModalContent } from "../../UI-Components/ModalContent"
+import { IoAdd } from "react-icons/io5"
 
 export default function RegisterFormPlans() {
   const { 
@@ -17,7 +22,9 @@ export default function RegisterFormPlans() {
 
   const [isAddProduct, setIsAddProduct] = useState(false)
   const [modalPlanIndex, setModalPlanIndex] = useState(0)
-  
+
+  const [isPlansWithProducts, setIsPlansWithProducts] = useState(false)
+
   function handleModal(index: number) {
     setIsAddProduct(!isAddProduct)
     setModalPlanIndex(index)
@@ -54,13 +61,13 @@ export default function RegisterFormPlans() {
       
       setRegisterStepsContext({
         ...registerStepsContext,
+        steps: 3,
         plans: [...registerStepsContext.plans, plan]
       })
     }
     catch(err) {
       console.log(err)
     }
-
   }
 
   async function RemovePlans(clubProviderId: string | string[] | undefined, planId: string | string[] | undefined, index: number) {
@@ -94,11 +101,14 @@ export default function RegisterFormPlans() {
     const plansUpdated = [...registerStepsContext.plans]
     plansUpdated[index]?.productId.push(productId)
 
+    let isPlansWithoutProducts = plansUpdated.some((item) => item.productId.length === 0)
+
     setRegisterStepsContext({
       ...registerStepsContext,
-      steps: 4,
+      steps: isPlansWithoutProducts ? 3 : 4,
       plans: plansUpdated
     })
+    setIsPlansWithProducts(isPlansWithoutProducts)
   }
 
   async function RemoveProductToPlan(planId: string | string[], productId: string | string[], index: number) {
@@ -118,95 +128,45 @@ export default function RegisterFormPlans() {
     const indexProducts = plansUpdated[index]?.productId.indexOf(productId)
     plansUpdated[index]?.productId.splice(indexProducts, 1)
 
+    let isPlansWithoutProducts = plansUpdated.some((item) => item.productId.length === 0)
+
     setRegisterStepsContext({
       ...registerStepsContext,
+      steps: isPlansWithoutProducts ? 3 : 4,
       plans: plansUpdated
     })
+    setIsPlansWithProducts(isPlansWithoutProducts)
   }
   
   return(
-    <Row>
-      <Col className="my-2" xxl={6}>
-        <Form onSubmit={(e) => RegisterPlans(e, clubProviderId)}>
-          <Form.Group className="mb-2">
-            <Form.Label>Nome do Plano</Form.Label>
-            <Form.Control name="PlanTitle" type="text" />
-          </Form.Group>
-          <Form.Group className="mb-2">
-            <Form.Label>Descrição</Form.Label>
-            <Form.Control name="PlanDescription" as="textarea" />
-          </Form.Group>
-          <Row>
-            <Col>
-              <Form.Group className="mb-2">
-                <Form.Label>Preço</Form.Label>
-                <Form.Control name="PlanPrice" type="number" />
-              </Form.Group>
-            </Col>
-            <Col>
-              <Form.Group className="mb-2">
-                <Form.Label>Frequencia</Form.Label>
-                <Form.Control name="PlanFrequency" type="number" />
-                <Form.Text className="text-muted">
-                  De x em x meses
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="gap-2">
-            <Col md={8} xxl={12}>
-              <Button 
-                variant="primary" 
-                className="w-100" 
-                type="submit"
-              >
-                Criar Plano
-              </Button>
-            </Col>
-            <Col>
-                <Button
-                  variant="success"
-                  className="w-100 text-white"
-                  disabled={registerStepsContext?.plans[0] && registerStepsContext?.plans[0].productId.length < 2 ? true : false}
-                >
-                <Link href={'/login/club_provider'}>
-                  Ir para Seu ambiente
-                </Link>
-                </Button>
-            </Col>
-
-          </Row>
-        </Form>
-      </Col>
-      <Col xxl={6}>
-        <section className="d-block w-100" style={{overflowY: 'auto', overflowX: 'hidden', maxHeight: '75vh'}}>
+    <section className={styles.registerPlansSection}>
+      <div className={styles.registerCol}>
+        <section className={styles.plansRegisteredContainer} style={{overflowY: 'auto', overflowX: 'hidden', maxHeight: '75vh'}}>
         {!registerStepsContext.plans.length && (
-          <Card className="p-2 my-2">
-            <Card.Text>Não existem Planos</Card.Text>
-          </Card>
+          <h5>Não existem Planos</h5> 
         )}
         {registerStepsContext.plans.map((plan: Plan, index: number) => (
-            <Card className="p-2 my-2" key={index}>
-              <Card.Title>{plan.title}</Card.Title>
-              <Card.Subtitle>Preço: R${plan.price}</Card.Subtitle>
-              <Card.Body className="p-1">
-                <Card.Text className="mb-0">De {plan.deliveryFrequency} em {plan.deliveryFrequency} meses</Card.Text>
-                <Card.Text>
-                  <strong>Descrição</strong>
+            <div className={styles.plansRegistered} key={index}>
+              <header>
+                <h5>{plan.title}</h5>
+                <h6>Preço: R${plan.price}</h6>
+              </header>
+              <p className="mb-0">De {plan.deliveryFrequency} em {plan.deliveryFrequency} meses</p>
+              <details className="p-1">
+                <summary>Descrição</summary>
+                <p>
                   {plan.description}
-                </Card.Text>
-              </Card.Body>
-              <Card.Footer className="border-0 bg-transparent p-0 d-flex justify-content-between">
-                <Button 
+                </p>
+              </details>
+              <footer className="border-0 bg-transparent p-0 d-flex justify-content-between">
+                <button 
                   onClick={() => handleModal(index)} 
-                  variant="info"
-                  className="text-white"
+                  className={styles.addProductToPlan}
                 >
                   Adicionar Produtos Ao Plano
-                </Button>
-                <Button
-                  className="rounded-pill"
-                  variant="danger"
+                </button>
+                <button
+                  className={styles.removeProductToPlan}
                   onClick={() => RemovePlans(clubProviderId, plan.id, index)}
                 >
                   <BsFillTrashFill
@@ -214,51 +174,113 @@ export default function RegisterFormPlans() {
                     cursor={'pointer'}
                     className=""
                     />
-                </Button>
-              </Card.Footer>
+                </button>
+              </footer>
               {modalPlanIndex == index ?
-                <Modal show={isAddProduct} onHide={() => handleModal(index)} key={index}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Editar Produtos ao Plano {plan.title} </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
+                <motion.section 
+                  className={styles.modal}
+                  animate={isAddProduct ? "open" : "closed"}
+                  variants={{
+                    open: { opacity: 1, x: 0 },
+                    closed: { opacity: 0, x: "-100%" },
+                  }}
+                >
+                  <ModalContent title={`Editar Produtos ao Plano ${plan.title}`}>
                     {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
                     {registerStepsContext.products.map((product: Product, indexProduct: number) => {
                       return (
-                        <Card className="my-1 p-2 position-relative" key={indexProduct}>
-                          <Card.Title>{product.name}</Card.Title>
-                          <Card.Subtitle>
+                        <div className={styles.productsAvailableToPlans} key={indexProduct}>
+                          <h5>{product.name}</h5>
+                          <details>
+                            <summary>Descrição</summary>
                             {product.description}
-                          </Card.Subtitle>
+                          </details>
                           <span>Valor: R${product.value}</span>
-
-                          
-                          
                           {!plan.productId.includes(String(product.id)) ? 
-                            <BsFillArrowRightSquareFill
-                              fontSize={40} 
-                              cursor={'pointer'}
-                              onClick={() => AddProductToPlan(plan.id, product.id, index)}
-                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
-                            />
-                          :
-                            <BsFillTrashFill
-                              fontSize={40} 
-                              cursor={'pointer'}
-                              onClick={() => RemoveProductToPlan(plan.id, product.id, index)}
-                              className="position-absolute top-50 end-0 me-2 translate-middle-y text-success"
+                            <button onClick={() => AddProductToPlan(plan.id, product.id, index)}>
+                              <IoAdd
+                                fontSize={25} 
+                                fontWeight={700}
+                                cursor={'pointer'}
                               />
+                            </button>
+                          :
+                            <button onClick={() => RemoveProductToPlan(plan.id, product.id, index)}>
+                              <BsFillTrashFill
+                                fontSize={25} 
+                                cursor={'pointer'}
+                              />
+                            </button>
                           }
-                        </Card>
+                        </div>
                       )
                     })}
-                  </Modal.Body>
-                </Modal>
+                    <button 
+                      className={styles.closeModal} 
+                      onClick={() => setIsAddProduct(false)}
+                    >
+                      Fechar
+                    </button>
+                  </ModalContent>
+                </motion.section >
               : ''}
-            </Card>
+            </div>
         ))}
         </section> 
-      </Col>
-    </Row>
+      </div>
+      <div className={styles.registerCol}>
+        <form 
+          onSubmit={(e) => RegisterPlans(e, clubProviderId)}
+          className={styles.formClubProvider}
+        >
+            <input 
+              name="PlanTitle" 
+              type="text"
+              placeholder="Nome do Plano" 
+            />
+            <fieldset>
+              <label>
+                Preço
+              </label>
+              <input 
+                name="PlanPrice" 
+                type="number" 
+                placeholder="R$00,00"
+              />
+            </fieldset>
+            <fieldset>
+              <label>
+                Frequencia de x em x meses
+              </label>
+              <input 
+                name="PlanFrequency" 
+                type="number" 
+                defaultValue={1}
+                min={1}
+                max={3}
+              />
+            </fieldset>
+            <textarea 
+              name="PlanDescription" 
+              placeholder="Descreva os Benefícios do seu plano" 
+              rows={5}
+            />
+          <button  
+            className="w-100" 
+            type="submit"
+          >
+            Criar Plano
+          </button>
+        </form>
+        <button
+          className="w-100 text-white"
+          disabled={isPlansWithProducts ? true : false}
+        >
+          <Link href={'/login/club_provider'}>
+            Ir para Seu ambiente
+          </Link>
+        </button>
+      </div>
+    </section>
   )
 }
