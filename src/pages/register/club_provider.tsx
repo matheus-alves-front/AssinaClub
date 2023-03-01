@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { RegisterStepsContextTypes } from "../../@types/ContextTypes";
 import { RegisterStepsContext } from "../../contexts/RegisterStepsContext";
@@ -65,7 +65,7 @@ export default function RegisterClubProvider() {
                 <span>{registerStepsContext?.steps > 3 ? <IoCheckmarkDoneSharp /> : 3}</span>
                 <progress value={registerStepsContext?.steps > 3 ? 100 : 0} key={3} />
               </div>
-              <div className={registerStepsContext?.steps > 4 ? styles.lastStepDone : styles.lastStep }>
+              <div className={registerStepsContext?.steps > 3 ? styles.lastStepDone : styles.lastStep }>
                 <span><IoCheckmarkDoneSharp /></span>
               </div>
             </div>
