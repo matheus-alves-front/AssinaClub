@@ -50,14 +50,43 @@
 
 .mySignatureDetails {
   position: relative;
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
   padding: .5rem;
   
   .sliderCards {
-    .card {
-      width: 300px;
-      min-width: 300px;
+    .plansCard {
+      width: 350px;
+      min-width: 350px;
+      position: relative;
+      color: $color-primary;
+      flex: 1;
+
+      p, h5 {
+        font-size: 1rem;
+        margin-bottom: .5rem
+      }
+      
+      .cancelButton {
+        @include button-danger(5px);
+        width: 80px;
+        position: absolute;  
+        top: 12px;
+        right: 10px;
+      }
+      
+      .plansCardDetails {
+        display: flex;
+        flex-direction: column;
+        
+        a {
+          margin-top: auto;
+  
+          .buttonLink {
+            @include button-primary(10px);
+          }
+        }
+      }
     }
   }
 }

@@ -92,32 +92,31 @@ export function MySignaturesDetails({AssignatureDetails, userId}: MySignaturesPr
           sliderClassName={styles.sliderCards}
         >
         {AssignatureDetails?.map((plan, index) => (
-          <div className={styles.card} key={index}>
+          <div className={styles.plansCard} key={index}>
             <CardBox cardRef={cardRef} title={String(plan.club?.clubName)}>
-              <div className="bg-transparent border-0 position-relative">
-                <h5 className="mt-2">{plan.club?.clubName}</h5>
-                <small>Assinante desde: xx/xx/xxxx</small>
-                <button
-                  onClick={() => setIsCancelModal(true)}
-                  className="position-absolute end-0 top-0 m-3"
+              <button
+                onClick={() => setIsCancelModal(true)}
+                className={styles.cancelButton}
                 >
-                  Cancelar
-                </button>
-              </div>
-              <div>
-                <h6>{plan.title}</h6>
-                <p>{plan.description}</p>
+                Cancelar
+              </button>
+              <div className={styles.plansCardDetails}> 
+                <h5>{plan.title}</h5>
+                <small><strong>Assinante desde:</strong></small>
+                <p>xx/xx/xxxx</p>
+                <small><strong>Próxima Entrega:</strong></small>
+                <p>xx/xx/xxxx</p>
                 <ProductsTableAssignature clubName={String(plan.club?.clubName)} productsInfo={plan.productsOfPlan} />
-                <p><strong>Próxima Entrega:</strong></p>
-                <p>...</p>
-              </div>
-              <footer className="d-flex justify-content-between">
+                <details>
+                  <summary>Descrição</summary>
+                  <p>{plan.description}</p>
+                </details>
                 <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
-                  <Button variant="dark">
+                  <button className={styles.buttonLink}>
                     Ir para Área dos Assinantes
-                  </Button>
+                  </button>
                 </Link>
-              </footer>
+              </div>
             </CardBox>
             <Modal show={isCancelModal} onHide={() => setIsCancelModal(false)}>
               <Modal.Header closeButton>
