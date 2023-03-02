@@ -34,8 +34,6 @@ export default function Slider(props: SliderType) {
         <>
             <div
                 className={`${sliderClassName} ${styles.sliderStyles}`}
-                ref={cardsWrapperRef}
-                style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
             >
                 <SliderButtons
                     infoList={infoList}
@@ -48,7 +46,12 @@ export default function Slider(props: SliderType) {
                     setMaxMovesIterations={setMaxMovesIterations}
                     setCardsWrapperPosition={setCardsWrapperPosition}
                 />
-                {props.children}
+                <div
+                    ref={cardsWrapperRef}
+                    style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
+                >
+                    {props.children}
+                </div>
             </div>
         </>
     )

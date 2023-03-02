@@ -1,6 +1,13 @@
 .sliderStyles {
-  display: flex;
-  gap: 20px;
   position: relative;
-  transition: .2s ease-in-out;
+  overflow: hidden;
+  width: 100%;
+  padding: 20px;
+  
+  > div {
+    transition: .4s ease-in-out;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+  }
 }
