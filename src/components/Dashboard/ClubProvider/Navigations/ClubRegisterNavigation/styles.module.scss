@@ -1,0 +1,6 @@
+@import '../styles.module.scss';
+
+.darkButton {
+    @include darkButton;
+    margin-bottom: 10px;
+}

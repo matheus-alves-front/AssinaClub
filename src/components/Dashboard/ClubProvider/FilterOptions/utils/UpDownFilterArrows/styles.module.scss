@@ -1,0 +1,27 @@
+@import '/src/styles/theme.scss';
+
+.arrowsWrapper {
+    @include flex-center;
+
+    div:last-child {
+        margin-left: 5px;  
+    }
+}
+
+.filterOptions, .filterOptionsSelected{
+    @include flex-center;
+    transition: 0.2s all;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+.filterOptions:hover {
+    background-color: $color-primary;
+    color: #FFFFFF;   
+}
+
+.filterOptionsSelected:hover {
+    background-color: #FFFFFF;   
+    color: $color-primary;
+}

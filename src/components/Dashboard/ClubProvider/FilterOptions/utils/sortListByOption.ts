@@ -52,9 +52,6 @@ export function sortListByOption(
     switch (option) {
 
         //* Plans Filter Options
-        case 'Título':
-            sortByParam("title" as keyof Copy, plansCopy, setPlansInfo)
-            break;
         case 'Preço':
             sortByParam("price" as keyof Copy, plansCopy, setPlansInfo)
             break;
@@ -68,23 +65,6 @@ export function sortListByOption(
         //* Products Filter Options
         case 'Valor':
             sortByParam("value" as keyof Copy, productsCopy, setProductsInfo)
-            break;
-        case 'Nome':
-            sortByParam("name" as keyof Copy, productsCopy, setProductsInfo)
-            break;
-        case 'SKU':
-            sortByParam("sku" as keyof Copy, productsCopy, setProductsInfo)
-            break;
-
-        //* Subscribers Filter Options
-        case 'Assinantes':
-            sortByParam("name" as keyof Copy, subscribersCopy, setSubscribersInfo)
-            break;
-        case 'Email':
-            sortByParam("email" as keyof Copy, subscribersCopy, setSubscribersInfo)
-            break;
-        case 'CPF':
-            sortByParam("cpf" as keyof Copy, subscribersCopy, setSubscribersInfo)
             break;
 
         default:

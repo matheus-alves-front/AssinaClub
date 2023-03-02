@@ -1,0 +1,14 @@
+@import '/src/styles/theme.scss';
+@import '../styles.module.scss';
+
+.filterButton {
+    @include button-primary-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
+}
+
+.deleteButton, .cancelButton {
+    @include button-danger-outline(10px);
+    @include flex-center();
+    transition: 0.2s all;
+}

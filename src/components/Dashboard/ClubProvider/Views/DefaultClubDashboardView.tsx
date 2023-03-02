@@ -1,16 +1,16 @@
-import { Col, Container, Row } from "react-bootstrap";
 import { DivisionColumn } from "../../../Divisions/DivisionColumn";
 import { DivisionLine } from "../../../Divisions/DivisionLine";
-import { ClubRegisterNavigation } from "../Navigations/ClubRegisterNavigation";
-import { MyNavigation } from "../Navigations/MyNavigation";
+import { ClubRegisterNavigation } from "../Navigations/ClubRegisterNavigation/ClubRegisterNavigation";
+import { MyNavigation } from "../Navigations/MyNavigation/MyNavigation";
 import { PlansRegister } from "../Registers/Plans/PlansRegister";
 import { ProductsRegister } from "../Registers/Products/ProductsRegister";
-import { PlansTable } from "../Tables/PlansTable";
-import { ProductsTable } from "../Tables/ProductsTable";
-import { SubscribersTable } from "../Tables/SubscribersTable";
-import styles from "../../../../styles/pages/clubDashboard.module.scss"
+import { PlansList } from "../Lists/PlansList/PlansList";
+import { ProductsList } from "../Lists/ProductsList/ProductsList";
+import { SubscribersList } from "../Lists/SubscriberList/SubscribersList";
 import { useContext } from "react";
 import { ClubNavigationContext, DeletingPlansContext, InfoContext } from "../../../../contexts/ClubDashboard/ClubDashboardContext";
+import styles from "./styles.module.scss"
+import { AddProductToPlanForm } from "../Registers/AddProductToPlanForm/AddProductToPlanForm";
 
 export function DefaultClubDashboardView() {
 
@@ -19,69 +19,57 @@ export function DefaultClubDashboardView() {
     const { deletingPlans, plansThatCanBeDeleted, } = useContext(DeletingPlansContext)
 
     const { plansInfo } = useContext(InfoContext)
+    
+    const {
+        focusMode
+    } = useContext(ClubNavigationContext)
 
     return (
         <>
-            <Row className="p-4 w-100">
-                <Col md={2} className="d-flex justify-content-center">
-                    <MyNavigation />
-                </Col>
-                <Col md="auto">
-                    <DivisionColumn />
-                </Col>
-                <Col>
-                    {myNavScreenSelected === "subscribers" &&
-                        <Container className={`${styles.easeCome}`}>
-                            <SubscribersTable />
-                        </Container>
-                    }
-                    {myNavScreenSelected === "plans" &&
-                        (
-                            !deletingPlans ? (
-                                <Container className={`${styles.easeCome}`}>
-                                    <PlansTable
-                                        plansInfo={plansInfo}
-                                    />
-                                </Container>
-                            ) : (
-                                <Container className={`${styles.easeCome}`}>
-                                    <PlansTable
-                                        plansInfo={plansThatCanBeDeleted}
-                                    />
-                                </Container>
-                            )
-                        )
-                    }
-                    {myNavScreenSelected === "products" &&
-                        <Container className={`${styles.easeCome}`}>
-                            <ProductsTable />
-                        </Container>
-                    }
-                </Col>
-            </Row>
-            <Row className="w-100">
-                <DivisionLine />
-            </Row>
-            <Row className="p-4 w-100">
-                <Col md={2} className="d-flex justify-content-center">
-                    <ClubRegisterNavigation />
-                </Col>
-                <Col md="auto">
-                    <DivisionColumn />
-                </Col>
-                <Col md="auto" className="mx-auto">
-                    {clubRegNavScreenSelected === "products" &&
-                        <Container className={`${styles.easeCome}`}>
-                            <ProductsRegister />
-                        </Container>
-                    }
-                    {clubRegNavScreenSelected === "plans" &&
-                        <Container className={`${styles.easeCome}`}>
-                            <PlansRegister />
-                        </Container>
-                    }
-                </Col>
-            </Row>
+            <section className={styles.upperSection}>
+                {
+                    focusMode === null &&
+                    <>
+                        <MyNavigation />
+                        <DivisionColumn />
+                    </>
+                }
+                {
+                    myNavScreenSelected === "subscribers" && (
+                        <div className={styles.wrapper}>
+                            <h1>Meus Assinantes</h1>
+                            <SubscribersList />
+                        </div>
+                    )
+                }
+                {
+                    myNavScreenSelected === "plans" &&
+                    <PlansList
+                        plansInfo={deletingPlans ? plansThatCanBeDeleted : plansInfo}
+                    />
+                }
+                {
+                    myNavScreenSelected === "products" &&
+                    <ProductsList />
+                }
+            </section>
+            <DivisionLine />
+            <section className={styles.lowerSection}>
+                <ClubRegisterNavigation />
+                <DivisionColumn />
+                {
+                    clubRegNavScreenSelected === "products" &&
+                    <ProductsRegister />
+                }
+                {
+                    clubRegNavScreenSelected === "plans" &&
+                    <PlansRegister />
+                }
+                {
+                    clubRegNavScreenSelected === "productToPlan" &&
+                    <AddProductToPlanForm />
+                }
+            </section>
         </>
     )
 }

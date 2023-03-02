@@ -78,7 +78,7 @@
   }
 
   button {
-    @include button-primary(10px);
+    @include button-primary(13px);
     margin-top: 1rem;
   }
 
@@ -122,7 +122,7 @@
     }
 
     &.nextStepButton {
-      @include button-primary(10px); 
+      @include button-primary(13px); 
     }
   }
 
