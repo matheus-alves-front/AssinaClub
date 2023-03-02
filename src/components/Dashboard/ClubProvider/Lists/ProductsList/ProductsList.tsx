@@ -8,24 +8,11 @@ import styles from "./styles.module.scss"
 
 export function ProductsList() {
 
-    const {
-        productsInfo
-    } = useContext(InfoContext)
+    const { productsInfo } = useContext(InfoContext)
 
-    const {
-        focusMode,
-        setFocusMode
-    } = useContext(ClubNavigationContext)
+    const { focusMode, setFocusMode } = useContext(ClubNavigationContext)
 
-    const {
-        setSelectedProductInAddPlan
-    } = useContext(AddProdToPlanContext)
-
-
-    //* Variables used in the slider
-    const [cardsWrapperPosition, setCardsWrapperPosition] = useState(0)
-    const [movesIterations, setMovesIterations] = useState(0)
-    const [maxMovesIterations, setMaxMovesIterations] = useState(0)
+    const { setSelectedProductInAddPlan } = useContext(AddProdToPlanContext)
 
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
@@ -39,26 +26,13 @@ export function ProductsList() {
     }, []);
 
     return (
-        <section className={
-            (focusMode === 'products' ? styles.listWrapperFocused : (
-                (movesIterations === maxMovesIterations) && (movesIterations !== 0)) ?
-                styles.listWrapperEnd : (
-                    movesIterations === 0 ? styles.listWrapperBegin : styles.listWrapper
-                )
-            )
-        }>
+        <section className={focusMode === 'products' ? styles.listWrapperFocused : styles.listWrapper}>
             <Slider
                 sliderClassName={styles.cardsWrapper}
                 wrapperRef={cardsWrapperRef}
                 infoList={productsInfo}
                 cardRefWidth={cardRefWidth}
                 cardsWrapperRefWidth={cardsWrapperRefWidth}
-                cardsWrapperPosition={cardsWrapperPosition}
-                movesIterations={movesIterations}
-                maxMovesIterations={maxMovesIterations}
-                setMovesIterations={setMovesIterations}
-                setMaxMovesIterations={setMaxMovesIterations}
-                setCardsWrapperPosition={setCardsWrapperPosition}
             >
                 {productsInfo &&
                     <>

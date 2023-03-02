@@ -1,4 +1,4 @@
-import { ReactNode, RefObject, SetStateAction } from "react"
+import { ReactNode, RefObject, useState } from "react"
 import SliderButtons from "./SliderButtons"
 
 export type SliderType = {
@@ -7,13 +7,7 @@ export type SliderType = {
     wrapperRef: RefObject<HTMLDivElement>,
     infoList: any[],
     cardRefWidth: number,
-    cardsWrapperRefWidth: number,
-    cardsWrapperPosition: number,
-    movesIterations: number,
-    maxMovesIterations: number,
-    setMovesIterations: (value: SetStateAction<number>) => void,
-    setMaxMovesIterations: (value: SetStateAction<number>) => void,
-    setCardsWrapperPosition: (value: SetStateAction<number>) => void    
+    cardsWrapperRefWidth: number
 }
 
 export default function Slider(props: SliderType) {
@@ -23,14 +17,12 @@ export default function Slider(props: SliderType) {
         wrapperRef,
         infoList,
         cardRefWidth,
-        cardsWrapperRefWidth,
-        cardsWrapperPosition,
-        movesIterations,
-        maxMovesIterations,
-        setMovesIterations,
-        setMaxMovesIterations,
-        setCardsWrapperPosition,
+        cardsWrapperRefWidth
     } = props
+
+    const [cardsWrapperPosition, setCardsWrapperPosition] = useState(0)
+    const [movesIterations, setMovesIterations] = useState(0)
+    const [maxMovesIterations, setMaxMovesIterations] = useState(0)
 
     return (
         <>
