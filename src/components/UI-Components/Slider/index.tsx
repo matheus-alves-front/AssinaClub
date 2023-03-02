@@ -1,23 +1,29 @@
-import { ReactNode, RefObject, useState } from "react"
+import { ReactNode, RefObject, useEffect, useRef, useState } from "react"
 import SliderButtons from "./SliderButtons"
+import observeRefsWidth from "./utils/observeRefsWidth";
+
+import styles from './styles.module.scss'
 
 export type SliderType = {
     sliderClassName: string,
     children: ReactNode,
-    wrapperRef: RefObject<HTMLDivElement>,
     infoList: any[],
-    cardRefWidth: number,
-    cardsWrapperRefWidth: number
+    cardRefWidth: number
 }
 
 export default function Slider(props: SliderType) {
 
+    const cardsWrapperRef = useRef() as RefObject<HTMLDivElement>;
+    const [cardsWrapperRefWidth, setcardsWrapperRefWidth] = useState<number>(0)
+
+    useEffect(() => {
+        observeRefsWidth(cardsWrapperRef, setcardsWrapperRefWidth)
+    }, []);
+
     const {
         sliderClassName,
-        wrapperRef,
         infoList,
         cardRefWidth,
-        cardsWrapperRefWidth
     } = props
 
     const [cardsWrapperPosition, setCardsWrapperPosition] = useState(0)
@@ -26,22 +32,22 @@ export default function Slider(props: SliderType) {
 
     return (
         <>
-            <SliderButtons
-                infoList={infoList}
-                cardRefWidth={cardRefWidth}
-                cardsWrapperRefWidth={cardsWrapperRefWidth}
-                cardsWrapperPosition={cardsWrapperPosition}
-                movesIterations={movesIterations}
-                setMovesIterations={setMovesIterations}
-                maxMovesIterations={maxMovesIterations}
-                setMaxMovesIterations={setMaxMovesIterations}
-                setCardsWrapperPosition={setCardsWrapperPosition}
-            />
             <div
-                className={sliderClassName}
-                ref={wrapperRef}
+                className={`${sliderClassName} ${styles.sliderStyles}`}
+                ref={cardsWrapperRef}
                 style={{ transform: `translate(${cardsWrapperPosition}px, 0)` }}
             >
+                <SliderButtons
+                    infoList={infoList}
+                    cardRefWidth={cardRefWidth}
+                    cardsWrapperRefWidth={cardsWrapperRefWidth}
+                    cardsWrapperPosition={cardsWrapperPosition}
+                    movesIterations={movesIterations}
+                    setMovesIterations={setMovesIterations}
+                    maxMovesIterations={maxMovesIterations}
+                    setMaxMovesIterations={setMaxMovesIterations}
+                    setCardsWrapperPosition={setCardsWrapperPosition}
+                />
                 {props.children}
             </div>
         </>

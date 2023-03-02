@@ -1,0 +1,71 @@
+@import '/src/styles/theme.scss';
+
+.mySignaturesCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 0;
+
+  
+  button {
+    @include button-secondary-outline(10px);
+  }
+  
+  .withoutSignatures {
+    width: 100%;
+    
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .signatures {
+    width: 49%;
+    padding: 0 .5rem;
+    display: flex;
+    flex-direction: column;
+    
+    h5, p {
+      margin-bottom: .5rem;
+    }
+
+    h5 {
+      color: $color-secondary;
+      font-size: 1rem;
+    }
+
+    h6 {
+      font-size: .8rem;
+    }
+
+    a {
+      color: $color-secondary;
+      margin-top: .5rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.mySignatureDetails {
+  position: relative;
+  max-width: 100%;
+  overflow: hidden;
+  padding: .5rem;
+  
+  .sliderCards {
+    .card {
+      width: 300px;
+      min-width: 300px;
+    }
+  }
+}
+
+@media (max-width: $mobile-small) {
+  .mySignaturesCard {
+    .signatures {
+      width: 100%;
+    }
+  }
+}

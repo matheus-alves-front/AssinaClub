@@ -17,22 +17,16 @@ export function ProductsList() {
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
 
-    const cardsWrapperRef = useRef() as RefObject<HTMLDivElement>;
-    const [cardsWrapperRefWidth, setcardsWrapperRefWidth] = useState<number>(0)
-
     useEffect(() => {
         observeRefsWidth(cardRef, setcardRefWidth)
-        observeRefsWidth(cardsWrapperRef, setcardsWrapperRefWidth)
     }, []);
 
     return (
         <section className={focusMode === 'products' ? styles.listWrapperFocused : styles.listWrapper}>
             <Slider
                 sliderClassName={styles.cardsWrapper}
-                wrapperRef={cardsWrapperRef}
                 infoList={productsInfo}
                 cardRefWidth={cardRefWidth}
-                cardsWrapperRefWidth={cardsWrapperRefWidth}
             >
                 {productsInfo &&
                     <>

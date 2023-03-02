@@ -29,9 +29,6 @@ export function PlansList({
     const cardRef = useRef() as RefObject<HTMLDivElement>;
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
 
-    const cardsWrapperRef = useRef() as RefObject<HTMLDivElement>;
-    const [cardsWrapperRefWidth, setcardsWrapperRefWidth] = useState<number>(0)
-
     const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
 
     const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
@@ -40,7 +37,6 @@ export function PlansList({
 
     useEffect(() => {
         observeRefsWidth(cardRef, setcardRefWidth)
-        observeRefsWidth(cardsWrapperRef, setcardsWrapperRefWidth)
     }, []);
 
     return (
@@ -48,10 +44,8 @@ export function PlansList({
         <section className={focusMode === 'plans' ? styles.listWrapperFocused : styles.listWrapper}>
             <Slider
                 sliderClassName={styles.cardsWrapper}
-                wrapperRef={cardsWrapperRef}
                 infoList={plansInfo}
                 cardRefWidth={cardRefWidth}
-                cardsWrapperRefWidth={cardsWrapperRefWidth}
             >
                 {plansInfo &&
                     <>
