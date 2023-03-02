@@ -4,6 +4,9 @@ import { CardBox } from "../../../UI-Components/CardBox"
 import styles from './myInformationsCard.module.scss'
 
 export function MyInformationsCard({subscriberData}: DashboardType) {
+  const firstName = subscriberData?.name.split(" ")[0]
+  const lastName = subscriberData?.name.split(' ').slice(1).join(' ')
+
   return (
     <CardBox title="Suas informações:">
       <form 
@@ -19,7 +22,7 @@ export function MyInformationsCard({subscriberData}: DashboardType) {
               placeholder="Nome"
               maxLength={14}
               minLength={2} 
-              defaultValue={subscriberData?.name}
+              defaultValue={firstName}
             />
           </div>
           <div className={styles.cardCol}>
@@ -30,7 +33,7 @@ export function MyInformationsCard({subscriberData}: DashboardType) {
               placeholder="Sobrenome" 
               maxLength={14}
               minLength={2} 
-              defaultValue={subscriberData?.name}
+              defaultValue={lastName}
             />
           </div>
           <div className={styles.cardCol}>

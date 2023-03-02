@@ -11,6 +11,7 @@ import { CardBox } from "../../../UI-Components/CardBox";
 import styles from './mySignatures.module.scss';
 import Slider from "../../../UI-Components/Slider";
 import observeRefsWidth from "../../../UI-Components/Slider/utils/observeRefsWidth";
+import React from "react";
 
 type MySignaturesProps = {
   AssignatureDetails?: ClubWithPlan[]
@@ -92,31 +93,33 @@ export function MySignaturesDetails({AssignatureDetails, userId}: MySignaturesPr
           sliderClassName={styles.sliderCards}
         >
         {AssignatureDetails?.map((plan, index) => (
-          <div className={styles.plansCard} key={index}>
-            <CardBox cardRef={cardRef} title={String(plan.club?.clubName)}>
+          <React.Fragment key={index}>
+            <CardBox 
+              className={styles.plansCard} 
+              cardRef={cardRef} 
+              title={String(plan.club?.clubName)}
+            >
               <button
                 onClick={() => setIsCancelModal(true)}
                 className={styles.cancelButton}
                 >
                 Cancelar
-              </button>
-              <div className={styles.plansCardDetails}> 
-                <h5>{plan.title}</h5>
-                <small><strong>Assinante desde:</strong></small>
-                <p>xx/xx/xxxx</p>
-                <small><strong>Próxima Entrega:</strong></small>
-                <p>xx/xx/xxxx</p>
-                <ProductsTableAssignature clubName={String(plan.club?.clubName)} productsInfo={plan.productsOfPlan} />
-                <details>
-                  <summary>Descrição</summary>
-                  <p>{plan.description}</p>
-                </details>
-                <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
-                  <button className={styles.buttonLink}>
-                    Ir para Área dos Assinantes
-                  </button>
-                </Link>
-              </div>
+              </button> 
+              <h5>{plan.title}</h5>
+              <small><strong>Assinante desde:</strong></small>
+              <p>xx/xx/xxxx</p>
+              <small><strong>Próxima Entrega:</strong></small>
+              <p>xx/xx/xxxx</p>
+              <ProductsTableAssignature clubName={String(plan.club?.clubName)} productsInfo={plan.productsOfPlan} />
+              <details>
+                <summary>Descrição</summary>
+                <p>{plan.description}</p>
+              </details>
+              <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
+                <button className={styles.buttonLink}>
+                  Ir para Área dos Assinantes
+                </button>
+              </Link>
             </CardBox>
             <Modal show={isCancelModal} onHide={() => setIsCancelModal(false)}>
               <Modal.Header closeButton>
@@ -143,7 +146,7 @@ export function MySignaturesDetails({AssignatureDetails, userId}: MySignaturesPr
                 </Button>
               </Modal.Footer>
             </Modal>
-          </div>
+          </React.Fragment>
         ))}
       </Slider>  
       }

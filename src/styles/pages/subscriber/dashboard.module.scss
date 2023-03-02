@@ -4,7 +4,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  margin: 2rem 0;
+  margin: 2rem auto;
 
   .dashboardNavigation {
     min-width: 200px;
@@ -126,6 +126,10 @@
           padding-top: .5rem;
         }
       }
+    }
+
+    .dashboardContent {
+      max-width: 100%;
     }
   }
 }
