@@ -43,7 +43,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
           </Head>
           <Header />
           {isLoad ?
-            <Component {...pageProps} />
+            <main id="pageContainer">
+              <Component {...pageProps} />
+            </main>
             :
             <LoaderSpinner />
           }

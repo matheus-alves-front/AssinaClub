@@ -1,38 +1,11 @@
 @import '/src/styles/theme.scss';
 
-@mixin listWrapper() {
+.sliderFocused {
     animation: easeCome 0.4s ease-out;
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-right: 2px solid $color-gray-ultra-light;
-    border-left: 2px solid $color-gray-ultra-light;
-    padding: 20px 0;
-    padding-left: 20px;
-}
-
-@mixin listWrapperFocused() {
-    @include listWrapper;
     background-color: $color-dark;
 }
 
-@mixin listWrapperBegin() {
-    border-left: none;
-}
-
-@mixin listWrapperEnd() {
-    border-right: none;
-}
-
-@mixin cardsWrapper {
-    @include flex-center;
-    transition: 0.5s all;
-    justify-content: flex-start;
-    gap: 40px;
-    width: 100%;
-}
-
-@mixin card {
+.card {
     @include flex-column;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
     height: 100%;

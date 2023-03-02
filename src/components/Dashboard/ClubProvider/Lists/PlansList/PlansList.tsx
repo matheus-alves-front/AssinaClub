@@ -7,8 +7,8 @@ import { ClubDashboardGlobalContext } from '../../../../../contexts/ClubDashboar
 import PlanCard from '../Cards/PlanCard/PlanCard';
 import { deletePlanAndUpdate } from './utils/deletePlan';
 import observeRefsWidth from '../../../../UI-Components/Slider/utils/observeRefsWidth';
-import styles from "./styles.module.scss"
 import Slider from '../../../../UI-Components/Slider';
+import styles from "../styles.module.scss"
 
 type PlansTableProps = {
     plansInfo: Plan[]
@@ -19,89 +19,72 @@ export function PlansList({
 }: PlansTableProps) {
 
     const { deletingPlans } = useContext(DeletingPlansContext)
-
     const { setUpdatePlans } = useContext(ClubDashboardUpdateContext)
-
     const { focusMode, setFocusMode } = useContext(ClubNavigationContext)
-
     const { setSelectedPlanInAddPlan } = useContext(AddProdToPlanContext)
+    const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
     const cardRef = useRef() as RefObject<HTMLDivElement>;
+
     const [cardRefWidth, setcardRefWidth] = useState<number>(0)
-
-    const cardsWrapperRef = useRef() as RefObject<HTMLDivElement>;
-    const [cardsWrapperRefWidth, setcardsWrapperRefWidth] = useState<number>(0)
-
     const [planBeingDeleted, setPlanBeingDeleted] = useState<Plan | null>(null)
-
-    const { clubProviderInfo } = useContext(ClubDashboardGlobalContext)
 
     const clubProviderId = String(clubProviderInfo?.id)
 
     useEffect(() => {
         observeRefsWidth(cardRef, setcardRefWidth)
-        observeRefsWidth(cardsWrapperRef, setcardsWrapperRefWidth)
     }, []);
 
     return (
-
-        <section className={focusMode === 'plans' ? styles.listWrapperFocused : styles.listWrapper}>
-            <Slider
-                sliderClassName={styles.cardsWrapper}
-                wrapperRef={cardsWrapperRef}
-                infoList={plansInfo}
-                cardRefWidth={cardRefWidth}
-                cardsWrapperRefWidth={cardsWrapperRefWidth}
-            >
-                {plansInfo &&
-                    <>
-                        {plansInfo.map((plan, index) => (
-                            <div
-                                onClick={() => {
-                                    if (focusMode === 'plans') {
-                                        setSelectedPlanInAddPlan(plan)
-                                        setFocusMode(null)
-                                    }
-                                }}
-                                className={styles.planCard}
-                                ref={cardRef}
-                                key={index}
-                            >
-                                <PlanCard
-                                    plan={plan}
-                                />
-                                {
-                                    deletingPlans &&
-                                    <button
-                                        onClick={() => {
-                                            setPlanBeingDeleted(plan)
-                                            deletePlanAndUpdate(
-                                                plan?.id,
-                                                clubProviderId,
-                                                setPlanBeingDeleted,
-                                                setUpdatePlans
-                                            )
-                                        }}
-                                        disabled={!!planBeingDeleted}
-                                    >
-                                        {planBeingDeleted?.id === plan.id ?
-                                            <Oval
-                                                width={18}
-                                                color="#FFFFFF"
-                                                secondaryColor="gray"
-                                                visible={true}
-                                                ariaLabel='oval-loading'
-                                                strokeWidth={3}
-                                                strokeWidthSecondary={4}
-
-                                            /> : "X"}
-                                    </button>
+        <Slider
+            sliderClassName={focusMode === 'plans' ? styles.sliderFocused : ''}
+            infoList={plansInfo}
+            cardRefWidth={cardRefWidth}
+        >
+            {plansInfo &&
+                <>
+                    {plansInfo.map((plan, index) => (
+                        <div
+                            onClick={() => {
+                                if (focusMode === 'plans') {
+                                    setSelectedPlanInAddPlan(plan)
+                                    setFocusMode(null)
                                 }
-                            </div>
-                        ))}
-                    </>
-                }
-            </Slider>
-        </section>
+                            }}
+                            ref={cardRef}
+                            key={index}
+                        >
+                            <PlanCard plan={plan} />
+                            {
+                                deletingPlans &&
+                                <button
+                                    onClick={() => {
+                                        setPlanBeingDeleted(plan)
+                                        deletePlanAndUpdate(
+                                            plan?.id,
+                                            clubProviderId,
+                                            setPlanBeingDeleted,
+                                            setUpdatePlans
+                                        )
+                                    }}
+                                    disabled={!!planBeingDeleted}
+                                >
+                                    {planBeingDeleted?.id === plan.id ?
+                                        <Oval
+                                            width={18}
+                                            color="#FFFFFF"
+                                            secondaryColor="gray"
+                                            visible={true}
+                                            ariaLabel='oval-loading'
+                                            strokeWidth={3}
+                                            strokeWidthSecondary={4}
+                                        /> : "X"}
+                                </button>
+                            }
+                        </div>
+                    ))}
+                </>
+            }
+        </Slider>
     )
 }
