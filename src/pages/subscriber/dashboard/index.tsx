@@ -60,7 +60,6 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
     }
 
     setIsDropdownMobile(false)
-    console.log(eventKey)
   }, [eventKey])
 
   return (

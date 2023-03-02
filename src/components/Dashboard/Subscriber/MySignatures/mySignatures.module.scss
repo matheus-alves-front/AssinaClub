@@ -23,6 +23,7 @@
     padding: 0 .5rem;
     display: flex;
     flex-direction: column;
+    margin-bottom: 1rem;
     
     h5, p {
       margin-bottom: .5rem;
@@ -38,7 +39,8 @@
     }
 
     a {
-      color: $color-secondary;
+      @include button-primary(10px);
+      font-size: .8rem;
       margin-top: .5rem;
 
       &:hover {

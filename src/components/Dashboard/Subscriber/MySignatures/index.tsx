@@ -42,7 +42,7 @@ export function MySignaturesCard({AssignatureDetails}: MySignaturesProps) {
             <h6><strong>Proxima entrega em:</strong></h6>
             <p>xx/xx/xxxx</p>
             <Link className="text-info" href={`/club_providers/${plan.club?.clubName}/clubArea`}>
-              Ir para Área do Clube
+              Área do Clube
             </Link>
           </div>  
         ))}
