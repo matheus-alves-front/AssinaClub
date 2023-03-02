@@ -57,7 +57,7 @@
     }
 }
 
-.filterOptions, .filterOptionsBlack, .tran2 {
+.tran2 {
     transition: 0.2s all;
 }
 
@@ -69,15 +69,7 @@
     transition: 0.6s all ease;
 }
 
-.filterOptions:hover {
-    background-color: #212529;
-    color: #FFFFFF;   
-}
 
-.filterOptionsBlack:hover {
-    background-color: #FFFFFF;   
-    color: #212529;
-}
 
 .editAdminImage {
     width: 16px;

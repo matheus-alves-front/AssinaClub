@@ -1,0 +1,53 @@
+@import '/src/styles/theme.scss';
+
+.optionsWrapper {
+    width: 100%;
+    margin: 10px 0;
+
+    > button {
+        border-bottom: 0;
+    }
+
+    > div:first-child > button {
+        border-radius: 10px 10px 0 0;
+
+    }
+
+    > div:last-child > button{
+        border-radius: 0 0 10px 10px;
+        border-bottom: 1px solid #DDDDDD;
+    }
+}
+
+.filterOption {
+    @include flex-center;
+    @include button-primary(0);
+    justify-content: space-between;
+    transition: 0.2s all;
+    padding: 15px 20px;
+    color: $color-primary;
+    background-color: #FBFBFB;
+    border: 1px solid #DDDDDD;
+    border-radius: 0;
+    width: 100%;    
+}
+
+.filterInput {
+    @include input-field-primary;
+    width: 100%;
+    border-top: 1px solid #DDDDDD;
+    margin: 0 0 10px 0;
+    padding: 10px 0 5px 5px;
+    color: $color-gray-light;
+    animation: easeCome 0.4s ease-out;
+
+    &::placeholder {
+        color: $color-gray-light;
+        font-size: 0.9rem;
+        font-style: italic;
+    }
+}
+
+.filterInput:last-child {
+    border-top: none;
+}

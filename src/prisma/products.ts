@@ -1,6 +1,6 @@
 import { prisma } from './PrismaClient'
 
-export async function getProducts(ClubProviderId: string ) {
+export async function getProducts(ClubProviderId: string) {
     const products = await prisma.product.findMany({
         where: {
             clubProviderId: ClubProviderId
@@ -15,25 +15,15 @@ export async function getProduct(ProductId: string) {
         where: {
             id: ProductId
         }
-    })     
+    })
 
     return product
 }
 
 export async function checkIfProductExists(ProductId: string) {
-    const product = await getProduct(ProductId)    
+    const product = await getProduct(ProductId)
 
     if (!product) return false
 
     return true
 }
-
-// export async function getProductsOfPlan(planId: string[]) {
-//     return await prisma.product.findMany({
-//       where: {
-//         plansId: {
-//           in: planId
-//         }
-//       }
-//     });
-//   }

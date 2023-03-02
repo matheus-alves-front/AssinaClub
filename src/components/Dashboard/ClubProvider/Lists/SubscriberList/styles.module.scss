@@ -1,0 +1,37 @@
+@import '/src/styles/theme.scss';
+
+.cardsWrapper {
+    width: 100%;
+    animation: easeCome 0.4s ease-out;
+}
+
+.subscriberCard {
+    @include flex-between;
+    transition: 0.2s all;
+    padding: 10px 20px;
+    border-bottom: 1px solid $color-gray-ultra-light-2;
+    overflow: hidden;
+
+    &:hover {
+        background-color: $color-gray-ultra-light;
+        cursor: pointer;
+    }
+
+    > p {
+        white-space: nowrap;
+        width: calc(25% - 50px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.subscriberCard:first-child {
+    border-top: 1px solid $color-gray-ultra-light-2;
+}
+
+.subscriberImage {
+    @include flex-center;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}

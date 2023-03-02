@@ -1,0 +1,22 @@
+@import '/src/styles/theme.scss';
+@import '../styles.module.scss';
+
+.listWrapper, .listWrapperEnd, .listWrapperBegin {
+    @include listWrapper;
+}
+
+.listWrapperFocused {
+    @include listWrapperFocused;
+}
+
+.listWrapperBegin {
+    @include listWrapperBegin;
+}
+
+.listWrapperEnd {
+    @include listWrapperEnd;
+}
+
+.cardsWrapper {
+    @include cardsWrapper;
+}
