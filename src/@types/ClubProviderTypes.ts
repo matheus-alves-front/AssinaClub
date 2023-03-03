@@ -4,7 +4,7 @@ export type ClubProvider = {
     hostName: string
     cpf: string
     cnpj: string
-    creationDate: String
+    creationDate: string
     email: string
     password: string
     description: string

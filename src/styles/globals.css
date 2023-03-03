@@ -71,5 +71,9 @@
   }
 
   h1, h2, h3 {
-    margin-bottom: 1rem !important;
+    margin-bottom: 1rem;
+  }
+
+  img {
+    max-width: 100%;
   }
