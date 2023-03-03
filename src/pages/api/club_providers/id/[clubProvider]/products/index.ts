@@ -1,77 +1,61 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Request, Response } from "express-serve-static-core"
+import { createRouter, expressWrapper } from 'next-connect';
+import cors from 'cors'
+import { upload } from '../../../../../../configs/S3Config';
+import { handleDeleteProducts, handleGetProducts, handlePostProducts } from '../../../../../../controllers/products';
+import { getClubProvider } from '../../../../../../prisma/clubProviders';
+import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema';
+import { productsSchema } from '../../../../schemas/productsSchema';
 
-import { ProductType, Product } from '../../../../../../@types/ProductTypes'
-import { getProducts } from '../../../../../../prisma/products'
-import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
+type CustomRequest = NextApiRequest & Request<any> & {
+    files: {
+        location: string
+    }[]
+}
 
-import { prisma } from '../../../../../../prisma/PrismaClient'
+type CustomResponse = NextApiResponse & Response<any>
 
-export default async function handleProducts(
-    req: NextApiRequest,
-    res: NextApiResponse<ProductType>
-) {
-    const { method } = req
-    const clubProviderId = String(req.query.clubProvider)
+const productsRouter = createRouter<CustomRequest, CustomResponse>();
 
-    if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
-        message: "Provider not found!"
-    })
+const PRODUCTS_IMAGES_MAX_AMOUNT = 5
 
-    if (method === "GET") {
-        const products = await getProducts(clubProviderId)
-
-        const { planId } = req.query
-
-        if(planId) {
-            const filteredProducts = products.filter(product => product.plansId.includes(String(planId)))
-            
-            return res.status(200).json({
-                data: filteredProducts.reverse(),
-            })
-        }
-
-        return res.status(200).json({
-            data: products.reverse(),
-        })
-
-    } else if (method === "POST") {
-        const {
-            name,
-            description,
-            sku,
-            value
-        }: Product = req.body
-
-        const product = await prisma.product.create({
-            data: {
-                name,
-                description,
-                sku,
-                value,
-                clubProviderId
-            }
-        })
-
-        return res.status(201).json({
-            data: product,
-            message: "Product created with sucess!"
+productsRouter
+    .use(expressWrapper(cors()))
+    .use(upload.array('file', PRODUCTS_IMAGES_MAX_AMOUNT))
+    .use(async (req, res, next) => {
+        const clubProviderId = String(req.query.clubProvider)               
+        const clubProvider = await getClubProvider(clubProviderId)
+        if (clubProvider) return next()
+        else return res.status(404).json({
+            message: "Provider not found!"
         })
     }
+    )
+    .use(async (req, res, next) => (
+        validateErrorsInSchema(req, res, next, productsSchema)
+    )
+    )
+    .get(handleGetProducts)
+    .post(handlePostProducts)
+    .delete(handleDeleteProducts)
 
-    else if (method === "DELETE") {
+export default productsRouter.handler({
+    onError: (err: any, _, res) => {
+        console.log(err)
+        res.status(500).json({
+            message: "Something broke!"
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
 
-        await prisma.product.deleteMany({
-            where: {
-                clubProviderId
-            }
-        })
-
-        return res.status(200).json({
-            message: "Products deleted with sucess!"
-        })
+export const config = {
+    api: {
+        bodyParser: false,
     }
-
-    return res.status(404).json({
-        message: 'Route not found.'
-    })
-} 
+}

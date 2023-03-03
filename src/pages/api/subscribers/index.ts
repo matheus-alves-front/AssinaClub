@@ -3,7 +3,7 @@ import { Request, Response } from "express-serve-static-core"
 import { createRouter, expressWrapper } from 'next-connect';
 import cors from 'cors'
 import { upload } from '../../../configs/S3Config';
-import { handleGetSubscribers, handlePostSubscribers } from '../../../controllers/subscriberController';
+import { handleGetSubscribers, handlePostSubscribers } from '../../../controllers/subscribers';
 import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 import { subscriberRegisterSchema } from '../schemas/subscriberSchema';
 

@@ -3,7 +3,7 @@ import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 import { Request, Response } from "express-serve-static-core"
 import { createRouter, expressWrapper } from 'next-connect';
 import cors from 'cors'
-import { handleDeleteClubProviderById, handleGetClubProviderById, handlePutClubProvidersById } from '../../../controllers/clubProvidersController';
+import { handleDeleteClubProviderById, handleGetClubProviderById, handlePutClubProvidersById } from '../../../controllers/clubProviders';
 import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
 import { validateClubProviderConflict } from '../../../middleware/validateClubProviderConflict';
 import { upload } from '../../../configs/S3Config';
