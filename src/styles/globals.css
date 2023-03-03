@@ -7,6 +7,12 @@
     font-family: 'Golos Text', sans-serif;
   }
 
+  #pageContainer {
+    width: 100%;
+    max-width: 1440px;
+    margin: auto;
+  }
+
   * {
     scrollbar-width: auto;
     scrollbar-color: #0084ff #ffffff;
@@ -35,6 +41,10 @@
     cursor: pointer;
     display: block;
     color: inherit;
+  }
+
+  details {
+    cursor: pointer;
   }
 
   fieldset {

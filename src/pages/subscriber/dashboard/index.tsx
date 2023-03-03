@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { GetSessionParams, getSession } from "next-auth/react"
 import { prisma } from "../../../prisma/PrismaClient"
@@ -10,11 +10,10 @@ import { Plan } from "../../../@types/PlansTypes"
 import { Product } from "../../../@types/ProductTypes"
 
 import { MyInformationsCard } from "../../../components/Dashboard/Subscriber/MyInformationsCard"
-import { MySignatures, MySignaturesCard } from "../../../components/Dashboard/Subscriber/MySignatures"
+import { MySignaturesDetails, MySignaturesCard } from "../../../components/Dashboard/Subscriber/MySignatures"
 import { ChangeAccount } from "../../../components/Dashboard/Subscriber/ChangeAccount"
 import { DivisionColumn } from "../../../components/Divisions/DivisionColumn"
 
-import { Accordion, Col, Container, Nav, Row, Tab } from "react-bootstrap"
 import { IoChevronDownOutline } from 'react-icons/io5'
 import styles from '../../../styles/pages/subscriber/dashboard.module.scss'
 
@@ -61,7 +60,6 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
     }
 
     setIsDropdownMobile(false)
-    console.log(eventKey)
   }, [eventKey])
 
   return (
@@ -123,16 +121,20 @@ export default function Dashboard({subscriberData, signatures, AssignatureDetail
         </aside>
     
         <DivisionColumn />
-        <section>
+        <section className={styles.dashboardContent}>
           <h1 className={styles.sectionName}>{sectionName}</h1>
           {eventKey === "my-account" && (
             <>
-              <MyInformationsCard subscriberData={subscriberData} />
-              <MySignaturesCard AssignatureDetails={AssignatureDetails} />
+              <div className={styles.col}>
+                <MyInformationsCard subscriberData={subscriberData} />
+              </div>
+              <div className={styles.col}>
+                <MySignaturesCard AssignatureDetails={AssignatureDetails} />
+              </div>
             </>
           )}
           {eventKey === "my-signatures" &&  
-            <MySignatures userId={String(subscriberData?.id)} AssignatureDetails={AssignatureDetails} />
+            <MySignaturesDetails userId={String(subscriberData?.id)} AssignatureDetails={AssignatureDetails} />
           }
 
           {eventKey === "wish-list" &&  ''}

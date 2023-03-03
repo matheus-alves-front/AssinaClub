@@ -99,6 +99,7 @@
             position: fixed;
             left: 0;
             bottom: 0;
+            z-index: 9;
             display: flex;
             flex-direction: column;
             animation: sidebarMenuAnimation .5s ease;

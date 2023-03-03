@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Product } from '../../../../../../@types/ProductTypes'
 import { InfoContext } from '../../../../../../contexts/ClubDashboard/ClubDashboardContext'
-import styles from '../styles.module.scss'
+import styles from '../../styles.module.scss'
 
 type ProductCardType = {
     product: Product | null
@@ -18,7 +18,7 @@ export default function ProductCard({
     if(!product) return <></>
 
     return (
-        <div className={styles.prodCard}>
+        <div className={styles.card}>
             <img src='' alt='' />
             <p>{product.name}</p>
             <p>{product.description}</p>
@@ -30,7 +30,6 @@ export default function ProductCard({
                 )).map(plan => plan.title).join(", ")}
             </p>
             <p>
-
                 Opções adicionais:
                 {/* {product?.additionalOptions?.map(option => option.title).join(", ")} */}
             </p>
