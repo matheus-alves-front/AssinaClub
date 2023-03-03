@@ -5,7 +5,7 @@ export default function validateErrorsInSchema(req: NextApiRequest, res: NextApi
 
     const { method } = req
 
-    if (!schema || !['POST', 'PUT'].includes(String(method)) || !req.body) return next()
+    if (!schema || !['POST'].includes(String(method)) || !req.body) return next()
 
     const validated = schema.validate(
         { ...(!!req?.body?.body ? JSON.parse(req.body.body) : req.body) },

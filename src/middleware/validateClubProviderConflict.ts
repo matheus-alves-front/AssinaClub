@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { prisma } from "../prisma/PrismaClient"
 
-export async function validateClubProviderConflict(req: NextApiRequest, res: NextApiResponse, next: any) {
+export async function validateClubProviderConflict(req: NextApiRequest, res: NextApiResponse, next: any) {    
 
-    const { clubName, email } = req.body
+    if (!['POST'].includes(String(req.method)) || !req?.body) return next()
+
+    const { clubName, email } = req?.body
 
     try {
         if (clubName) {
