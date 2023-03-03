@@ -1,3 +1,4 @@
+import React from "react";
 import { RefObject, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
@@ -8,10 +9,10 @@ import { ProductsTableAssignature } from "./ProductsTableAssignature";
 import { Button, Card, Col, Modal, Row } from "react-bootstrap";
 import { CardBox } from "../../../UI-Components/CardBox";
 
-import styles from './mySignatures.module.scss';
 import Slider from "../../../UI-Components/Slider";
 import observeRefsWidth from "../../../UI-Components/Slider/utils/observeRefsWidth";
-import React from "react";
+
+import styles from './mySignatures.module.scss';
 
 type MySignaturesProps = {
   AssignatureDetails?: ClubWithPlan[]
@@ -78,14 +79,12 @@ export function MySignaturesDetails({AssignatureDetails, userId}: MySignaturesPr
   return (
     <section className={styles.mySignatureDetails}>
       {!AssignatureDetails?.length ? 
-        <>
+        <div className={styles.noSignatures}>
           <p>Você ainda não é assinante de nenhum clube</p>
           <Link href={'/club_providers/clubs_board'}>
-            <Button variant="primary">
-              Ver os Clubes
-            </Button>
+            Ver os Clubes
           </Link>
-        </> 
+        </div> 
       : 
         <Slider 
           cardRefWidth={cardRefWidth}

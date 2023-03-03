@@ -55,6 +55,23 @@
   width: 100%;
   overflow: hidden;
   padding: .5rem;
+
+  .noSignatures {
+    width: 70%;
+    margin: 1rem .5rem;
+    box-shadow: 0 0 16px 0px rgba(0,0,0,0.3);
+    padding: 1.5rem;
+    border-radius: 10px;
+    
+    p {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    a {
+      @include button-secondary(10px);
+    }
+  }
   
   .sliderCards {
     .plansCard {
@@ -118,4 +135,11 @@
 }
 
 @media (max-width: $mobile) {
+  .mySignatureDetails {
+    .noSignatures {
+      width: 90%;
+      margin: 1rem auto;
+
+    }
+  }
 }
