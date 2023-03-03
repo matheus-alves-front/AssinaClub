@@ -11,81 +11,82 @@ datasource db {
 }
 
 model Subscriber {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  cpf String
-  birthDate String
-  email String @unique
-  password String
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  cpf             String
+  birthDate       String
+  email           String         @unique
+  password        String
   signaturesClubs ClubProvider[] @relation(fields: [clubProviderIds], references: [id])
-  clubProviderIds String[] @db.ObjectId
-  signaturePlans Plan[] @relation(fields: [planIds], references: [id])
-  planIds String[] @db.ObjectId
+  clubProviderIds String[]       @db.ObjectId
+  signaturePlans  Plan[]         @relation(fields: [planIds], references: [id])
+  planIds         String[]       @db.ObjectId
+  image           String?
 }
 
 model ClubProvider {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  clubName String @unique
-  hostName String
-  cpf String
-  cnpj String
-  creationDate String
-  email String @unique
-  password String
-  description String
-  // logo
-  // banner
-  admins Admin[]
-  products Product[]
-  plans Plan[]
-  subscribers Subscriber[] @relation(fields: [subscriberIds], references: [id])
-  subscriberIds String[] @db.ObjectId
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  clubName      String       @unique
+  hostName      String
+  cpf           String
+  cnpj          String
+  creationDate  String
+  email         String       @unique
+  password      String
+  description   String
+  logo          String?
+  banner        String?
+  admins        Admin[]
+  products      Product[]
+  plans         Plan[]
+  subscribers   Subscriber[] @relation(fields: [subscriberIds], references: [id])
+  subscriberIds String[]     @db.ObjectId
 }
 
 model Admin {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  name String 
-  birthDate String
-  email String @unique
-  password String
-  occupation String
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  birthDate         String
+  email             String        @unique
+  password          String
+  occupation        String
   clubProviderAdmin ClubProvider? @relation(fields: [clubProviderId], references: [id])
-  clubProviderId String @db.ObjectId
+  clubProviderId    String        @db.ObjectId
+  userImage         String?
 }
 
 model Product {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  description String
-  sku String
-  value Float
-  additionalOptions String[] @db.ObjectId
-  memberOfPlans Plan[] @relation(fields: [plansId], references: [id])
-  plansId String[] @db.ObjectId
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  description         String
+  sku                 String
+  value               Float
+  additionalOptions   String[]      @db.ObjectId
+  memberOfPlans       Plan[]        @relation(fields: [plansId], references: [id])
+  plansId             String[]      @db.ObjectId
   clubProviderProduct ClubProvider? @relation(fields: [clubProviderId], references: [id])
-  clubProviderId String @db.ObjectId
+  clubProviderId      String        @db.ObjectId
+  images              String[]
 }
 
 model Option {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  options String[]  
-  productId String @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  options   String[]
+  productId String   @db.ObjectId
 }
 
 model Plan {
-  id String    @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  description String
-  price Float
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  title             String
+  description       String
+  price             Float
   deliveryFrequency Int
-  productsPlan Product[] @relation(fields: [productId], references: [id])
-  productId String[] @db.ObjectId
-
-  subscribers Subscriber[] @relation(fields: [subscriberIds], references: [id])
-  subscriberIds String[] @db.ObjectId
-
-  clubProviderPlan ClubProvider? @relation(fields: [clubProviderId], references: [id])
-  clubProviderId String @db.ObjectId
+  productsPlan      Product[]     @relation(fields: [productId], references: [id])
+  productId         String[]      @db.ObjectId
+  subscribers       Subscriber[]  @relation(fields: [subscriberIds], references: [id])
+  subscriberIds     String[]      @db.ObjectId
+  clubProviderPlan  ClubProvider? @relation(fields: [clubProviderId], references: [id])
+  clubProviderId    String        @db.ObjectId
+  images            String[]
 }
-

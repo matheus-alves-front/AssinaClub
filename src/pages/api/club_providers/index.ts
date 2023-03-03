@@ -1,65 +1,53 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from 'bcrypt';
-import { ValidationErrorItem } from '@hapi/joi';
-
-import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
-import { getClubProviders, validateClubProviderConflict } from '../../../prisma/clubProviders'
-
-import { prisma } from '../../../prisma/PrismaClient'
+import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
+import { Request, Response } from "express-serve-static-core"
+import { createRouter, expressWrapper } from 'next-connect';
+import cors from 'cors'
+import { handleGetClubProviders, handlePostClubProviders } from '../../../controllers/clubProvidersController';
 import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
-import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
+import { validateClubProviderConflict } from '../../../middleware/validateClubProviderConflict';
+import { upload } from '../../../configs/S3Config';
 
-export default async function handleClubProviders(
-    req: NextApiRequest,
-    res: NextApiResponse<ClubProviderType>
-) {
-    const { method } = req
+type CustomRequest = NextApiRequest & Request<any> & {
+    files: {
+        location: string
+    }[]
+}
 
-    if (method === "GET") {
-        const clubProviders = await getClubProviders() 
+type CustomResponse = NextApiResponse & Response<any>
 
-        return res.status(200).json({
-            data: clubProviders,
-        })
-    } else if (method === "POST") {
-        const {
-            clubName,
-            hostName,
-            cpf,
-            cnpj,
-            email,
-            password,
-            description
-        }: ClubProvider = req.body        
+const clubProvidersRouter = createRouter<CustomRequest, CustomResponse>();
 
-        if (validateErrorsInSchema(clubProviderRegisterSchema, req, res) !== 'ok') return
+clubProvidersRouter
+    .use(expressWrapper(cors()))
+    .use(upload.array('file', 2))
+    .use(async (req, res, next) => (
+        validateErrorsInSchema(req, res, next, clubProviderRegisterSchema)
+    )
+    )
+    .use(async (req, res, next) => (
+        validateClubProviderConflict(req, res, next)
+    )
+    )
+    .get(handleGetClubProviders)
+    .post(handlePostClubProviders)
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+export default clubProvidersRouter.handler({
+    onError: (err: any, _, res) => {
+        console.log(err)
+        res.status(500).json({
+            message: "Something broke!"
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
 
-        const clubNameCleaned = clubName.trim().replaceAll(" ","-")
-
-        const clubProviderCreation = {
-            data: {
-                clubName: clubNameCleaned,
-                hostName,
-                cpf,
-                cnpj,
-                password: hashedPassword,
-                email,
-                description,
-                creationDate: new Date(Date.now()).toISOString()
-            }
-        }
-
-        if (await validateClubProviderConflict(clubName, email, res) !== 'ok') return
-
-        else {
-            const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
-
-            return res.status(201).json({
-                data: clubProvider,
-            })
-        }
+export const config = {
+    api: {
+        bodyParser: false,
     }
-    return res.status(404).json({ message: 'Route not found.' })
 }

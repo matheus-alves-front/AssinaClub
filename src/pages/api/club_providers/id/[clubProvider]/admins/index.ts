@@ -8,7 +8,7 @@ import { checkIfClubProviderExists } from '../../../../../../prisma/clubProvider
 
 import { prisma } from '../../../../../../prisma/PrismaClient'
 import { adminRegisterSchema } from '../../../../schemas/adminSchema'
-import validateErrorsInSchema from '../../../../../../utils/validateErrosInSchema'
+import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema'
 
 export default async function handleAdminsOfClubProviders(
   req: NextApiRequest,

@@ -7,7 +7,7 @@ import { LoginRequest, LoginType } from '../../../@types/LoginType';
 
 import { prisma } from '../../../prisma/PrismaClient';
 import { loginAttemptSchema } from '../schemas/loginSchema';
-import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
+import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 
 export default async function handleLogin(
     req: NextApiRequest,
