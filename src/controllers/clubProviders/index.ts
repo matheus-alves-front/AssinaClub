@@ -18,11 +18,20 @@ export async function handleGetClubProviderById(
 ) {
     const clubProviderId = req.query.clubProviderId as string
 
-    const clubProvider = await getClubProvider(clubProviderId)
+    try {
+        const clubProvider = await getClubProvider(clubProviderId)
 
-    return res.status(200).json({
-        data: clubProvider
-    })
+        return res.status(200).json({
+            data: clubProvider
+        })
+
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
+
 }
 
 
@@ -30,53 +39,43 @@ export async function handleGetClubProviders(
     req: NextApiRequest,
     res: NextApiResponse<ClubProviderType>
 ) {
-    const clubProviders = await getClubProviders()
+    try {
+        const clubProviders = await getClubProviders()
 
-    return res.status(200).json({
-        data: clubProviders
-    })
+        return res.status(200).json({
+            data: clubProviders
+        })
+
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
 }
 
 export async function handlePostClubProviders(
     req: CustomRequest,
     res: NextApiResponse<ClubProviderType>
 ) {
-    const {
-        clubName,
-        hostName,
-        cpf,
-        cnpj,
-        email,
-        password,
-        description
-    }: ClubProvider = req.body
+    const { password } = req.body
 
-    let { files } = req
-
-    files = files.sort((a: any, b: any) => {
+    // Assumes that the banner is the larger image
+    const [logo, banner] = req.files.sort((a: any, b: any) => {
         if (a.size > b.size) return 1
         else return -1
     })
 
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    const clubNameCleaned = clubName.trim().replaceAll(" ", "-")
-
-    const clubProviderCreation = {
+    const clubProvider = await prisma.clubProvider.create({
         data: {
-            clubName: clubNameCleaned,
-            hostName,
-            cpf,
-            cnpj,
-            password: hashedPassword,
-            email,
-            description,
+            ...req.body,
+            clubName: req.body.clubName.trim().replaceAll(" ", "-"),
+            password: (password ? bcrypt.hashSync(password, 10) : password),
             creationDate: new Date(Date.now()).toISOString(),
-            logo: files[0].location,
-            banner: files[1].location,
+            logo: logo.location,
+            banner: banner.location,
         }
-    }
-    const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
+    })
 
     return res.status(201).json({
         data: clubProvider
@@ -90,31 +89,13 @@ export async function handlePutClubProvidersById(
 ) {
     const clubProviderId = req.query.clubProviderId as string
 
-    const {
-        clubName,
-        hostName,
-        cpf,
-        cnpj,
-        email,
-        password,
-        description,
-        removeSubscriber
-    }: ClubProvider = req.body
-
-    let hashedPassword
-
-    if (password) hashedPassword = bcrypt.hashSync(password, 10)
+    const { password, removeSubscriber } = req.body
 
     const clubProvider = await prisma.clubProvider.update({
         where: { id: clubProviderId },
         data: {
-            clubName,
-            hostName,
-            cpf,
-            cnpj,
-            email,
-            password: hashedPassword,
-            description
+            ...req.body,
+            password: (password ? bcrypt.hashSync(password, 10) : password),
         }
     })
 

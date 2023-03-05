@@ -7,17 +7,17 @@ import validateErrorsInSchema from '../../../../../../middleware/validateErrosIn
 import { upload } from '../../../../../../configs/S3Config'
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { handleDeleteAdmins, handleGetAdmins, handlePostAdmins } from '../../../../../../controllers/admins'
+import { Admin } from '../../../../../../@types/AdminsClubProviderTypes'
 
 type CustomRequest = NextApiRequest & Request & {
-  files: { location: string }[]
   file: { location: string }
 }
 
 type CustomResponse = NextApiResponse & Response
 
-const plansRouter = createRouter<CustomRequest, CustomResponse>();
+const adminsRouter = createRouter<CustomRequest, CustomResponse>();
 
-plansRouter
+adminsRouter
   .use(expressWrapper(cors()))
   .use(upload.single('file'))
   .use(validateClubProviderExistence)
@@ -28,7 +28,7 @@ plansRouter
   .post(handlePostAdmins)
   .delete(handleDeleteAdmins)
 
-export default plansRouter.handler({
+export default adminsRouter.handler({
   onError: (err: any, _, res) => {
     console.error(err)
     res.status(500).json({

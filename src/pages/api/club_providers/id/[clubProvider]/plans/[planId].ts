@@ -1,98 +1,47 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Plan } from '../../../../../../@types/PlansTypes'
+import { createRouter, expressWrapper } from 'next-connect'
+import cors from 'cors'
+import { Request, Response } from "express-serve-static-core"
+import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
+import { upload } from '../../../../../../configs/S3Config'
+import { handleDeletePlan, handleGetPlan, handlePutPlan } from '../../../../../../controllers/plans'
 
-import { PlansType, Plan } from '../../../../../../@types/PlansTypes'
-import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
-import { getPlan } from '../../../../../../prisma/plans'
-import { createProductToPlanRelation, removeProductToPlanRelation } from '../../../../../../prisma/plansProductRelation'
-import { getProduct } from '../../../../../../prisma/products'
+type CustomRequest = NextApiRequest & Request & {
+  files: { location: string }[]
+  locals?: {
+    plan: Plan
+  } 
+}
 
-import { prisma } from '../../../../../../prisma/PrismaClient'
+type CustomResponse = NextApiResponse & Response
 
-export default async function handlePlansOfClubProviders(
-  req: NextApiRequest,
-  res: NextApiResponse<PlansType>
-) {
-  const { method } = req
-  const clubProviderId = String(req.query.clubProvider)
-  const planId = String(req.query.planId)
+const plansRouter = createRouter<CustomRequest, CustomResponse>();
 
-  if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
-    message: "Provider not found!"
-  })
+plansRouter
+  .use(expressWrapper(cors()))
+  .use(upload.array('file', 2))
+  .use(validateClubProviderExistence)
+  .get(handleGetPlan)
+  .put(handlePutPlan)
+  .delete(handleDeletePlan)
 
-  const plan = await getPlan(planId)
-  
-  if (!plan) {
-    return res.status(404).json({
-      message: "Plan not found!"
-    })
-  }
-
-  if (method === "GET") {
-    return res.status(200).json({
-      data: plan,
-    })
-  } else if (method === "PUT") {
-    const {
-      title,
-      description,
-      price,
-      deliveryFrequency,
-      productId,
-      removeProduct
-    }: Plan = req.body
-
-    const productIdString = String(req.body.productId)
-
-    if (productId) {
-      const product = await getProduct(productIdString) 
-
-      if (!product) {
-        return res.status(404).json({
-          message: `Product not found`,
-        })
-      }
-
-      if (removeProduct) {
-        removeProductToPlanRelation(productIdString, planId)
-
-        return res.status(201).json({
-          message: `Product Removed from Plan ${product?.name}`,
-        })
-      }
-
-      createProductToPlanRelation(productIdString, planId)
-
-      return res.status(201).json({
-        message: `Product Added to Plan ${product?.name}`,
-      })
-    }
-
-    const plan = await prisma.plan.update({
-      where: {
-        id: planId
-      },
-      data: {
-        title,
-        description,
-        price,
-        deliveryFrequency,
-        productId
-      }
+export default plansRouter.handler({
+  onError: (err: any, _, res) => {
+    console.error(err)
+    res.status(500).json({
+      message: "Something broke!"
     });
+  },
+  onNoMatch: (_, res) => {
+    res.status(404).json({
+      message: "Page is not found"
+    });
+  },
+});
 
-    return res.status(201).json({
-      data: plan,
-    })
-  } else if (method === "DELETE") {
-    await prisma.plan.delete({
-      where: { id: planId }
-    })
-
-    return res.status(201).json({
-      message: "Plan Deleted",
-    })
+export const config = {
+  api: {
+    bodyParser: false,
   }
-
-  return res.status(404).json({ message: 'Route not found.' })
 }

@@ -13,14 +13,14 @@ export async function handleGetProducts(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = String(req.query.clubProvider)
-
-    const products = await getProducts(clubProviderId)
+    const clubProviderId = req.query.clubProvider as string
 
     const { planId } = req.query
 
+    const products = await getProducts(clubProviderId)
+
     if (planId) {
-        const filteredProducts = products.filter(product => product.plansId.includes(String(planId)))
+        const filteredProducts = products.filter(product => product.plansId.includes(planId as string))
 
         return res.status(200).json({
             data: filteredProducts.reverse()
@@ -36,45 +36,47 @@ export async function handlePostProducts(
     req: CustomRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = String(req.query.clubProvider)
+    try {
+        const product = await prisma.product.create({
+            data: {
+                ...req.body,
+                clubProviderId: req.query.clubProvider as string,
+                images: req.files.map(file => file.location)
+            }
+        })
 
-    const {
-        name,
-        description,
-        sku,
-        value
-    }: Product = req.body
+        return res.status(201).json({
+            data: product,
+            message: "Product created with sucess!"
+        })
 
-    const product = await prisma.product.create({
-        data: {
-            name,
-            description,
-            sku,
-            value,
-            clubProviderId,
-            images: req.files.map(file => file.location)
-        }
-    })
-
-    return res.status(201).json({
-        data: product,
-        message: "Product created with sucess!"
-    })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
 }
 
 export async function handleDeleteProducts(
     req: CustomRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = String(req.query.clubProvider)
+    try {
+        await prisma.product.deleteMany({
+            where: {
+                clubProviderId: req.query.clubProvider as string
+            }
+        })
 
-    await prisma.product.deleteMany({
-        where: {
-            clubProviderId
-        }
-    })
+        return res.status(200).json({
+            message: "Products deleted with sucess!"
+        })
 
-    return res.status(200).json({
-        message: "Products deleted with sucess!"
-    })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            message: 'Something went wrong!'
+        })
+    }
 }

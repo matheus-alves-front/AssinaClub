@@ -1,13 +1,30 @@
-import { Admin } from "@prisma/client"
 import { NextApiRequest, NextApiResponse } from "next"
-import { deleteAllClubProviderAdmins, getAdmins } from "../../prisma/adminsClubProviders"
+import { deleteAllClubProviderAdmins, getAdmin, getAdmins } from "../../prisma/adminsClubProviders"
 import bcrypt from "bcrypt"
 import { prisma } from "../../prisma/PrismaClient"
+import { Admin } from "../../@types/AdminsClubProviderTypes"
 
 type CustomRequest = NextApiRequest & {
     file: {
         location: string
     }
+    locals?: {
+        admin: Admin
+    }
+}
+
+export async function handleGetAdmin(
+    req: CustomRequest,
+    res: NextApiResponse
+) {
+    if (req.locals) {
+        return res.status(200).json({
+            data: req.locals.admin
+        })
+    }
+    return res.status(200).json({
+        message: "Admin not found!"
+    })
 }
 
 export async function handleGetAdmins(
@@ -35,30 +52,21 @@ export async function handlePostAdmins(
     req: CustomRequest,
     res: NextApiResponse
 ) {
-    const {
-        name,
-        birthDate,
-        email,
-        password,
-        occupation,
-    }: Admin = req.body
+    const { password } = req.body
 
     const { file: image } = req
 
     try {
         const admin = await prisma.admin.create({
             data: {
-                name,
-                birthDate,
-                email,
+                ...req.body,
                 password: bcrypt.hashSync(password, 10),
-                occupation,
                 clubProviderId: req.query.clubProvider as string,
                 userImage: image.location
             }
         });
 
-        return res.status(201).json({   
+        return res.status(201).json({
             data: admin
         })
 
@@ -70,8 +78,42 @@ export async function handlePostAdmins(
     }
 }
 
-export async function handleDeleteAdmins(
+export async function handlePutAdmin(
     req: CustomRequest,
+    res: NextApiResponse
+) {
+    const { password } = req.body
+
+    const admin = await prisma.admin.update({
+        where: {
+            id: req.query.clubProviderAdmin as string
+        },
+        data: {
+            ...req.body,
+            password: (password ? bcrypt.hashSync(password, 10) : password),
+        }
+    })
+
+    return res.status(200).json({
+        data: admin,
+    })
+}
+
+export async function handleDeleteAdmin(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    await prisma.admin.delete({
+        where: { id: req.query.clubProviderAdmin as string }
+    })
+
+    return res.status(201).json({
+        message: "Account Deleted"
+    })
+}
+
+export async function handleDeleteAdmins(
+    req: NextApiRequest,
     res: NextApiResponse
 ) {
     const clubProviderId = req.query.clubProvider as string

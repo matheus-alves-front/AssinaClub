@@ -1,11 +1,25 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { Plan } from "../../@types/PlansTypes"
 import { getPlans } from "../../prisma/plans"
 import { prisma } from "../../prisma/PrismaClient"
 import { Request } from "express-serve-static-core"
+import { getProduct } from "../../prisma/products"
+import { createProductToPlanRelation, removeProductToPlanRelation } from "../../prisma/plansProductRelation"
 
 type CustomRequest = NextApiRequest & Request & {
     files: { location: string }[]
+}
+
+export async function handleGetPlan(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const clubProviderId = req.query.clubProvider as string
+
+    const plans = await getPlans(clubProviderId)
+
+    return res.status(200).json({
+        data: plans.reverse()
+    })
 }
 
 export async function handleGetPlans(
@@ -27,23 +41,13 @@ export async function handlePostPlans(
 ) {
     const clubProviderId = req.query.clubProvider as string
 
-    const {
-        title,
-        description,
-        price,
-        deliveryFrequency
-    }: Plan = JSON.parse(req.body.body)
-
     const { files: images } = req
 
     const imagesUrls = images.map(image => image.location)
 
     const plan = await prisma.plan.create({
         data: {
-            title,
-            description,
-            price,
-            deliveryFrequency,
+            ...req.body,
             clubProviderId,
             images: imagesUrls
         }
@@ -52,4 +56,66 @@ export async function handlePostPlans(
     return res.status(201).json({
         data: plan
     })
+}
+
+export async function handlePutPlan(
+    req: CustomRequest,
+    res: NextApiResponse
+) {
+    const { removeProduct, productId } = req.body
+
+    const planId = req.query.planId as string
+
+    if (productId) {
+
+        const product = await getProduct(productId)
+
+        if (!product) {
+            return res.status(404).json({
+                message: `Product not found`
+            })
+        }
+
+        if (removeProduct) {
+            removeProductToPlanRelation(productId, planId)
+            return res.status(201).json({
+                message: `Product Removed from Plan ${product?.name}`
+            })
+        }
+
+        createProductToPlanRelation(productId, planId)
+        return res.status(201).json({
+            message: `Product Added to Plan ${product?.name}`
+        })
+    }
+
+    const plan = await prisma.plan.update({
+        where: {
+            id: planId
+        },
+        data: {
+            ...req.body
+        }
+    });
+
+    return res.status(201).json({
+        data: plan
+    })
+}
+
+export async function handleDeletePlan(
+    req: CustomRequest,
+    res: NextApiResponse
+) {
+    try {
+        await prisma.plan.delete({
+            where: { id: req.query.planId as string }
+        })
+    
+        return res.status(201).json({
+            message: "Plan Deleted",
+        })
+    } catch (error) {
+        
+    }
 }

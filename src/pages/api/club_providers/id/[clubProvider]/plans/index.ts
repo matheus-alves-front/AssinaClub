@@ -5,6 +5,8 @@ import { Request, Response } from "express-serve-static-core"
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { upload } from '../../../../../../configs/S3Config'
 import { handleGetPlans, handlePostPlans } from '../../../../../../controllers/plans'
+import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema'
+import { planRegisterSchema } from '../../../../schemas/planSchema'
 
 type CustomRequest = NextApiRequest & Request & {
   files: { location: string }[]
@@ -17,6 +19,10 @@ const plansRouter = createRouter<CustomRequest, CustomResponse>();
 plansRouter
   .use(expressWrapper(cors()))
   .use(upload.array('file', 2))
+  .use(async (req, res, next) => (
+    validateErrorsInSchema(req, res, next, planRegisterSchema)
+  )
+  )
   .use(validateClubProviderExistence)
   .get(handleGetPlans)
   .post(handlePostPlans)
