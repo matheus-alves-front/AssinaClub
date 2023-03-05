@@ -60,7 +60,7 @@ export async function handlePostAdmins(
                 ...req.body,
                 password: bcrypt.hashSync(password, 10),
                 clubProviderId: req.query.clubProvider as string,
-                userImage: image.location
+                image: image.location
             }
         });
 

@@ -1,36 +1,37 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Request, Response } from "express-serve-static-core"
-import { createRouter, expressWrapper } from 'next-connect';
-import cors from 'cors'
+import { createRouter } from 'next-connect';
 import { upload } from '../../../configs/S3Config';
 import { handleGetSubscribers, handlePostSubscribers } from '../../../controllers/subscribers';
 import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 import { subscriberRegisterSchema } from '../schemas/subscriberSchema';
+import { validateSubscriberEmailConflict } from '../../../middleware/validateSubscriberEmailConflict';
 
-type CustomRequest = NextApiRequest & Request<any> & {
+type CustomRequest = NextApiRequest & Request & {
     file: {
-        key: string
+        location: string
     }
 }
 
 type CustomResponse = NextApiResponse & Response<any>
 
-const subscriberRouter = createRouter<CustomRequest, CustomResponse>();
+const subscribersRouter = createRouter<CustomRequest, CustomResponse>();
 
-subscriberRouter
-    .use(expressWrapper(cors()))
+subscribersRouter
     .use(upload.single('file'))
     .use(async (req, res, next) => {
         return validateErrorsInSchema(req, res, next, subscriberRegisterSchema)
     }
     )
+    .use(validateSubscriberEmailConflict)
     .get(handleGetSubscribers)
     .post(handlePostSubscribers)
 
-export default subscriberRouter.handler({
+export default subscribersRouter.handler({
     onError: (err: any, _, res) => {
         res.status(500).json({
-            message: "Something broke!"
+            message: `Something broke!`,
+            error: `${err}`
         });
     },
     onNoMatch: (_, res) => {

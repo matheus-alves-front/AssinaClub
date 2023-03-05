@@ -6,6 +6,7 @@ import validateClubProviderExistence from '../../../../../../../../middleware/va
 import validateErrorsInSchema from '../../../../../../../../middleware/validateErrosInSchema'
 import { optionRegisterSchema } from '../../../../../../schemas/optionSchema'
 import { handleGetOptions, handlePostOptions } from '../../../../../../../../controllers/options'
+import { validateProductExistence } from '../../../../../../../../middleware/validateProductExistence'
 
 type CustomRequest = NextApiRequest & Request & {
     files: { location: string }[]
@@ -20,6 +21,7 @@ const optionsRouter = createRouter<CustomRequest, CustomResponse>()
 optionsRouter
     .use(upload.array('file', OPTIONS_IMAGES_MAX_AMOUNT))
     .use(validateClubProviderExistence)
+    .use(validateProductExistence)
     .use(async (req, res, next) => (
         validateErrorsInSchema(req, res, next, optionRegisterSchema)
     )

@@ -52,7 +52,7 @@ model Admin {
   occupation        String
   clubProviderAdmin ClubProvider? @relation(fields: [clubProviderId], references: [id])
   clubProviderId    String        @db.ObjectId
-  userImage         String?
+  image             String?
 }
 
 model Product {
