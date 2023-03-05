@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Request, Response } from "express-serve-static-core"
-import { createRouter, expressWrapper } from 'next-connect'
-import cors from 'cors'
+import { createRouter} from 'next-connect'
 import { upload } from '../../../../../../configs/S3Config'
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { handleDeleteAdmin, handleGetAdmin, handlePutAdmin } from '../../../../../../controllers/admins'
@@ -22,7 +21,6 @@ type CustomResponse = NextApiResponse & Response
 const adminRouter = createRouter<CustomRequest, CustomResponse>();
 
 adminRouter
-  .use(expressWrapper(cors()))
   .use(upload.single('file'))
   .use(validateClubProviderExistence)
   .use(validateAdminExistence)

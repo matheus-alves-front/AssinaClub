@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Request, Response } from "express-serve-static-core"
-import { createRouter, expressWrapper } from 'next-connect';
-import cors from 'cors'
+import { createRouter } from 'next-connect';
 import { upload } from '../../../../../../configs/S3Config';
 import { handleDeleteProducts, handleGetProducts, handlePostProducts } from '../../../../../../controllers/products';
 import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema';
@@ -14,12 +13,11 @@ type CustomRequest = NextApiRequest & Request & {
 
 type CustomResponse = NextApiResponse & Response
 
-const productsRouter = createRouter<CustomRequest, CustomResponse>();
+export const PRODUCTS_IMAGES_MAX_AMOUNT = 5
 
-const PRODUCTS_IMAGES_MAX_AMOUNT = 5
+const productsRouter = createRouter<CustomRequest, CustomResponse>()
 
 productsRouter
-    .use(expressWrapper(cors()))
     .use(upload.array('file', PRODUCTS_IMAGES_MAX_AMOUNT))
     .use(validateClubProviderExistence)
     .use(async (req, res, next) => (

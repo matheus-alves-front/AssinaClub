@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import bcrypt from 'bcrypt'
 import { prisma } from "../../prisma/PrismaClient"
 import { getClubProvider, getClubProviders } from "../../prisma/clubProviders"
-import { ClubProvider, ClubProviderType } from "../../@types/ClubProviderTypes"
+import { ClubProviderType } from "../../@types/ClubProviderTypes"
 import { removeSubscriberRelationByClubProvider } from "../../prisma/signaturesRelation"
 import { deleteAllClubProviderAdmins } from "../../prisma/adminsClubProviders"
 
@@ -16,10 +16,10 @@ export async function handleGetClubProviderById(
     req: NextApiRequest,
     res: NextApiResponse<ClubProviderType>
 ) {
-    const clubProviderId = req.query.clubProviderId as string
-
     try {
-        const clubProvider = await getClubProvider(clubProviderId)
+        const clubProvider = await getClubProvider(
+            req.query.clubProviderId as string
+        )
 
         return res.status(200).json({
             data: clubProvider
@@ -31,7 +31,6 @@ export async function handleGetClubProviderById(
             message: 'Something went wrong!'
         })
     }
-
 }
 
 
@@ -80,7 +79,6 @@ export async function handlePostClubProviders(
     return res.status(201).json({
         data: clubProvider
     })
-
 }
 
 export async function handlePutClubProvidersById(

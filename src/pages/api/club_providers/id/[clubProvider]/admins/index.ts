@@ -1,13 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Request, Response } from "express-serve-static-core"
-import { createRouter, expressWrapper } from 'next-connect'
-import cors from 'cors'
+import { createRouter } from 'next-connect'
 import { adminRegisterSchema } from '../../../../schemas/adminSchema'
 import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema'
 import { upload } from '../../../../../../configs/S3Config'
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { handleDeleteAdmins, handleGetAdmins, handlePostAdmins } from '../../../../../../controllers/admins'
-import { Admin } from '../../../../../../@types/AdminsClubProviderTypes'
 
 type CustomRequest = NextApiRequest & Request & {
   file: { location: string }
@@ -18,7 +16,6 @@ type CustomResponse = NextApiResponse & Response
 const adminsRouter = createRouter<CustomRequest, CustomResponse>();
 
 adminsRouter
-  .use(expressWrapper(cors()))
   .use(upload.single('file'))
   .use(validateClubProviderExistence)
   .use(async (req, res, next) => (

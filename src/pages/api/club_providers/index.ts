@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 import { Request, Response } from "express-serve-static-core"
-import { createRouter, expressWrapper } from 'next-connect';
-import cors from 'cors'
+import { createRouter } from 'next-connect';
 import { handleGetClubProviders, handlePostClubProviders } from '../../../controllers/clubProviders';
 import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
 import { validateClubProviderConflict } from '../../../middleware/validateClubProviderConflict';
@@ -19,7 +18,6 @@ type CustomResponse = NextApiResponse & Response<any>
 const clubProvidersRouter = createRouter<CustomRequest, CustomResponse>();
 
 clubProvidersRouter
-    .use(expressWrapper(cors()))
     .use(upload.array('file', 2))
     .use(async (req, res, next) => (
         validateErrorsInSchema(req, res, next, clubProviderRegisterSchema)

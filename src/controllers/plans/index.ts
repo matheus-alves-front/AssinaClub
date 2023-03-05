@@ -13,9 +13,7 @@ export async function handleGetPlan(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = req.query.clubProvider as string
-
-    const plans = await getPlans(clubProviderId)
+    const plans = await getPlans(req.query.clubProvider as string)
 
     return res.status(200).json({
         data: plans.reverse()
@@ -26,9 +24,7 @@ export async function handleGetPlans(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = req.query.clubProvider as string
-
-    const plans = await getPlans(clubProviderId)
+    const plans = await getPlans(req.query.clubProvider as string)
 
     return res.status(200).json({
         data: plans.reverse()
@@ -39,8 +35,6 @@ export async function handlePostPlans(
     req: CustomRequest,
     res: NextApiResponse
 ) {
-    const clubProviderId = req.query.clubProvider as string
-
     const { files: images } = req
 
     const imagesUrls = images.map(image => image.location)
@@ -48,7 +42,7 @@ export async function handlePostPlans(
     const plan = await prisma.plan.create({
         data: {
             ...req.body,
-            clubProviderId,
+            clubProviderId: req.query.clubProvider as string,
             images: imagesUrls
         }
     });

@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createRouter, expressWrapper } from 'next-connect'
-import cors from 'cors'
+import { createRouter } from 'next-connect'
 import { Request, Response } from "express-serve-static-core"
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { upload } from '../../../../../../configs/S3Config'
@@ -17,7 +16,6 @@ type CustomResponse = NextApiResponse & Response
 const plansRouter = createRouter<CustomRequest, CustomResponse>();
 
 plansRouter
-  .use(expressWrapper(cors()))
   .use(upload.array('file', 2))
   .use(async (req, res, next) => (
     validateErrorsInSchema(req, res, next, planRegisterSchema)
