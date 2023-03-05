@@ -28,7 +28,7 @@ export async function addProductToPlan(
     }
     catch (err) {
         alert("Houve um erro ao realizar o registro.")
-        console.log(err)
+        console.error(err)
     }
 
 }

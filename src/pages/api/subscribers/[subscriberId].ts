@@ -1,78 +1,42 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Request, Response } from 'express-serve-static-core'
+import { upload } from '../../../configs/S3Config'
+import { createRouter } from 'next-connect'
+import { handleDeleteSubscriber, handleGetSubscriber, handlePutSubscriber } from '../../../controllers/subscribers'
+import validateSubscriberExistence from '../../../middleware/validateSubscriberExistence'
 
-import bcrypt from 'bcrypt'
+type CustomRequest = NextApiRequest & Request<any> & {
+    file: {
+        location: string
+    }
+}
 
-import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
+type CustomResponse = NextApiResponse & Response<any>
 
-import { getSubscriber } from '../../../prisma/subscribers'
+const subscriberRouter = createRouter<CustomRequest, CustomResponse>();
 
-import { prisma } from '../../../prisma/PrismaClient'
+subscriberRouter
+    .use(upload.single('file'))
+    .use(validateSubscriberExistence)
+    .get(handleGetSubscriber)
+    .put(handlePutSubscriber)
+    .delete(handleDeleteSubscriber)
 
-export default async function updateSubscriber(
-    req: NextApiRequest,
-    res: NextApiResponse<SubscriberType>
-) {
-    const { method } = req
-    const subscriberId = String(req.query.subscriberId)
+export default subscriberRouter.handler({
+    onError: (err: any, _, res) => {
+        res.status(500).json({
+            message: "Something broke!"
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
 
-    if (method === "GET") {
-        const subscriber = await getSubscriber(subscriberId)
-
-        return res.status(200).json({
-            data: subscriber
-        })
-
-    } else if (method === "PUT") {
-        const {
-            name,
-            cpf,
-            birthDate,
-            email,
-            password
-        }: Subscriber = req.body
-
-        const subscriberExists = await getSubscriber(subscriberId)
-
-        if (!subscriberExists) return res.status(404).json({
-            message: 'Subscriber does not exist'
-        })
-
-        let hashedPassword
-
-        if (password) {
-            hashedPassword = bcrypt.hashSync(password, 10)
-        }
-
-        const subscriber = await prisma.subscriber.update({
-            where: { id: subscriberId },
-            data: {
-                name,
-                cpf,
-                birthDate,
-                email,
-                password: hashedPassword ? hashedPassword : password
-            }
-        })
-
-        return res.status(201).json({
-            data: subscriber,
-            message: "update success"
-        })
-
-    } else if (method === "DELETE") {
-
-        const subscriberExists = await getSubscriber(subscriberId)
-
-        if (!subscriberExists) return res.status(404).json({
-            message: 'Subscriber does not exist'
-        })
-
-        await prisma.subscriber.delete({
-            where: { id: subscriberId }
-        })
-
-        return res.status(201).json({
-            message: "Account Deleted",
-        })
+export const config = {
+    api: {
+        bodyParser: false,
     }
 }

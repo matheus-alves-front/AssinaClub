@@ -1,74 +1,48 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { ValidationErrorItem } from '@hapi/joi';
+import { Request, Response } from "express-serve-static-core"
+import { createRouter } from 'next-connect';
+import { upload } from '../../../configs/S3Config';
+import { handleGetSubscribers, handlePostSubscribers } from '../../../controllers/subscribers';
+import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
+import { subscriberRegisterSchema } from '../schemas/subscriberSchema';
+import { validateSubscriberEmailConflict } from '../../../middleware/validateSubscriberEmailConflict';
 
-import { SubscriberType, Subscriber } from '../../../@types/SubscriberTypes'
-import { getSubscribers } from '../../../prisma/subscribers'
-
-import { prisma } from '../../../prisma/PrismaClient'
-
-import bcrypt from "bcrypt"
-import { subscriberRegisterSchema } from '../schemas/subscriberSchema'
-import validateErrorsInSchema from '../../../utils/validateErrosInSchema';
-
-export default async function handleSubscribers(
-    req: NextApiRequest,
-    res: NextApiResponse<SubscriberType>
-) {
-    const { method } = req
-
-    if (method === "GET") {
-        const subscribers = await getSubscribers()
-
-        const { clubProviderId } = req.query
-
-        if(clubProviderId) {
-            const filteredSubs = subscribers.filter(subscriber => subscriber.clubProviderIds.includes(String(clubProviderId)))
-
-            return res.status(200).json({
-                data: filteredSubs.reverse(),
-            })
-        }
-
-        return res.status(200).json({
-            data: subscribers.reverse(),
-        })
-    } else if (method === "POST") {
-        const {
-            name,
-            cpf,
-            birthDate,
-            email,
-            password
-        }: Subscriber = req.body
-
-        if (validateErrorsInSchema(subscriberRegisterSchema, req, res) !== 'ok') return
-
-        const subscriberCreation = {
-            data: {
-                name,
-                cpf,
-                birthDate,
-                email,
-                password: bcrypt.hashSync(password, 10)
-            }
-        }
-
-        const emailInUse = await prisma.subscriber.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        if (emailInUse) return res.status(409).json({
-            message: "Email already in use"
-        })
-
-        const subscriber = await prisma.subscriber.create(subscriberCreation)
-
-        return res.status(201).json({
-            data: subscriber,
-        })
+type CustomRequest = NextApiRequest & Request & {
+    file: {
+        location: string
     }
+}
 
-    return res.status(404).json({ message: 'Route not found.' })
+type CustomResponse = NextApiResponse & Response<any>
+
+const subscribersRouter = createRouter<CustomRequest, CustomResponse>();
+
+subscribersRouter
+    .use(upload.single('file'))
+    .use(async (req, res, next) => {
+        return validateErrorsInSchema(req, res, next, subscriberRegisterSchema)
+    }
+    )
+    .use(validateSubscriberEmailConflict)
+    .get(handleGetSubscribers)
+    .post(handlePostSubscribers)
+
+export default subscribersRouter.handler({
+    onError: (err: any, _, res) => {
+        res.status(500).json({
+            message: `Something broke!`,
+            error: `${err}`
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
 }

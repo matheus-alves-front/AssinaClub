@@ -1,11 +1,11 @@
-import Joi from '@hapi/joi';
+import Joi from '@hapi/joi'
 
 interface AdminRegisterSchema {
-    name: string;
-    birthDate: string;
-    email: string;
-    password: string;
-    occupation: string;
+    name: string
+    birthDate: string
+    email: string
+    password: string
+    occupation: string
 }
 
 export const adminRegisterSchema = Joi.object<AdminRegisterSchema>({

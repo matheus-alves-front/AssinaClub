@@ -1,9 +1,9 @@
-import Joi from '@hapi/joi';
+import Joi from '@hapi/joi'
 
 interface LoginAttemptSchema {
-    email: string;
-    password: string;
-    typeOfUser: string;
+    email: string
+    password: string
+    typeOfUser: string
 }
 
 export const loginAttemptSchema = Joi.object<LoginAttemptSchema>({

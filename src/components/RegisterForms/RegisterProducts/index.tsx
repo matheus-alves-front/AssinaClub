@@ -88,7 +88,7 @@ export function RegisterFormProducts() {
       await axios.delete(`/api/club_providers/id/${clubProviderId}/products/${productId}`)
     }
     catch(err) {
-      console.log(err)
+      console.error(err)
     }
 
     const productsUpdated = [...registerStepsContext.products]
