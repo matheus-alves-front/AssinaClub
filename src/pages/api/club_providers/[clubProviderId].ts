@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
 import { Request, Response } from "express-serve-static-core"
-import { createRouter} from 'next-connect';
+import { createRouter } from 'next-connect';
 import { handleDeleteClubProviderById, handleGetClubProviderById, handlePutClubProvidersById } from '../../../controllers/clubProviders';
 import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
 import { validateClubProviderConflict } from '../../../middleware/validateClubProviderConflict';
 import { upload } from '../../../configs/S3Config';
+import validateBody from '../../../middleware/validateBody';
 
 type CustomRequest = NextApiRequest & Request<any> & {
     files: {
@@ -27,6 +28,7 @@ clubProviderRouter
         validateClubProviderConflict(req, res, next)
     )
     )
+    .use(validateBody)
     .get(handleGetClubProviderById)
     .put(handlePutClubProvidersById)
     .delete(handleDeleteClubProviderById)
@@ -44,3 +46,9 @@ export default clubProviderRouter.handler({
         });
     },
 });
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+}

@@ -71,8 +71,8 @@ export async function handlePostClubProviders(
             clubName: req.body.clubName.trim().replaceAll(" ", "-"),
             password: (password ? bcrypt.hashSync(password, 10) : password),
             creationDate: new Date(Date.now()).toISOString(),
-            logo: logo.location,
-            banner: banner.location,
+            logo: logo?.location,
+            banner: banner?.location,
         }
     })
 
@@ -82,31 +82,44 @@ export async function handlePostClubProviders(
 }
 
 export async function handlePutClubProvidersById(
-    req: NextApiRequest,
+    req: CustomRequest,
     res: NextApiResponse<ClubProviderType>
 ) {
     const clubProviderId = req.query.clubProviderId as string
 
+    const clubProvider = await getClubProvider(clubProviderId)
+
     const { password, removeSubscriber } = req.body
 
-    const clubProvider = await prisma.clubProvider.update({
+    const { files: images } = req
+
+    let logo = ''
+    let banner = ''
+
+    if (images) {
+        images.forEach(image => {
+            ((image.location.includes('logo') && !logo) || clubProvider?.banner) ?
+                logo = image.location :
+                banner = image.location
+        })
+    }
+
+    const clubProviderUpated = await prisma.clubProvider.update({
         where: { id: clubProviderId },
         data: {
             ...req.body,
             password: (password ? bcrypt.hashSync(password, 10) : password),
+            logo: logo !== '' ? logo : undefined,
+            banner: banner !== '' ? banner : undefined
         }
     })
 
     if (removeSubscriber) {
         removeSubscriberRelationByClubProvider(clubProviderId, removeSubscriber)
-
-        return res.status(201).json({
-            message: "Subscriber Remove Success!"
-        })
     }
 
     return res.status(200).json({
-        data: clubProvider,
+        data: clubProviderUpated,
         message: "Update success!"
     })
 }
