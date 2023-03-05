@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Request, Response } from "express-serve-static-core"
-import { createRouter} from 'next-connect'
+import { createRouter } from 'next-connect'
 import { upload } from '../../../../../../configs/S3Config'
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { handleDeleteAdmin, handleGetAdmin, handlePutAdmin } from '../../../../../../controllers/admins'
 import validateAdminExistence from '../../../../../../middleware/valideteAdminExistence'
 import { Admin } from '../../../../../../@types/AdminsClubProviderTypes'
+import validateBody from '../../../../../../middleware/validateBody'
 
 type CustomRequest = NextApiRequest & Request & {
   file: {
@@ -24,6 +25,7 @@ adminRouter
   .use(upload.single('file'))
   .use(validateClubProviderExistence)
   .use(validateAdminExistence)
+  .use(validateBody)
   .get(handleGetAdmin)
   .put(handlePutAdmin)
   .delete(handleDeleteAdmin)
@@ -41,3 +43,9 @@ export default adminRouter.handler({
     });
   },
 });
+
+export const config = {
+  api: {
+    bodyParser: false,
+  }
+}

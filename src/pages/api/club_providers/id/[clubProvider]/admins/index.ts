@@ -6,6 +6,7 @@ import validateErrorsInSchema from '../../../../../../middleware/validateErrosIn
 import { upload } from '../../../../../../configs/S3Config'
 import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
 import { handleDeleteAdmins, handleGetAdmins, handlePostAdmins } from '../../../../../../controllers/admins'
+import validateBody from '../../../../../../middleware/validateBody'
 
 type CustomRequest = NextApiRequest & Request & {
   file: { location: string }
@@ -18,6 +19,7 @@ const adminsRouter = createRouter<CustomRequest, CustomResponse>();
 adminsRouter
   .use(upload.single('file'))
   .use(validateClubProviderExistence)
+  .use(validateBody)
   .use(async (req, res, next) => (
     validateErrorsInSchema(req, res, next, adminRegisterSchema)
   ))

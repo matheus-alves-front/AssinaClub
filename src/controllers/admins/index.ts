@@ -82,6 +82,8 @@ export async function handlePutAdmin(
 ) {
     const { password } = req.body
 
+    const { file: image } = req
+
     const admin = await prisma.admin.update({
         where: {
             id: req.query.clubProviderAdmin as string
@@ -89,6 +91,7 @@ export async function handlePutAdmin(
         data: {
             ...req.body,
             password: (password ? bcrypt.hashSync(password, 10) : password),
+            image: image ? image.location : image
         }
     })
 
