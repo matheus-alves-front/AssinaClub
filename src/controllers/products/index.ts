@@ -9,8 +9,10 @@ type CustomRequest = NextApiRequest & {
     }[]
 }
 
-export async function handleGetProducts(req: NextApiRequest, res: NextApiResponse) {
-
+export async function handleGetProducts(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
     const clubProviderId = String(req.query.clubProvider)
 
     const products = await getProducts(clubProviderId)
@@ -21,17 +23,19 @@ export async function handleGetProducts(req: NextApiRequest, res: NextApiRespons
         const filteredProducts = products.filter(product => product.plansId.includes(String(planId)))
 
         return res.status(200).json({
-            data: filteredProducts.reverse(),
+            data: filteredProducts.reverse()
         })
     }
 
     return res.status(200).json({
-        data: products.reverse(),
+        data: products.reverse()
     })
 }
 
-export async function handlePostProducts(req: CustomRequest, res: NextApiResponse) {
-
+export async function handlePostProducts(
+    req: CustomRequest,
+    res: NextApiResponse
+) {
     const clubProviderId = String(req.query.clubProvider)
 
     const {
@@ -58,8 +62,10 @@ export async function handlePostProducts(req: CustomRequest, res: NextApiRespons
     })
 }
 
-export async function handleDeleteProducts(req: CustomRequest, res: NextApiResponse) {
-
+export async function handleDeleteProducts(
+    req: CustomRequest,
+    res: NextApiResponse
+) {
     const clubProviderId = String(req.query.clubProvider)
 
     await prisma.product.deleteMany({

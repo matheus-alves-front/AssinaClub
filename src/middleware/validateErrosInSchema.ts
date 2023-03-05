@@ -1,7 +1,8 @@
 import type { NextApiResponse, NextApiRequest } from 'next'
 import { ValidationErrorItem } from '@hapi/joi';
+import { NextHandler } from 'next-connect';
 
-export default function validateErrorsInSchema(req: NextApiRequest, res: NextApiResponse, next: any, schema: any) {
+export default function validateErrorsInSchema(req: NextApiRequest, res: NextApiResponse, next: NextHandler, schema: any) {
 
     const { method } = req
 

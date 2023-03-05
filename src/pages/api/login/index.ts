@@ -114,7 +114,7 @@ async function login(
         })
 
     } catch (err) {
-        console.log(err)
+        console.error(err)
         return res.status(500).json({
             message: "An error occurred trying to login",
         })

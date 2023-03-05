@@ -12,9 +12,11 @@ type CustomRequest = NextApiRequest & {
     }[]
 }
 
-export async function handleGetClubProviderById(req: NextApiRequest, res: NextApiResponse<ClubProviderType>) {
-
-    const clubProviderId = String(req.query.clubProviderId)
+export async function handleGetClubProviderById(
+    req: NextApiRequest,
+    res: NextApiResponse<ClubProviderType>
+) {
+    const clubProviderId = req.query.clubProviderId as string
 
     const clubProvider = await getClubProvider(clubProviderId)
 
@@ -24,7 +26,10 @@ export async function handleGetClubProviderById(req: NextApiRequest, res: NextAp
 }
 
 
-export async function handleGetClubProviders(req: NextApiRequest, res: NextApiResponse<ClubProviderType>) {
+export async function handleGetClubProviders(
+    req: NextApiRequest,
+    res: NextApiResponse<ClubProviderType>
+) {
     const clubProviders = await getClubProviders()
 
     return res.status(200).json({
@@ -32,7 +37,10 @@ export async function handleGetClubProviders(req: NextApiRequest, res: NextApiRe
     })
 }
 
-export async function handlePostClubProviders(req: CustomRequest, res: NextApiResponse<ClubProviderType>) {
+export async function handlePostClubProviders(
+    req: CustomRequest,
+    res: NextApiResponse<ClubProviderType>
+) {
     const {
         clubName,
         hostName,
@@ -71,14 +79,16 @@ export async function handlePostClubProviders(req: CustomRequest, res: NextApiRe
     const clubProvider = await prisma.clubProvider.create(clubProviderCreation)
 
     return res.status(201).json({
-        data: clubProvider,
+        data: clubProvider
     })
 
 }
 
-export async function handlePutClubProvidersById(req: NextApiRequest, res: NextApiResponse<ClubProviderType>) {
-
-    const clubProviderId = String(req.query.clubProviderId)
+export async function handlePutClubProvidersById(
+    req: NextApiRequest,
+    res: NextApiResponse<ClubProviderType>
+) {
+    const clubProviderId = req.query.clubProviderId as string
 
     const {
         clubName,
@@ -122,10 +132,12 @@ export async function handlePutClubProvidersById(req: NextApiRequest, res: NextA
     })
 }
 
-export async function handleDeleteClubProviderById(req: NextApiRequest, res: NextApiResponse) {
+export async function handleDeleteClubProviderById(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const clubProviderId = req.query.clubProviderId as string
 
-    const clubProviderId = String(req.query.clubProviderId)
-    
     if (!(await deleteAllClubProviderAdmins(clubProviderId))) {
         return res.status(500).json({
             message: "Error while deleting all admins"
@@ -136,7 +148,7 @@ export async function handleDeleteClubProviderById(req: NextApiRequest, res: Nex
         })
 
         return res.status(201).json({
-            message: "Account Deleted",
+            message: "Account Deleted"
         })
     }
 }

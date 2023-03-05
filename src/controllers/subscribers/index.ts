@@ -10,7 +10,10 @@ type CustomRequest = NextApiRequest & {
     }
 }
 
-export async function handleGetSubscribers(req: NextApiRequest, res: NextApiResponse<SubscriberType>) {
+export async function handleGetSubscribers(
+    req: NextApiRequest,
+    res: NextApiResponse<SubscriberType>
+) {
     const subscribers = await getSubscribers()
 
     const { clubProviderId } = req.query
@@ -26,7 +29,10 @@ export async function handleGetSubscribers(req: NextApiRequest, res: NextApiResp
     })
 }
 
-export async function handlePostSubscribers(req: NextApiRequest, res: NextApiResponse<SubscriberType>) {
+export async function handlePostSubscribers(
+    req: NextApiRequest,
+    res: NextApiResponse<SubscriberType>
+) {
     const {
         name,
         cpf,
@@ -61,6 +67,6 @@ export async function handlePostSubscribers(req: NextApiRequest, res: NextApiRes
     const subscriber = await prisma.subscriber.create(subscriberCreation)
 
     return res.status(201).json({
-        data: subscriber,
+        data: subscriber
     })
 }

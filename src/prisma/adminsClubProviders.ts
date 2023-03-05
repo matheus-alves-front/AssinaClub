@@ -28,7 +28,7 @@ export async function deleteAllClubProviderAdmins(clubProviderId: string) {
         }
       })
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return false  
     }
     return true

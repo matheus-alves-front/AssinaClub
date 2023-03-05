@@ -25,16 +25,13 @@ clubProvidersRouter
         validateErrorsInSchema(req, res, next, clubProviderRegisterSchema)
     )
     )
-    .use(async (req, res, next) => (
-        validateClubProviderConflict(req, res, next)
-    )
-    )
+    .use(validateClubProviderConflict)
     .get(handleGetClubProviders)
     .post(handlePostClubProviders)
 
 export default clubProvidersRouter.handler({
     onError: (err: any, _, res) => {
-        console.log(err)
+        console.error(err)
         res.status(500).json({
             message: "Something broke!"
         });

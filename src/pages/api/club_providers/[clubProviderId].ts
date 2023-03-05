@@ -35,7 +35,7 @@ clubProviderRouter
 
 export default clubProviderRouter.handler({
     onError: (err: any, _, res) => {
-        console.log(err)
+        console.error(err)
         res.status(500).json({
             message: "Something broke!"
         });
