@@ -1,11 +1,15 @@
 import axios from "axios";
 import { FormEvent, useContext, useState } from "react";
-import { Button, Card, Col, Form, Modal, Row, Toast } from "react-bootstrap";
 
 import { Product } from "../../../@types/ProductTypes";
 import { RegisterStepsContext } from "../../../contexts/RegisterStepsContext";
 
 import { BsFillTrashFill } from "react-icons/bs";
+
+import styles from '../registerForm.module.scss'
+import { motion } from "framer-motion";
+import { ModalContent } from "../../UI-Components/ModalContent";
+import { Toast } from "../../UI-Components/Toast";
 
 
 export function RegisterFormProducts() {
@@ -98,98 +102,90 @@ export function RegisterFormProducts() {
 
   return (
     <>
-      <Form className="p-2" onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
-        <Row className="my-1">
-          <Col className="my-1" md={12}>
-            <Form.Group>
-              <Form.Label>Nome do Produto</Form.Label>
-              <Form.Control type="text" name="productName" />
-            </Form.Group>
-          </Col>
-          <Col className="my-1" md={12}>
-            <Form.Group>
-              <Form.Label>Descrição</Form.Label>
-              <Form.Control as="textarea" name="productDescription" />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="my-1">
-          <Col className="my-1" md={6}>
-            <Form.Group>
-              <Form.Label>Sku:</Form.Label>
-              <Form.Control type="text" name="productSku" />
-              <Form.Text className="text-muted">
-                sku é o identificador único do produto
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col className="my-1" md={6}>
-            <Form.Group>
-              <Form.Label>Valor:</Form.Label>
-              <Form.Control type="number" min="0.00" max="10000.00" name="productValue" />
-              <Form.Text className="text-muted">
-                O valor é uma média para controle de gastos em seu dashboard
-              </Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="my-1">
-          <Col md={5}>
-            <Button type="submit" className="w-100 p-2 mt-4">Registrar Produto</Button>
-          </Col>
-          <Col md={7}>
-            <Button 
-              variant="warning" 
-              className="w-100 p-2 mt-4"
-              onClick={() => handleModal()}
-            >Editar Produtos Cadastrados</Button>
-          </Col>
-          <Col xs={12}>
-            <Button 
-              variant="success" 
-              className="w-100 p-2 mt-4"
-              onClick={() => goToNextStepRegister()}
-              disabled={registerStepsContext.products.length < 3 ? true : false}
+      <form className={styles.formClubProvider} onSubmit={(e) => RegisterProducts(e, clubProviderId)}>
+        <input 
+          type="text" 
+          name="productName" 
+          placeholder="Nome do Produto"
+        />
+        <fieldset>
+          <label>
+            SKU: identificador único do produto
+          </label>
+          <input type="text" name="productSku" placeholder="nome-do-produto ou 1,2,3,4..." />
+        </fieldset>
+        <textarea name="productDescription" placeholder="Descrição" rows={3} />
+        <label>Valor: O valor é uma média para controle de gastos em seu dashboard</label>
+        <input 
+          type="number" 
+          min="0.00" 
+          max="10000.00" 
+          name="productValue" 
+          placeholder="R$" 
+        />
+        <button type="submit" className="w-100 p-2 mt-4">Registrar Produto</button>
+      </form>
+      <section className={styles.nextStepSection}>
+        <button  
+          className="w-100 p-2 mt-4"
+          onClick={() => handleModal()}
+        >Editar Produtos Cadastrados</button>
+        <button 
+          className={styles.nextStepButton}
+          onClick={() => goToNextStepRegister()}
+          disabled={registerStepsContext.products.length < 3 ? true : false}
+        >
+          Criar Planos
+        </button>
+      </section>
+      <motion.section 
+        className={styles.toast}
+        animate={isProductRegistered ? "open" : "closed"}
+        variants={{
+          open: {opacity: 1, y: 0},
+          closed: {opacity: 0, y: "100%"},
+        }}
+      >
+        <Toast title="Produto Adicionado">
+            <small><strong>Sku:</strong> {productRegistered?.sku}</small>
+            <p><strong>nome:</strong> {productRegistered?.name}</p>
+            <p><strong>valor:</strong> {productRegistered?.value}</p>
+            <p><strong>descrição:</strong> {productRegistered?.description}</p>
+        </Toast>
+      </motion.section>
+      <motion.section 
+        className={styles.modal}
+        animate={isEditModal ? "open" : "closed"}
+        variants={{
+          open: { opacity: 1, x: 0 },
+          closed: { opacity: 0, x: "-100%" },
+        }}
+      >
+        <ModalContent title="Editar Produtos:">
+            {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
+            {registerStepsContext.products.map((product: Product, index: number) => (
+              <div className={styles.productEdit} key={index}>
+                <h5>{product.name}</h5>
+                <details>
+                  <summary>Descrição:</summary>
+                  <p>{product.description}</p>
+                </details>
+                <span>Valor: R${product.value}</span>
+                <button
+                  onClick={() => DeleteProduct(product.id, index)}
+                >
+                  <BsFillTrashFill fontSize={25} />
+                </button>
+              </div>
+            ))}
+            <button 
+              onClick={() => setIsEditModal(false)}
+              className={styles.closeModal}
             >
-              Criar Planos
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-      <Toast className="fixed-bottom m-2" show={isProductRegistered} >
-        <Toast.Header>
-          <strong className="me-auto">Produto Adicionado</strong>
-          <small>sku: {productRegistered?.sku}</small>
-        </Toast.Header>
-        <Toast.Body>
-          <p>nome: {productRegistered?.name}</p>
-          <p>valor: {productRegistered?.value}</p>
-          <p>descrição: {productRegistered?.description}</p>
-        </Toast.Body>
-      </Toast>
-      <Modal show={isEditModal} onHide={handleModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Editar Produtos: </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {registerStepsContext.products.length == 0 && 'Você não tem produtos'}
-          {registerStepsContext.products.map((product: Product, index: number) => (
-            <Card className="my-1 p-2 position-relative" key={index}>
-              <Card.Title>{product.name}</Card.Title>
-              <Card.Subtitle>
-                {product.description}
-              </Card.Subtitle>
-              <span>Valor: R${product.value}</span>
-              <Button
-                onClick={() => DeleteProduct(product.id, index)}
-                variant="danger position-absolute top-50 end-0 me-2 translate-middle-y"
-              >
-                <BsFillTrashFill />
-              </Button>
-            </Card>
-          ))}
-        </Modal.Body>
-      </Modal>
+              Fechar
+            </button>
+        </ModalContent>
+      </motion.section>
     </>
   )
 }

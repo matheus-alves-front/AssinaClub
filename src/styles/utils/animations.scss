@@ -1,0 +1,25 @@
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sidebarMenuAnimation {
+  from {
+    left: -355px;
+  }
+  to {
+    left: 0;
+  }
+}
+
+@keyframes easeCome {
+  from {
+      opacity: 0;
+  } to {
+      opacity: 1;
+  }
+}

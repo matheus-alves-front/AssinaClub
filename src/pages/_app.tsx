@@ -3,16 +3,17 @@ import '../styles/theme.scss'
 
 import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
+import { SSRProvider } from '@react-aria/ssr';
 
 import { useState } from 'react'
 import { Router } from 'next/router'
 
-import { Spinner } from 'react-bootstrap'
-
-import { Header } from '../components/Header'
-import { LoaderSpinner } from '../components/Loader'
-import { ClubProvider } from '../@types/ClubProviderTypes'
 import { ClubDashboardGlobalContext } from '../contexts/ClubDashboard/ClubDashboardGlobalContext'
+import { LoaderSpinner } from '../components/Loader'
+import { Header } from '../components/Header'
+
+import { ClubProvider } from '../@types/ClubProviderTypes'
+import Head from 'next/head';
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
@@ -29,19 +30,28 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
   })
 
   return (
-    <SessionProvider session={session}>
-      <ClubDashboardGlobalContext.Provider value={{
-        clubProviderInfo, setClubProviderInfo,
-        showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard
-      }}>
-        <Header />
-        {isLoad ?
-          <Component {...pageProps} />
-          :
-          <LoaderSpinner />
-        }
-        <footer className='p-5 bg-dark mt-4 text-white'>footer</footer>
-      </ClubDashboardGlobalContext.Provider>
-    </SessionProvider>
+    <SSRProvider>
+      <SessionProvider session={session}>
+        <ClubDashboardGlobalContext.Provider value={{
+          clubProviderInfo, setClubProviderInfo,
+          showOnlyAdminsInDashboard, setShowOnlyAdminsInDashboard
+        }}>
+          <Head>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link href="https://fonts.googleapis.com/css2?family=Golos+Text&display=swap" rel="stylesheet" />
+          </Head>
+          <Header />
+          {isLoad ?
+            <main id="pageContainer">
+              <Component {...pageProps} />
+            </main>
+            :
+            <LoaderSpinner />
+          }
+          <footer className='p-5 bg-dark mt-4 text-white'>footer</footer>
+        </ClubDashboardGlobalContext.Provider>
+      </SessionProvider>
+    </SSRProvider>
   )
 }

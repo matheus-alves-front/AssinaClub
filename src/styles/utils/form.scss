@@ -1,0 +1,35 @@
+@mixin form-wrapper {
+    width: 50%;
+    min-width: 500px;
+    animation: easeCome 0.4s ease-out;
+
+    p {
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+
+    p:first-child {
+        margin-top: 0;
+    }
+}
+
+@mixin form-input {
+    @include input-field-primary;
+    width: 100%;
+}
+
+@mixin buttons-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+@mixin reverse-dark-button {
+    @include button-primary-outline(13px);
+    max-width: 200px;
+}
+
+@mixin dark-button {
+    @include button-primary(13px);
+    max-width: 200px;
+}

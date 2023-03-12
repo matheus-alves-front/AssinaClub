@@ -1,0 +1,16 @@
+@import '/src/styles/theme.scss';
+
+.wrapper {
+    width: 100%;
+    max-width: 100%;
+}
+
+.upperSection, .lowerSection {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+
+    @media (max-width: $clubdashboard-breakpoint-2) {
+        flex-direction: column;
+    }
+}

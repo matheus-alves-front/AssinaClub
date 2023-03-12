@@ -14,6 +14,8 @@ export type DeletingPlansContextType = {
 }
 
 export type ClubNavigationContextType = {
+    focusMode: string | null, 
+    setFocusMode: (value: SetStateAction<string | null>) => void
     myNavScreenSelected: string
     setMyNavScreenSelected: (value: SetStateAction<string>) => void
     clubRegNavScreenSelected: string

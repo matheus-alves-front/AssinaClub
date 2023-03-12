@@ -1,0 +1,145 @@
+@import '/src/styles/theme.scss';
+
+.mySignaturesCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 0;
+
+  
+  button {
+    @include button-secondary-outline(10px);
+  }
+  
+  .withoutSignatures {
+    width: 100%;
+    
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .signatures {
+    width: 49%;
+    padding: 0 .5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    
+    h5, p {
+      margin-bottom: .5rem;
+    }
+
+    h5 {
+      color: $color-secondary;
+      font-size: 1rem;
+    }
+
+    h6 {
+      font-size: .8rem;
+    }
+
+    a {
+      @include button-primary(10px);
+      font-size: .8rem;
+      margin-top: .5rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.mySignatureDetails {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: .5rem;
+
+  .noSignatures {
+    width: 70%;
+    margin: 1rem .5rem;
+    box-shadow: 0 0 16px 0px rgba(0,0,0,0.3);
+    padding: 1.5rem;
+    border-radius: 10px;
+    
+    p {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    a {
+      @include button-secondary(10px);
+    }
+  }
+  
+  .sliderCards {
+    .plansCard {
+      width: 350px;
+      min-width: 350px;
+      position: relative;
+      color: $color-primary;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+
+      p, h5 {
+        font-size: 1rem;
+        margin-bottom: .5rem
+      }
+      
+      .cancelButton {
+        @include button-danger(5px);
+        width: 80px;
+        position: absolute;  
+        top: 12px;
+        right: 10px;
+      }
+      
+      > div {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        details {
+          margin-bottom: 1.5rem;
+        }
+
+        a {
+          margin-top: auto;
+  
+          .buttonLink {
+            @include button-primary(10px);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile-small) {
+  .mySignaturesCard {
+    .signatures {
+      width: 100%;
+    }
+  }
+
+  .mySignatureDetails {
+    .sliderCards {
+      .plansCard {
+        max-width: 100%;
+        min-width: 300px;
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile) {
+  .mySignatureDetails {
+    .noSignatures {
+      width: 90%;
+      margin: 1rem auto;
+
+    }
+  }
+}

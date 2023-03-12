@@ -1,13 +1,36 @@
-// $theme-colors: (
-//   "primary":    $primary,
-//   "secondary":  $secondary,
-//   "success":    $success,
-//   "info":       $info,
-//   "warning":    $warning,
-//   "danger":     $danger,
-//   "light":      $light,
-//   "dark":       $dark
-// );
+// Pallete: https://coolors.co/palette/191528-3c162f-5c162e-7c162e-110e1b
+// Colors
+$color-black: #000000;
+$color-white: #FFFFFF;
+$color-gray: #495057;
+$color-gray-dark: #343a40;
+$color-gray-light: #6c757d;
+$color-gray-ultra-light: #EEEEEE;
+$color-gray-ultra-light-2: #DDDDDD;
+$color-gray-ultra-light-3: #FEFEFE;
+$color-gray-master-light: #8e9aaf;
 
-/* import bootstrap to set changes */
-@import "~bootstrap/scss/bootstrap";
+$color-primary: #110e1b;
+$color-secondary: #5C162E;
+$color-tertiary: #2ab7ca;
+
+$color-danger: #7C162E;
+$color-dark: #191528;
+$color-link: #00406c;
+
+// Breakpoints
+$desktop-large: 1440px;
+$desktop: 1024px;
+$mobile: 768px;
+$mobile-small: 475px;
+
+@import '/src/styles/utils/buttons.scss';
+@import '/src/styles/utils/inputs.scss';
+@import '/src/styles/utils/animations.scss';
+@import '/src/styles/utils/step-progress.scss';
+@import '/src/styles/utils/modals.scss';
+@import '/src/styles/utils/flex.scss';
+@import '/src/styles/utils/form.scss';
+@import '/src/styles/utils/toast.scss';
+@import '/src/styles/utils/custom-break-points.scss';
+

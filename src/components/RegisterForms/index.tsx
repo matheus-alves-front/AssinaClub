@@ -1,14 +1,12 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
-import {
-  Row,
-  Col, 
-  Button,
-  Form,
-  FloatingLabel
-} from 'react-bootstrap';
-import axios from 'axios'
-import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
 import { useRouter } from 'next/router';
+import axios from 'axios'
+
+import { RegisterStepsContext } from '../../contexts/RegisterStepsContext';
+
+import { IoAdd } from 'react-icons/io5'
+import styles from './registerForm.module.scss'
+import { InputFile } from '../UI-Components/InputFile';
 
 export function RegisterFormSubscriber() {
   const [isChecked, setIsChecked] = useState(false)
@@ -49,8 +47,6 @@ export function RegisterFormSubscriber() {
       "email": emailSubscriber.value,
       "password": passwordSubscriber.value
     }
-
-
     
     try {
       await axios.post(`/api/subscribers`, data)
@@ -63,80 +59,62 @@ export function RegisterFormSubscriber() {
   }
 
   return (
-    <Form 
+    <form 
       name="regiterFormSubscriber" 
       onSubmit={(e) => RegisterSubscriberSubmit(e)}
-      className="p-4 py-4"
+      className={styles.formSubscriber}
     >
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Nome</Form.Label>
-            <Form.Control 
-              name="firstNameSubscriber" 
-              type="text" 
-              placeholder="Nome"
-              maxLength={14}
-              minLength={2} 
-            />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Sobrenome</Form.Label>
-            <Form.Control 
-              name="lastNameSubscriber" 
-              type="text" 
-              placeholder="Sobrenome" 
-              maxLength={14}
-              minLength={2} 
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Label>CPF</Form.Label>
-            <Form.Control 
-              name="cpfSubscriber" 
-              type="text" 
-              placeholder="CPF"
-              maxLength={11}
-              minLength={11}  
-            />
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group className="mb-3">
-            <Form.Label>Data Nascimento</Form.Label>
-            <Form.Control name="birthDateSubscriber" type="date" placeholder="Data de Nascimento" />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control name="emailSubscriber" type="email" placeholder="Email" />
-          </Form.Group>
-        </Col>
-        <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Senha</Form.Label>
-            <Form.Control name="passwordSubscriber" type="password" placeholder="Senha" />
-          </Form.Group>
-        </Col>
-      </Row>
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check
+      <InputFile>
+        <input type="file" />
+      </InputFile>
+      <input 
+        name="firstNameSubscriber" 
+        type="text" 
+        placeholder="Nome"
+        maxLength={14}
+        minLength={2} 
+      />
+      <input 
+        name="lastNameSubscriber" 
+        type="text" 
+        placeholder="Sobrenome" 
+        maxLength={14}
+        minLength={2} 
+      />
+      <input 
+        name="cpfSubscriber" 
+        type="text" 
+        placeholder="CPF"
+        maxLength={11}
+        minLength={11}  
+      />
+      <input 
+        name="birthDateSubscriber" 
+        type="date" 
+        placeholder="Data de Nascimento" 
+      />
+      <input 
+        name="emailSubscriber" 
+        type="email" 
+        placeholder="Email" 
+      />
+      <input 
+        name="passwordSubscriber" 
+        type="password" 
+        placeholder="Senha" 
+      />
+      <label>
+        <input
           onChange={() => setIsChecked(!isChecked)}
-          type="checkbox" label="Aceito os termos e compromissos" />
-      </Form.Group>
-      <Button variant="primary" type="submit" disabled={isChecked ? false : true}>
+          type="checkbox"  
+        />
+        Aceito os termos e compromissos
+      </label>
+          
+      <button type="submit" disabled={isChecked ? false : true}>
         Registrar
-      </Button>
-    </Form>
+      </button>
+    </form>
   )
 }
 
@@ -224,92 +202,46 @@ export function RegisterFormClubProvider() {
 
   return (
     <>
-      <Form 
+      <form 
         name="formClubProvider" 
-        className='p-1 py-3'
+        className={styles.formClubProvider}
         onSubmit={(e) => RegisterClubProviderSubmit(e)}
       >
-          <Row className='mb-1'>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Nome do Clube</Form.Label>
-                <Form.Control name="clubProviderName" type="text" placeholder="Ex: Clube Ciclistas" />
-              </Form.Group>
-            </Col>
-
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Nome do Host</Form.Label>
-                <Form.Control name="clubProviderHostName" type="text" placeholder="Digite seu nome..." />
-                <Form.Text className="text-muted">
-                  Nome do proprietário do Clube
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Form.Group>
-            <FloatingLabel
-              controlId="floatingTextarea"
-              label="Descrição ClubProvider"
-              className="mb-3"
-            >
-              <Form.Control 
-                name="clubProviderDescription"
-                style={{ height: '100px' }} 
-                as="textarea" 
-                placeholder="Leave a comment here" 
-              />
-            </FloatingLabel>
-          </Form.Group>
-          <Row>
-            <Col md={2}>
-              <Form.Group>
-                <Form.Check 
-                  type="switch"
-                  id="custom-switch"
-                  onChange={(e) => whichTypeOfPerson(e)}
-                  label={typeOfPerson}
-                  className="my-1"
-                />
-              </Form.Group>
-            </Col>
-            <Col md={10}>
-              {typeOfPerson === "CPF" 
-              ?
-                <Form.Group className="mb-3">
-                  <Form.Control name="clubProviderCpf" type="text" placeholder="CPF" />
-                </Form.Group>
-              :
-                <Form.Group className="mb-3">
-                  <Form.Control name="clubProviderCnpj" type="text" placeholder="CNPJ" />
-                </Form.Group>
-              }
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control name="clubProviderEmail" type="email" placeholder="Email" />
-                <Form.Text className="text-muted">
-                  Lembre que Email e senha são suas credenciais de Login
-                </Form.Text>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Senha</Form.Label>
-                <Form.Control name="clubProviderPassword" type="password" placeholder="Senha" />
-              </Form.Group>
-            </Col>
-        </Row>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" label="Concordo com os Termos de Serviço" />
-        </Form.Group>
-        <Button className='w-100 py-2 mt-3' variant="primary" type="submit" disabled={!isCheckedInput}>
+        <InputFile>
+          <input type="file" />
+        </InputFile>
+        <input name="clubProviderName" type="text" placeholder="Nome do seu Clube" /> 
+        <input name="clubProviderHostName" type="text" placeholder="Nome do proprietário do Clube" />
+        <textarea 
+          name="clubProviderDescription"
+          style={{ height: '100px' }} 
+          placeholder="Descreva seu clube para seus assinantes" 
+        ></textarea>
+        {/* <input
+          type="switch"
+          id="custom-switch"
+          onChange={(e) => whichTypeOfPerson(e)}
+          className="my-1"
+        /> */}
+        {typeOfPerson === "CPF" 
+        ?
+          <input name="clubProviderCpf" type="text" placeholder="CPF" maxLength={11} /> 
+        :
+          <input name="clubProviderCnpj" type="text" placeholder="CNPJ" />
+        }     
+        <label htmlFor='clubProviderPassword'>
+          Lembre que Email e senha são suas credenciais de Login
+        </label>      
+        <input name="clubProviderEmail" type="email" placeholder="Email" />
+        <input name="clubProviderPassword" type="password" placeholder="Senha" />
+        <label htmlFor='checkbox'>
+          Li e concordo com os termos de serviços
+        </label>   
+        <input onChange={(e) => setIsCheckedInput(e.target.checked)} type="checkbox" />
+        <button className='w-100 py-2 mt-3' type="submit" disabled={!isCheckedInput}>
           Registrar
-        </Button>
-      </Form>
+        </button>
+      </form>
     </>
   )
 }

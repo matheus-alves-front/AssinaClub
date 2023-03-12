@@ -1,11 +1,15 @@
-import axios from "axios";
-import router from "next/router";
 import { FormEvent } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import router from "next/router";
+import axios from "axios";
+
 import { DashboardType } from "../../../../pages/subscriber/dashboard";
+import { CardBox } from "../../../UI-Components/CardBox";
+
+import styles from '../MyInformationsCard/myInformationsCard.module.scss'
 
 export function ChangeAccount({subscriberData}: DashboardType) {
   const firstName = subscriberData?.name.split(" ")[0]
+  const lastName = subscriberData?.name.split(' ').slice(1).join(' ')
 
   async function changeSubscriberInformationSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -39,7 +43,7 @@ export function ChangeAccount({subscriberData}: DashboardType) {
       "cpf": cpfSubscriber.value,
       "birthDate": birthDateSubscriber.value,
       "email": emailSubscriber.value,
-      "password": passwordSubscriber.value
+      // "password": passwordSubscriber.value
     }
     
     try {
@@ -55,86 +59,83 @@ export function ChangeAccount({subscriberData}: DashboardType) {
 
 
   return (
-    <Card>
-      <Card.Body>
-        <Form 
-          name="editFormSubscriber" 
-          onSubmit={(e) => changeSubscriberInformationSubmit(e)}
+    <CardBox title="Suas informações:">
+      <form 
+        name="editFormSubscriber" 
+        className={styles.form}
+        onSubmit={(e) => changeSubscriberInformationSubmit(e)}
+      >
+        <fieldset>
+          <div className={styles.cardCol}>
+            <label>Nome</label>
+            <input 
+              name="firstNameSubscriber" 
+              type="text" 
+              placeholder="Nome"
+              maxLength={14}
+              minLength={2} 
+              defaultValue={firstName}
+            />
+          </div>
+          <div className={styles.cardCol}>
+            <label>Sobrenome</label>
+            <input 
+              name="lastNameSubscriber" 
+              type="text" 
+              placeholder="Sobrenome" 
+              maxLength={14}
+              minLength={2} 
+              defaultValue={lastName}
+            />
+          </div>
+          <div className={styles.cardCol}>
+            <label>CPF</label>
+            <input 
+              name="cpfSubscriber" 
+              type="text" 
+              placeholder="CPF"
+              maxLength={11}
+              minLength={11}  
+              defaultValue={subscriberData?.cpf}
+              disabled
+            />
+          </div>
+          <div className={styles.cardCol}>
+            <label>Data Nascimento</label>
+            <input 
+              defaultValue={subscriberData?.birthDate} 
+              name="birthDateSubscriber" 
+              type="date" 
+              placeholder="Data de Nascimento" 
+            />
+          </div>
+          <div className={styles.cardCol}>
+            <label>Email</label>
+            <input 
+              defaultValue={subscriberData?.email} 
+              name="emailSubscriber" 
+              type="email" 
+              placeholder="Email" 
+            />
+          </div>
+          <div className={styles.cardCol}>
+            <label>Senha</label>
+            <input 
+              defaultValue={subscriberData?.password} 
+              name="passwordSubscriber" 
+              type="password" 
+              placeholder="Senha" 
+              disabled
+            />
+          </div>
+        </fieldset>
+        <button 
+          type="submit" 
+          className={styles.submitChangeAccount}
         >
-          <fieldset>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Nome</Form.Label>
-                  <Form.Control 
-                    name="firstNameSubscriber" 
-                    type="text" 
-                    placeholder="Nome"
-                    maxLength={14}
-                    minLength={2} 
-                    defaultValue={firstName}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Sobrenome</Form.Label>
-                  <Form.Control 
-                    name="lastNameSubscriber" 
-                    type="text" 
-                    placeholder="Sobrenome" 
-                    maxLength={14}
-                    minLength={2} 
-                    defaultValue={subscriberData?.name.split(' ').slice(1).join(' ')}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>CPF</Form.Label>
-                  <Form.Control 
-                    name="cpfSubscriber" 
-                    type="text" 
-                    placeholder="CPF"
-                    maxLength={11}
-                    minLength={11}  
-                    defaultValue={subscriberData?.cpf}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>Data Nascimento</Form.Label>
-                  <Form.Control defaultValue={subscriberData?.birthDate} name="birthDateSubscriber" type="date" placeholder="Data de Nascimento" />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control defaultValue={subscriberData?.email} name="emailSubscriber" type="email" placeholder="Email" />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Senha</Form.Label>
-                  <Form.Control defaultValue={subscriberData?.password} name="passwordSubscriber" type="password" placeholder="Senha" />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button 
-              className="float-end mt-2 px-4" 
-              variant={'primary'}
-              type="submit"
-            >
-              Salvar
-            </Button>
-          </fieldset>
-        </Form>
-      </Card.Body>
-  </Card>
+          Salvar
+        </button>
+      </form>
+  </CardBox>
   )
 }

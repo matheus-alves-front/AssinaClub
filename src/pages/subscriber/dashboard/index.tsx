@@ -1,20 +1,25 @@
+import { useEffect, useState } from "react"
 import { GetServerSideProps } from "next"
 import { GetSessionParams, getSession } from "next-auth/react"
 import { prisma } from "../../../prisma/PrismaClient"
+import axios from "axios"
 
 import { Subscriber } from "../../../@types/SubscriberTypes"
 import { ClubProvider } from "../../../@types/ClubProviderTypes"
 import { Plan } from "../../../@types/PlansTypes"
+import { Product } from "../../../@types/ProductTypes"
 
 import { MyInformationsCard } from "../../../components/Dashboard/Subscriber/MyInformationsCard"
-import { MySignatures, MySignaturesCard } from "../../../components/Dashboard/Subscriber/MySignatures"
+import { MySignaturesDetails, MySignaturesCard } from "../../../components/Dashboard/Subscriber/MySignatures"
 import { ChangeAccount } from "../../../components/Dashboard/Subscriber/ChangeAccount"
+import { DivisionColumn } from "../../../components/Divisions/DivisionColumn"
 
-import { Col, Container, Nav, Row, Tab } from "react-bootstrap"
-import { useEffect, useState } from "react"
+import { IoChevronDownOutline } from 'react-icons/io5'
+import styles from '../../../styles/pages/subscriber/dashboard.module.scss'
 
 export interface ClubWithPlan extends Plan {
   club?: ClubProvider
+  productsOfPlan: Product[]
 }
 
 export type DashboardType = {
@@ -25,113 +30,124 @@ export type DashboardType = {
 
 export default function Dashboard({subscriberData, signatures, AssignatureDetails}: DashboardType) {
   const [eventKey, setEventKey] = useState('my-signatures')
-  
+  const [sectionName, setSectionName] = useState("Minhas Assinaturas")
+
+  const [isDropdownMobile, setIsDropdownMobile] = useState(false)
+
+  useEffect(() => {
+    switch (eventKey) {
+      case "my-account":
+        setSectionName("Minha Conta");
+        break;
+      case "my-signatures":
+        setSectionName("Minhas Assinaturas");
+        break;
+      case "wish-list":
+        setSectionName("Lista de Desejos");
+        break;
+      case "my-address":
+        setSectionName("Meus Endereços");
+        break;
+      case "my-credit-cards":
+        setSectionName("Meus Cartões");
+        break;
+      case "change-account":
+        setSectionName("Alterar Conta");
+        break;
+      default:
+        setSectionName("Minhas Assinaturas");
+        break;
+    }
+
+    setIsDropdownMobile(false)
+  }, [eventKey])
+
   return (
-      <Container fluid={'xl'}>
-        <Tab.Container 
-            id="my-account-dashboard" 
-            defaultActiveKey="my-signatures"
-            onSelect={(eventKey) => {
-              setEventKey(String(eventKey))
-            }}
+      <section className={styles.container}>
+        <aside 
+          id="my-account-dashboard"
+          className={styles.dashboardNavigation} 
         >
-          <Row className="justify-content-around">
-            <Col 
-              xl={3}
-              lg={3}
-              sm={12} 
-              className="border-end"
-            >
-              <Nav variant="pills" className="flex-column">
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="my-account"
-                    className={eventKey === "my-account" ? 'text-white' : ''}
-                  >
-                    Minha Conta
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="my-signatures"
-                    className={eventKey === "my-signatures" ? 'text-white' : ''}
-                  >
-                    Minhas Assinaturas
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="wish-list"
-                    className={eventKey === "wish-list" ? 'text-white' : ''}
-                  >
-                    Lista de Desejos
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="my-address"
-                    className={eventKey === "my-address" ? 'text-white' : ''}
-                  >
-                    Meus Endereços
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="my-credit-cards"
-                    className={eventKey === "my-credit-cards" ? 'text-white' : ''}
-                  >
-                    Meus Cartões
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link 
-                    eventKey="change-account"
-                    className={eventKey === "change-account" ? 'text-white' : ''}
-                  >
-                    Alterar Conta
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Col>
-            <Col 
-              sm={12} 
-              lg={9}
-              xl={9}
-            >
-              <Tab.Content>
-                <Tab.Pane eventKey="my-account">
-                  <h1>Minha Conta</h1>
-                  <Row>
-                    <Col>
-                      <MyInformationsCard subscriberData={subscriberData} />
-                    </Col>
-                    <Col>
-                      <MySignaturesCard signatures={signatures} />
-                    </Col>
-                  </Row> 
-                </Tab.Pane>
-                <Tab.Pane eventKey="my-signatures">
-                  <h1>Minhas Assinaturas</h1>
-                  <MySignatures userId={String(subscriberData?.id)} AssignatureDetails={AssignatureDetails} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="wish-list">
-                  <h1>Minhas Lista de Desejos</h1>
-                </Tab.Pane>
-                <Tab.Pane eventKey="my-address">
-                  <h1>Meus Endereços</h1>
-                </Tab.Pane>
-                <Tab.Pane eventKey="my-credit-cards">
-                  <h1>Meus Cartões</h1>
-                </Tab.Pane>
-                <Tab.Pane eventKey="change-account">
-                  <h1>Alterar Conta</h1>
-                  <ChangeAccount subscriberData={subscriberData} />
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
-      </Container>
+          <button 
+            className={`${styles.sectionNameMobile} ${isDropdownMobile ? styles.sectionNameMobileActive : ''}`}
+            onClick={() => setIsDropdownMobile(!isDropdownMobile)}
+          >
+            {sectionName}
+            <IoChevronDownOutline />
+          </button>
+          <nav className={isDropdownMobile ? styles.active : ''}>
+              <button 
+                className={eventKey === "my-account" ? styles.active : ''}
+                onClick={() => setEventKey("my-account")}
+              >
+                Minha Conta
+              </button>
+            
+              <button 
+                className={eventKey === "my-signatures" ? styles.active : ''}
+                onClick={() => setEventKey("my-signatures")}
+              >
+                Minhas Assinaturas
+              </button>
+            
+              <button 
+                className={eventKey === "wish-list" ? styles.active : ''}
+                onClick={() => setEventKey("wish-list")}
+              >
+                Lista de Desejos
+              </button>
+            
+              <button 
+                className={eventKey === "my-address" ? styles.active : ''}
+                onClick={() => setEventKey("my-address")}
+              >
+                Meus Endereços
+              </button>
+            
+              <button 
+                className={eventKey === "my-credit-cards" ? styles.active : ''}
+                onClick={() => setEventKey("my-credit-cards")}
+              >
+                Meus Cartões
+              </button>
+            
+              <button 
+                className={eventKey === "change-account" ? styles.active : ''}
+                onClick={() => setEventKey("change-account")}
+              >
+                Alterar Conta
+              </button>
+          </nav>
+        </aside>
+    
+        <DivisionColumn />
+        <section className={styles.dashboardContent}>
+          <h1 className={styles.sectionName}>{sectionName}</h1>
+          {eventKey === "my-account" && (
+            <>
+              <div className={styles.col}>
+                <MyInformationsCard subscriberData={subscriberData} />
+              </div>
+              <div className={styles.col}>
+                <MySignaturesCard AssignatureDetails={AssignatureDetails} />
+              </div>
+            </>
+          )}
+          {eventKey === "my-signatures" &&  
+            <MySignaturesDetails userId={String(subscriberData?.id)} AssignatureDetails={AssignatureDetails} />
+          }
+
+          {eventKey === "wish-list" &&  ''}
+
+          {eventKey === "my-address" &&  ''}
+
+          {eventKey === "my-credit-cards" &&  ''}
+
+          {eventKey === "change-account" &&  
+            <ChangeAccount subscriberData={subscriberData} />
+          }
+        </section>
+      </section>
   )
 }
 
@@ -179,11 +195,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   })
 
-  const AssignatureDetails = assinantOfPlans.map(plan => {
-    const club = assinantOfClubs.find(club => club.id === plan.clubProviderId);
-    
-    return { ...plan, club };
-  });
+  const AssignatureDetails = await Promise.all(
+    assinantOfPlans.map(async (plan) => {
+      const club = assinantOfClubs.find(club => club.id === plan.clubProviderId);
+  
+      const productsOfPlan = await axios.get(`${process.env.BASE_URL}/api/club_providers/id/${plan.clubProviderId}/products?=plansId=${plan.id}`)
+  
+      return { ...plan, club, productsOfPlan: productsOfPlan.data.data };
+    })
+  ) 
 
   return {
     props: {

@@ -1,0 +1,171 @@
+@mixin button-primary($padding) {
+  width: 100%;
+  background-color: $color-primary;
+  color: $color-white;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: $color-primary;
+    background-color: transparent;
+  }
+
+  &:disabled {
+    opacity: .9;
+    background-color: $color-primary;
+  }
+}
+
+@mixin button-primary-outline($padding) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-primary;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $color-white;
+    background-color: $color-primary;
+  }
+}
+
+@mixin button-secondary($padding) {
+  width: 100%;
+  background-color: $color-secondary;
+  color: $color-white;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-secondary;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: $color-secondary;
+    background-color: transparent;
+  }
+
+  &:disabled {
+    opacity: .9;
+    background-color: $color-secondary;
+  }
+}
+
+@mixin button-secondary-outline($padding) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-secondary;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-secondary;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $color-white;
+    background-color: $color-secondary;
+  }
+}
+
+@mixin button-danger($padding) {
+  width: 100%;
+  background-color: $color-danger;
+  color: $color-white;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-danger;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: $color-danger;
+    background-color: transparent;
+  }
+}
+
+@mixin button-danger-outline($padding) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-danger;
+  font-weight: bold;
+  padding: $padding;
+  border: 1px solid $color-danger;
+  border-radius: 5px;
+  transition: .3s ease-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $color-white;
+    background-color: $color-danger;
+  }
+}
+
+@mixin button-navigation-dashboard-subscriber($padding, $paddingHover) {
+  width: 100%;
+  background-color: transparent;
+  color: $color-primary;
+  font-weight: bold;
+  padding: $padding;
+  border: 0;
+  border-left: 2px solid $color-secondary;
+  transition: .1s ease-out;
+  text-align: start;
+
+  &:hover {
+    color: $color-secondary;
+    background-color: transparent;
+    padding-left: $padding * 1.5;
+    border-width: 10px;
+  }
+
+  @media (max-width: $mobile) {
+    color: $color-secondary;
+    border-left: 0;
+    border-bottom: 2px solid $color-secondary;
+  }
+}
+
+@mixin button-navigation-dashboard-subscriber-active($padding) {
+  width: 100%;
+  padding: $padding;
+  padding-left: $padding * 1.5;
+  text-align: start;
+  background-color: transparent;
+  color: $color-secondary;
+  font-weight: bold;
+  border: 0;
+  border-left: 10px solid $color-secondary;
+  transition: .1s ease-out;
+  
+  @media (max-width: $mobile) {
+    display: none;
+  }
+}

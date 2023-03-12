@@ -5,12 +5,6 @@ import axios from "axios";
 import { getSession, signIn } from 'next-auth/react'
 
 import styles from '../../styles/pages/login.module.scss'
-import { 
-  Container,
-  Button,
-  Form,
-  Card
-} from 'react-bootstrap';
 
 export default function Login(session: any) {
   async function LoginSubmit(event: FormEvent<HTMLFormElement>) {
@@ -43,36 +37,30 @@ export default function Login(session: any) {
 
   return (
     <>
-      <Container className={styles.container} fluid="lg">
-        <Card className={`${styles.form} px-5 py-4 shadow-lg`}>
-          <h2 className="mb-3">Login Assinante</h2>
-          <Form
+      <section className={styles.container}>
+        <div className={styles.formContainer}>
+          <h2>Login Assinante</h2>
+          <form
             name="formSubscribers" 
             className="mb-1"
             onSubmit={(e) => LoginSubmit(e)}
           >
-            <Form.Group className="mb-2">
-              <Form.Label>Email</Form.Label>
-              <Form.Control name="email" type="email" placeholder="Email" />
-              <Form.Text className="text-muted">
+            <fieldset className="mb-2">
+              <input name="email" type="email" placeholder="Email" />
+              <small className="text-muted">
                 Nunca compartilhe suas credenciais.
-              </Form.Text>
-            </Form.Group>
-            <Form.Group className="mb-4">
-              <Form.Label>Senha</Form.Label>
-              <Form.Control name="password" type="password" placeholder="Senha" />
-            </Form.Group>
-            <Button className="w-100" variant="primary" type="submit">
-              Fazer Login
-            </Button>
-          </Form>
-          
-          <Button onClick={() => signIn('github')} variant={'danger'}>Github</Button>
+              </small>
+              <input name="password" type="password" placeholder="Senha" />
+              <button className="w-100" type="submit">
+                Fazer Login
+              </button>
+            </fieldset>
+          </form>
           <Link href={'/register/subscriber'}>
-            <Button variant="warning" className="my-2 text-white w-100">Quero Ser Assinante</Button>
+            <button className="my-2 text-white w-100">Quero Ser Assinante</button>
           </Link>
-        </Card>
-      </Container>
+        </div>
+      </section>
     </>
   )
 }

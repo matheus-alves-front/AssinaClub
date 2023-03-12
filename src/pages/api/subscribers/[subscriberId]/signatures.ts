@@ -21,37 +21,43 @@ export default async function updateSubscriber(
             unsubscribe
         }: Subscriber = req.body
 
-        const subscriberExists = await getSubscriber(subscriberId)
+        try {
+            const subscriberExists = await getSubscriber(subscriberId)
 
-        if(!subscriberExists) return res.status(404).json({
-            message: 'Subscriber does not exist'
-        })
-
-        if (!clubAssinatureId || !planIds) {
-            return res.status(400).json({
-                message: "Missing planIds or clubAssinatureId"
+            if (!subscriberExists) return res.status(404).json({
+                message: 'Subscriber does not exist'
             })
-        }
 
-        if (unsubscribe || !isPaid) {
-            removeSubscriberRelation(subscriberId, clubAssinatureId, String(planIds))
+            if (!clubAssinatureId || !planIds) {
+                return res.status(400).json({
+                    message: "Missing planIds or clubAssinatureId"
+                })
+            }
+
+            if (unsubscribe || !isPaid) {
+                removeSubscriberRelation(subscriberId, clubAssinatureId, String(planIds))
+
+                return res.status(201).json({
+                    message: "Signature Removed"
+                })
+            }
+
+            if (isPaid) {
+                await createSubscriberRelation(subscriberId, clubAssinatureId, String(planIds))
+
+                return res.status(201).json({
+                    message: "Signature Completed"
+                })
+            }
 
             return res.status(201).json({
-                message: "Signature Removed"
+                message: "update no if"
             })
+            
+        } catch (err) {
+            console.log(err)
+            return res.status(500)
         }
-
-        if (isPaid) {
-            await createSubscriberRelation(subscriberId, clubAssinatureId, String(planIds))
-
-            return res.status(201).json({
-                message: "Signature Completed"
-            })
-        }
-
-        return res.status(201).json({
-            message: "update no if"
-        })
 
     }
 }

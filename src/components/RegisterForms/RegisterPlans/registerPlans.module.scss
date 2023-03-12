@@ -1,0 +1,76 @@
+@import '../registerForm.module.scss';
+
+.registerPlansSection {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  .registerCol {
+    max-width: 100%;
+  
+    .formClubProvider {
+      width: 100%;
+      max-width: 700px;
+      
+      input {
+        &:first-child {
+          width: 100%;
+        }
+      }
+      
+      label {
+        margin-top: 0;
+        width: 100%;
+      }
+      
+      button {
+        @include button-primary(13px);
+        margin-bottom: 10px;
+      }
+    }
+    
+    button {
+        @include button-secondary(10px);
+    }
+  }
+
+  .plansRegisteredContainer {
+    max-width: 100%;
+    width: 700px;
+    padding: 1rem;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    border-radius: 10px;
+
+    .plansRegistered {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+
+      details {
+        margin-bottom: .5rem;
+      }
+
+      footer {
+        display: flex;
+        gap: 1rem;
+
+        .addProductToPlan {
+          width: 90%;
+          @include button-primary-outline(5px)
+        }
+
+        .removeProductToPlan {
+          width: 10%;
+        }
+      }
+    }
+  }
+}
