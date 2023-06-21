@@ -18,6 +18,7 @@ export default function ClubsBoard({clubProviders}: ClubProviderProps) {
         <div className={styles.clubsBoard}>
           {clubProviders.map((club, index) => (
             <ClubsCard
+              key={index}
               clubProvider={club}
               className={styles.clubsCard} 
             />

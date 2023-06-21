@@ -9,10 +9,11 @@ import { Plan } from "../../../@types/PlansTypes"
 import { Product } from "../../../@types/ProductTypes"
 import { Subscriber } from "../../../@types/SubscriberTypes"
 
-import { Button, Card, Col, Container, Image, Row } from "react-bootstrap"
 import { LoaderSpinner } from "../../../components/Loader"
 import { getPlans } from "../../../prisma/plans"
 import { getProducts } from "../../../prisma/products"
+
+import styles from '../../../styles/pages/club_providers/clubProviderPage.module.scss'
 
 type ClubProviderHomeProps = {
   clubProvider: ClubProvider
@@ -62,51 +63,49 @@ export default function ClubProvidersHome({
   }
 
   return (
-    <Container>
-      <Row>
+    <section className={styles.Container}>
+      <div className={styles.Header}>
+        <img 
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5P9pyvWR6UAMZJ6Zd8JRyEXM-KvDCCGZyUQ&usqp=CAU" 
+          alt={'heuehu'}
+        />
         <h1>{clubProvider?.clubName}</h1>
-        <h5>Descrição:</h5>
+        <h2>Descrição:</h2>
         <p>{clubProvider?.description}</p>
-        <h3>Planos</h3>
-
+      </div>
+      <h3>Planos</h3>
+      <div className={styles.Content}>
         {clubProviderPlans.map((plan, index) => (
-          <Col className="mb-4" key={index} md={4}>
-            <Card>
-              <Image 
-                src={'https://www.nerdaocubo.com.br/media/wysiwyg/img_nossos-cubos_nerd-ao-cubo.jpg'} 
-                alt={'heuehu'}
-                fluid
-                rounded
-              />
-              <Card.Body>
-                <Card.Title>{plan.title}</Card.Title>  
-                <p>{plan.description}</p>
-                <p>Entrega de {plan.deliveryFrequency} em {plan.deliveryFrequency} mês</p>
-                <h6 className="mb-3">Produtos que você irá receber:</h6>
-                {clubProviderProducts.map((product, index) => {
-                  if (productIncludesInPlan(plan.productId, product.id)) {
-                    return (
-                      <div key={index}>
-                        <p><strong>{product?.name}: </strong>
-                          <span>{product.description}</span>
-                        </p>
-                      </div>
-                    )
-                  }
-                })}
-              </Card.Body>
-              <Button 
-                onClick={() => handleCheckout(plan.clubProviderId, plan.id, clubProvider?.clubName, plan.title)}
-                variant="success" 
-                className="m-2"
+          <article key={index} className={styles.Card}>
+            <h4>{plan.title}</h4>  
+            <div>
+              <p>{plan.description}</p>
+              <p>Entrega de {plan.deliveryFrequency} em {plan.deliveryFrequency} meses</p>
+              <h5 className="mb-3">Produtos que você irá receber:</h5>
+              {clubProviderProducts.map((product, index) => {
+                if (productIncludesInPlan(plan.productId, product.id)) {
+                  return (
+                    <div key={index}>
+                      <p>
+                        <strong>{product?.name}:</strong>
+                        <br />
+                        <span>{product.description}</span>
+                      </p>
+                    </div>
+                  )
+                }
+              })}
+            </div>
+            <button 
+              onClick={() => handleCheckout(plan.clubProviderId, plan.id, clubProvider?.clubName, plan.title)}
+              className="m-2"
               >
-                Assinar
-              </Button>
-            </Card>
-          </Col>
+              Assinar
+            </button>
+          </article>
         ))}
-      </Row>
-    </Container>
+      </div>
+    </section>
   )
 }
 

@@ -17,12 +17,16 @@ $color-tertiary: #2ab7ca;
 $color-danger: #7C162E;
 $color-dark: #191528;
 $color-link: #00406c;
+$color-success: #1dab45;
 
 // Breakpoints
 $desktop-large: 1440px;
 $desktop: 1024px;
 $mobile: 768px;
 $mobile-small: 475px;
+
+// Shadows and customs
+$box-shadow-common: 0px 0px 10px 0px rgba(0,0,0,0.75);
 
 @import '/src/styles/utils/buttons.scss';
 @import '/src/styles/utils/inputs.scss';

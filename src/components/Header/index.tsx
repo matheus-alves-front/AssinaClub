@@ -57,125 +57,128 @@ export function Header() {
   return (
     <>
       <header className={`${styles.header} ${isMenuSidebar ? 'active' : ''}`}>
-        <Link href="/" className={styles.logo}>
-            AssinaClub
-        </Link>
-        <nav className="position-relative py-2">
-          <Link 
-            href={'/club_providers/clubs_board'}
-            className="fw-bold"
-          >
-              Clubes
+        <div className={styles.container}>
+          <Link href="/" className={styles.logo}>
+              AssinaClub
           </Link>
-
-          {!userData ? 
-            <div 
-              id="login-header-dropdown" 
-              title="Login"
-              className={styles.loginSection}
+          <nav className="position-relative py-2">
+            <Link 
+              href={'/club_providers/clubs_board'}
+              className="fw-bold"
             >
+                Clubes
+            </Link>
+
+            {!userData ? 
+              <div 
+                id="login-header-dropdown" 
+                title="Login"
+                className={styles.loginSection}
+              >
+                <button
+                  onClick={() => setIsLoginDropdown(!isLoginDropdown)}
+                >Login</button>
+                {isLoginDropdown ?
+                  <div 
+                    className={styles.dropdown}
+                    ref={loginDropdownRef}
+                  >
+                    <Link href="/login/subscriber">Sou Assinante</Link>
+                    <Link href="/login/club_provider">Sou Clube</Link>
+                  </div>
+                :
+                ''
+                }
+              </div>
+            : 
               <button
-                onClick={() => setIsLoginDropdown(!isLoginDropdown)}
-              >Login</button>
-              {isLoginDropdown ?
-                <div 
-                  className={styles.dropdown}
-                  ref={loginDropdownRef}
-                >
-                  <Link href="/login/subscriber">Sou Assinante</Link>
-                  <Link href="/login/club_provider">Sou Clube</Link>
-                </div>
-               :
-               ''
-               }
-            </div>
-           : 
-            <button
-              className={styles.menuToggle}
-              onClick={() => setIsMenuSidebar(!isMenuSidebar)}
-            >
-              <IoMenu fontSize={50} />
-            </button>
-          }
+                className={styles.menuToggle}
+                onClick={() => setIsMenuSidebar(!isMenuSidebar)}
+              >
+                <IoMenu fontSize={50} />
+              </button>
+            }
 
 
-          {isMenuSidebar ? 
-            <aside className={styles.sidebarMenu}>
-              <header>
-                {userData && (typeOfUser !== 'subscriber' && (
-                  <h5 className={styles.adminName}>
-                    {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
-                  </h5>
-                ))}
-                <h4>
-                  Olá, {userData ? userData?.name : 'Faça Login'}
-                </h4>
-                <button 
-                  className={styles.closeMenu}
-                  onClick={() => setIsMenuSidebar(!isMenuSidebar)}
-                >
-                  <IoClose />
-                </button>
-              </header>
+            {isMenuSidebar ? 
+              <aside className={styles.sidebarMenu}>
+                <header>
+                  {userData && (typeOfUser !== 'subscriber' && (
+                    <h5 className={styles.adminName}>
+                      {userData.clubName ? userData.clubName : clubProviderInfo?.clubName}
+                    </h5>
+                  ))}
+                  <h4>
+                    Olá, {userData ? userData?.name : 'Faça Login'}
+                  </h4>
+                  <button 
+                    className={styles.closeMenu}
+                    onClick={() => setIsMenuSidebar(!isMenuSidebar)}
+                  >
+                    <IoClose />
+                  </button>
+                </header>
 
-              <DivisionLineWithoutMargin />
+                <DivisionLineWithoutMargin />
 
-              <section className={styles.menuContent}>
-                {session.data ?
-                  (
-                    <>
-                      {
-                        typeOfUser === "subscriber" &&
-                        SUBSCRIBER_HEADER_OPTIONS.map(({ text, path }, index) => (
-                          <Link
-                            key={index}
-                            href={path}
-                            className={styles.headerOption}
-                          >
-                            {text}
-                          </Link>)
-                        )
-                      }
-                      {
-                        typeOfUser === "admin" &&
-                        ADMIN_HEADER_OPTIONS.map(({ text, path }, index) => {
-
-                          if(text === "Home" ) path += `${clubProviderInfo?.id}/dashboard`
-                          if(text === "Administradores" ) path += `${clubProviderInfo?.id}/dashboard/admins`
-
-                          return (
+                <section className={styles.menuContent}>
+                  {session.data ?
+                    (
+                      <>
+                        {
+                          typeOfUser === "subscriber" &&
+                          SUBSCRIBER_HEADER_OPTIONS.map(({ text, path }, index) => (
                             <Link
                               key={index}
                               href={path}
                               className={styles.headerOption}
                             >
                               {text}
-                            </Link>
+                            </Link>)
                           )
-                        })
-                      }
-                      <button
-                        className={styles.signOut}
-                        onClick={() => signOut()}
-                      >Sair da Conta</button>
+                        }
+                        {
+                          typeOfUser === "admin" &&
+                          ADMIN_HEADER_OPTIONS.map(({ text, path }, index) => {
+
+                            if(text === "Home" ) path += `${clubProviderInfo?.id}/dashboard`
+                            if(text === "Administradores" ) path += `${clubProviderInfo?.id}/dashboard/admins`
+
+                            return (
+                              <Link
+                                key={index}
+                                href={path}
+                                className={styles.headerOption}
+                              >
+                                {text}
+                              </Link>
+                            )
+                          })
+                        }
+                        <button
+                          className={styles.signOut}
+                          onClick={() => signOut()}
+                        >Sair da Conta</button>
+                      </>
+                    )
+                    :
+                    <>
+                      <Link 
+                        className={styles.headerOption}
+                        href={'/login/subscriber'}
+                      >Fazer Login</Link>
+                      <Link 
+                        className={styles.headerOptionSignInClubProvider}
+                        href={'/login/club_provider'}
+                      >Sou Administrador de um Clube</Link>
                     </>
-                  )
-                  :
-                  <>
-                    <Link 
-                      className={styles.headerOption}
-                      href={'/login/subscriber'}
-                    >Fazer Login</Link>
-                    <Link 
-                      className={styles.headerOptionSignInClubProvider}
-                      href={'/login/club_provider'}
-                    >Sou Administrador de um Clube</Link>
-                  </>
-                }
-              </section>
-            </aside>
-          : ''}
-        </nav>
+                  }
+                </section>
+              </aside>
+            : ''}
+          </nav>
+
+        </div>
       </header>
     </>
   )

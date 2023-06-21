@@ -1,0 +1,90 @@
+@import "/src/styles/theme.scss"; 
+
+.Container {
+  // width: 80%;
+  // margin: auto;
+
+  @include flex-column();
+  padding: 2rem 1rem;
+
+  .Header {
+    @include flex-column();
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    width: 100%;
+    
+    img {
+      width: 100%;
+      border: 5px solid $color-white;
+      border-radius: 15px;
+      box-shadow: $box-shadow-common;
+    }
+
+    h1 {
+      font-size: 4rem;
+      background-color: $color-white;
+      padding: 5px 25px;
+      border-radius: 15px;
+      box-shadow: $box-shadow-common;
+      margin: -60px auto 40px 20px;
+    }
+
+    p, h2 {
+      padding: 0 1.5rem;
+    }
+  }
+
+  > h3 {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    padding: 5px 25px;
+    border-radius: 10px;
+    box-shadow: $box-shadow-common;
+  }
+
+  .Content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+
+    .Card {
+      background-color: $color-gray-ultra-light;
+      border: 2px solid $color-gray-ultra-light;
+      @include flex-column();
+      border-radius: 1rem;
+      overflow: hidden;
+
+      h4 {
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        background-color: $color-link;
+        color: $color-white;
+        font-size: 1.5rem;
+      }
+      
+      > div {
+        flex: 1;
+        padding: 2rem;
+
+        @include flex-column();
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      button {
+        @include button-secondary(20px);
+        border-radius: 0;
+        border-width: 0;
+        border-top-width: 1px;
+        border-color: $color-success;
+        background-color: $color-success;
+        font-size: 1.2rem;
+
+        &:hover {
+          color: $color-success;
+        }
+      }
+    }
+  }
+}
