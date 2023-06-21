@@ -1,89 +1,54 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from 'bcrypt'
+import validateErrorsInSchema from '../../../middleware/validateErrosInSchema';
+import { Request, Response } from "express-serve-static-core"
+import { createRouter } from 'next-connect';
+import { handleDeleteClubProviderById, handleGetClubProviderById, handlePutClubProvidersById } from '../../../controllers/clubProviders';
+import { clubProviderRegisterSchema } from '../schemas/clubProviderSchema';
+import { validateClubProviderConflict } from '../../../middleware/validateClubProviderConflict';
+import { upload } from '../../../configs/S3Config';
+import validateBody from '../../../middleware/validateBody';
 
-import { ClubProviderType, ClubProvider } from '../../../@types/ClubProviderTypes'
+type CustomRequest = NextApiRequest & Request<any> & {
+    files: {
+        location: string
+    }[]
+}
 
-import { checkIfClubProviderExists, getClubProvider, validateClubProviderConflict } from '../../../prisma/clubProviders'
-import { removeSubscriberRelationByClubProvider } from '../../../prisma/signaturesRelation'
-import { prisma } from '../../../prisma/PrismaClient'
-import { deleteAllClubProviderAdmins } from '../../../prisma/adminsClubProviders'
+type CustomResponse = NextApiResponse & Response<any>
 
-export default async function handleClubProvider(
-    req: NextApiRequest,
-    res: NextApiResponse<ClubProviderType>
-) {
-    const { method } = req
-    const clubProviderId = String(req.query.clubProviderId)
+const clubProviderRouter = createRouter<CustomRequest, CustomResponse>();
 
-    if (!await checkIfClubProviderExists(clubProviderId)) return res.status(404).json({
-        message: "Provider not found!"
-    })
+clubProviderRouter
+    .use(upload.array('file', 2))
+    .use(async (req, res, next) => (
+        validateErrorsInSchema(req, res, next, clubProviderRegisterSchema)
+    )
+    )
+    .use(async (req, res, next) => (
+        validateClubProviderConflict(req, res, next)
+    )
+    )
+    .use(validateBody)
+    .get(handleGetClubProviderById)
+    .put(handlePutClubProvidersById)
+    .delete(handleDeleteClubProviderById)
 
-    if (method === "GET") {
-        const clubProvider = await getClubProvider(clubProviderId)
+export default clubProviderRouter.handler({
+    onError: (err: any, _, res) => {
+        console.error(err)
+        res.status(500).json({
+            message: "Something broke!"
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
 
-        return res.status(200).json({
-            data: clubProvider
-        })
-
-    } else if (method === "PUT") {
-        const {
-            clubName,
-            hostName,
-            cpf,
-            cnpj,
-            email,
-            password,
-            description,
-            removeSubscriber
-        }: ClubProvider = req.body
-
-        if (await validateClubProviderConflict(clubName, email, res) !== 'ok') return
-
-        let hashedPassword
-
-        if (password) hashedPassword = bcrypt.hashSync(password, 10)
-
-        const clubProvider = await prisma.clubProvider.update({
-            where: { id: clubProviderId },
-            data: {
-                clubName,
-                hostName,
-                cpf,
-                cnpj,
-                email,
-                password: hashedPassword,
-                description
-            }
-        })
-
-        if (removeSubscriber) {
-            removeSubscriberRelationByClubProvider(clubProviderId, removeSubscriber)
-
-            return res.status(201).json({
-                message: "Subscriber Remove Success"
-            })
-        }
-
-        return res.status(201).json({
-            data: clubProvider,
-            message: "update success"
-        })
-
-    } else if (method === "DELETE") {
-
-        if (!(await deleteAllClubProviderAdmins(clubProviderId))) {
-            return res.status(500).json({
-                message: "Error while deleting all admins"
-            })
-        } else {
-            await prisma.clubProvider.delete({
-                where: { id: clubProviderId }
-            })
-    
-            return res.status(201).json({
-                message: "Account Deleted",
-            })
-        }
+export const config = {
+    api: {
+        bodyParser: false,
     }
 }

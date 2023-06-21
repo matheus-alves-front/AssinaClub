@@ -51,5 +51,3 @@ export async function removeSubscriberRelationByClubProvider(ClubProviderId: str
 
   return subscribers
 }
-
-// export async function getPlansAssignature

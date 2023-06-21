@@ -1,85 +1,48 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
-import bcrypt from 'bcrypt'
-
-import { AdminType, Admin } from '../../../../../../@types/AdminsClubProviderTypes'
-import { deleteAllClubProviderAdmins, getAdmins } from '../../../../../../prisma/adminsClubProviders'
-import { checkIfClubProviderExists } from '../../../../../../prisma/clubProviders'
-
-import { prisma } from '../../../../../../prisma/PrismaClient'
+import { Request, Response } from "express-serve-static-core"
+import { createRouter } from 'next-connect'
 import { adminRegisterSchema } from '../../../../schemas/adminSchema'
-import validateErrorsInSchema from '../../../../../../utils/validateErrosInSchema'
+import validateErrorsInSchema from '../../../../../../middleware/validateErrosInSchema'
+import { upload } from '../../../../../../configs/S3Config'
+import validateClubProviderExistence from '../../../../../../middleware/validateClubProviderExistence'
+import { handleDeleteAdmins, handleGetAdmins, handlePostAdmins } from '../../../../../../controllers/admins'
+import validateBody from '../../../../../../middleware/validateBody'
 
-export default async function handleAdminsOfClubProviders(
-  req: NextApiRequest,
-  res: NextApiResponse<AdminType>
-) {
-  const { method } = req
-  const clubProviderId = String(req.query.clubProvider)  
+type CustomRequest = NextApiRequest & Request & {
+  file: { location: string }
+}
 
-  if (!await checkIfClubProviderExists(clubProviderId)) {
-    return res.status(404).json({
-      message: "Provider not found!"
-    })
-  }
+type CustomResponse = NextApiResponse & Response
 
-  if (method === "GET") {
-    const admins = await getAdmins(clubProviderId)
+const adminsRouter = createRouter<CustomRequest, CustomResponse>();
 
-    return res.status(200).json({
-      data: admins.reverse(),
-    })
-  } else if (method === "POST") {
-    const {
-      name,
-      birthDate,
-      email,
-      password,
-      occupation,
-    }: Admin = req.body
+adminsRouter
+  .use(upload.single('file'))
+  .use(validateClubProviderExistence)
+  .use(validateBody)
+  .use(async (req, res, next) => (
+    validateErrorsInSchema(req, res, next, adminRegisterSchema)
+  ))
+  .get(handleGetAdmins)
+  .post(handlePostAdmins)
+  .delete(handleDeleteAdmins)
 
-    if (validateErrorsInSchema(adminRegisterSchema, req, res) !== 'ok') return
-
-    const emailInUse = await prisma.admin.findUnique({
-      where: {
-        email
-      }
-    })
-
-    if (emailInUse) return res.status(409).json({
-      message: 'Email already in use by another admin'
-    })
-
-    const hashedPassword = bcrypt.hashSync(password, 10)
-
-    const admin = await prisma.admin.create({
-      data: {
-        name,
-        birthDate,
-        email,
-        password: hashedPassword,
-        occupation,
-        clubProviderId
-      }
+export default adminsRouter.handler({
+  onError: (err: any, _, res) => {
+    console.error(err)
+    res.status(500).json({
+      message: "Something broke!"
     });
+  },
+  onNoMatch: (_, res) => {
+    res.status(404).json({
+      message: "Page is not found"
+    });
+  },
+});
 
-    return res.status(201).json({
-      data: admin,
-    })
+export const config = {
+  api: {
+    bodyParser: false,
   }
-  else if (method === "DELETE") {
-
-    if( await deleteAllClubProviderAdmins(clubProviderId)) {
-      return res.json({
-        message: "All admins deleted successfully"
-      })
-    } else {
-      return res.status(500).json({
-        message: "Error while deleting all admins"
-      })
-    }
-
-  }
-
-  return res.status(404).json({ message: 'Route not found.' })
 }

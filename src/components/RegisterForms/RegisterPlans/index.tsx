@@ -66,7 +66,7 @@ export default function RegisterFormPlans() {
       })
     }
     catch(err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -82,7 +82,7 @@ export default function RegisterFormPlans() {
       })
     }
     catch(err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -95,7 +95,7 @@ export default function RegisterFormPlans() {
       await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
     }
     catch(err) {
-      console.log(err)
+      console.error(err)
     }
 
     const plansUpdated = [...registerStepsContext.plans]
@@ -121,7 +121,7 @@ export default function RegisterFormPlans() {
       await axios.put(`/api/club_providers/id/${clubProviderId}/plans/${planId}`, addProductToPlan)
     }
     catch(err) {
-      console.log(err)
+      console.error(err)
     }
 
     const plansUpdated = [...registerStepsContext.plans]

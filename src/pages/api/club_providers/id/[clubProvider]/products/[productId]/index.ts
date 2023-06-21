@@ -1,65 +1,48 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { Request, Response } from "express-serve-static-core"
+import { createRouter } from 'next-connect'
+import { upload } from '../../../../../../../configs/S3Config'
+import validateClubProviderExistence from '../../../../../../../middleware/validateClubProviderExistence'
+import validateErrorsInSchema from '../../../../../../../middleware/validateErrosInSchema'
+import { productsSchema } from '../../../../../schemas/productsSchema'
+import { PRODUCTS_IMAGES_MAX_AMOUNT } from '..'
+import { handleDeleteProduct, handleGetProduct, handlePutProduct } from '../../../../../../../controllers/products'
 
-import { ProductType, Product } from '../../../../../../../@types/ProductTypes'
-import { checkIfProductExists, getProduct } from '../../../../../../../prisma/products'
-import { checkIfClubProviderExists } from '../../../../../../../prisma/clubProviders'
+type CustomRequest = NextApiRequest & Request & {
+    files: { location: string }[]
+}
 
-import { prisma } from '../../../../../../../prisma/PrismaClient'
+type CustomResponse = NextApiResponse & Response
 
-export default async function handleProduct(
-    req: NextApiRequest,
-    res: NextApiResponse<ProductType>
-) {
-    const { method } = req
-    const clubProviderId = String(req.query.clubProvider)
-    const productId = String(req.query.productId)
+const productRouter = createRouter<CustomRequest, CustomResponse>()
 
-    if (!await checkIfClubProviderExists(clubProviderId) || !await checkIfProductExists(productId)) {
-        return res.status(404).json({
-            message: "Product or Provider not found!"
-        })
-    }
+productRouter
+    .use(upload.array('file', PRODUCTS_IMAGES_MAX_AMOUNT))
+    .use(validateClubProviderExistence)
+    .use(async (req, res, next) => (
+        validateErrorsInSchema(req, res, next, productsSchema)
+    )
+    )
+    .get(handleGetProduct)
+    .put(handlePutProduct)
+    .delete(handleDeleteProduct)
 
-    if (method === "GET") {
+export default productRouter.handler({
+    onError: (err: any, _, res) => {
+        console.error(err)
+        res.status(500).json({
+            message: "Something broke!"
+        });
+    },
+    onNoMatch: (_, res) => {
+        res.status(404).json({
+            message: "Page is not found"
+        });
+    },
+});
 
-        const product = await getProduct(productId)
-
-        return res.status(200).json({
-            data: product
-        })
-
-    } else if (method === "PUT") {
-
-        const {
-            name,
-            description,
-            sku,
-            value
-        }: Product = req.body
-
-        const productUpdated = await prisma.product.update({
-            where: { id: productId },
-            data: {
-                name,
-                description,
-                sku,
-                value
-            }
-        })
-
-        return res.status(201).json({
-            data: productUpdated,
-            message: "Product updated with success!"
-        })
-
-    } else if (method === "DELETE") {
-
-        await prisma.product.delete({
-            where: { id: productId }
-        })
-
-        return res.status(200).json({
-            message: "Product deleted with sucess!",
-        })
+export const config = {
+    api: {
+        bodyParser: false,
     }
 }

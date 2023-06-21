@@ -1,13 +1,13 @@
-import Joi from '@hapi/joi';
+import Joi from '@hapi/joi'
 
 interface ClubProviderRegisterSchema {
-    clubName: string;
-    hostName: string;
-    cpf: string;
-    cnpj: string;
-    email: string;
-    password: string;
-    description: string;
+    clubName: string
+    hostName: string
+    cpf: string
+    cnpj: string
+    email: string
+    password: string
+    description: string
 }
 
 export const clubProviderRegisterSchema = Joi.object<ClubProviderRegisterSchema>({

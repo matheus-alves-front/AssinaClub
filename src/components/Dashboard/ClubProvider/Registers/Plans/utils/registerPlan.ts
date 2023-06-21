@@ -38,7 +38,7 @@ export async function registerPlan(
             setUpdatePlans(true)
         }
     } catch (err) {
-        console.log(err)
+        console.error(err)
     }
 
     form.reset()

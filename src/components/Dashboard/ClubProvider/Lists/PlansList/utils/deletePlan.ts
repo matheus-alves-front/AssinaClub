@@ -19,7 +19,7 @@ export async function deletePlanAndUpdate(
         }, 500)
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
         setPlanBeingDeleted(null)
     }
 }
@@ -35,6 +35,6 @@ export async function deletePlanAndDontUpdate(
         await axios.delete(deletePlanUrl)
     }
     catch (err) {
-        console.log(err)
+        console.error(err)
     }
 }

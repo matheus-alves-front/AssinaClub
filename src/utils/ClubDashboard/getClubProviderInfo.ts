@@ -25,7 +25,7 @@ export async function getClubProviderInfo(
         setClubProviderInfo(clubProvider)
         getSubscribersInfo(clubProvider.id, setSubscribersInfo)
     } catch (err) {
-        console.log(err)
+        console.error(err)
         alert("Algo deu errado!")
     }
 }
